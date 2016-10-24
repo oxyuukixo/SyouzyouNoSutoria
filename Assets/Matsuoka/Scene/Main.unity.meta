@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Matsuoka/Scene/Main.unity.meta
 guid: 68e934070a94fa045a25d3598aa34078
 timeCreated: 1476775496
+=======
+guid: be7af6ff77ece7441b95826584731383
+timeCreated: 1477023030
+>>>>>>> 11cc416c55157fea00868b31b6b9f6106f529ccc:Assets/Matsuoka/Scene/Main.unity.meta
 licenseType: Free
 DefaultImporter:
   userData: 
