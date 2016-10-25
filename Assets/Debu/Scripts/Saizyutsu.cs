@@ -31,7 +31,6 @@ public class Saizyutsu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         //彩術を使用する
         if (/*IsSaizyutsu &&*/CrossPlatformInputManager.GetButton("Fire1") && InstNum < WallMaxNum)
         {

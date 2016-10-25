@@ -46,6 +46,10 @@ public class PushButton : MonoBehaviour {
         {
             m_Command = 6;
         }
+        if(gameObject.name == "Psy")
+        {
+            m_Command = 7;
+        }
         switch (m_Command)
         {
             case 0:
@@ -68,6 +72,9 @@ public class PushButton : MonoBehaviour {
                 break;
             case 6:
                 cc.End();
+                break;
+            case 7:
+                cc.Psy();
                 break;
         }
     }
