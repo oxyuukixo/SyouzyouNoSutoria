@@ -14,6 +14,12 @@ enum PlayerNumber
     Ignir
 }
 
+enum EnemyNumber
+{
+    Enemy1 = 7
+}
+
+
 public class CharaControl : MonoBehaviour {
 
     private GameObject m_MoveSprite;
@@ -269,6 +275,10 @@ public class CharaControl : MonoBehaviour {
         if (obj.name == "Mashira")
         {
             iPlayerNum = (int)PlayerNumber.Mashira;
+        }
+        if (obj.name == "Enemy1")
+        {
+            iPlayerNum = (int)EnemyNumber.Enemy1;
         }
     }
 
