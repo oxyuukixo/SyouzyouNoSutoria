@@ -360,11 +360,34 @@ public class CharaControl : MonoBehaviour {
 
     public void Attack()
     {
+        RaycastHit hit;  //光線に当たったオブジェクトを受け取るクラス
+        Ray ray;         //光線クラス
+        Status status;   //ステータス
+        int damage;      //ダメージ
+
+        iSelectCommand = 2;
         CommandUIFalse(0);
 
-        if (m_SelectPlayer.transform.position.z < m_BMClass.m_MapSize - 1)
+        if (!CrossPlatformInputManager.GetButtonDown("Fire1")) return;
+        // スクリーン座標に対してマウスの位置の光線を取得
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // マウスの光線の先にオブジェクトが存在していたら hit に入る
+        if (Physics.Raycast(ray, out hit))
         {
-            m_SelectPlayer.transform.position += new Vector3(0, 0, 1);
+            //マウスの光線に当たったのが敵以外なら何もしない
+            if (hit.collider.gameObject.tag == "Enemy")
+            {
+                status = hit.collider.gameObject.GetComponent<Status>();
+                damage = DamageCalculations.Damege(gameObject, hit.collider.gameObject,
+                    GameLevel.levelEasy, AttackType.Physical, AttackProperty.NoPropertyAttack);
+                status.HP -= damage;
+                if (status.HP < 0)
+                {
+                    status.HP = 0;
+                    Destroy(hit.collider.gameObject);
+                }
+                iSelectCommand = 0;
+            }
         }
     }
 
