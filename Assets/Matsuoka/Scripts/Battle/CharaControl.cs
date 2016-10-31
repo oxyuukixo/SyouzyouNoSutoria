@@ -325,16 +325,11 @@ public class CharaControl : MonoBehaviour {
             {
                 // 当たったオブジェクトを取得
                 CharactorNumber(hit.collider.gameObject);
-
                 // ステージ上
                 if (iPlayerNum == (int)PlayerNumber.Default)
                 {
-                    // ステージの範囲内なら移動
-                    if (hit.transform.position.x < m_BMClass.m_MapSize && hit.transform.position.z < m_BMClass.m_MapSize)
-                    {
-                        m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0, 0.662f, 0);
-                        iSelectCommand = 0;
-                    }
+                    m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
+                    iSelectCommand = 0;
                 }
             }
 
