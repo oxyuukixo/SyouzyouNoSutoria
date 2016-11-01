@@ -7,6 +7,7 @@ using System.Text;
 public class ConversationControll : MonoBehaviour {
 
     //読み込むテキストのパス(シーン移動する前に設定)
+    [HideInInspector]
     public static string m_TextPath = "Test.txt";
 
     private string m_TextDate;
