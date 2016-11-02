@@ -20,7 +20,7 @@ public class Status : MonoBehaviour {
     public int MAT;
     public int DF;
     public int MDF;
-    public int TEC;         // ダメージ補正
+    public int TEC;         // ダメージ補正,素早さ
     public int MOV;         // 移動力,範囲
     public int HEIGHT;      // 今いる高さ,0が一番低い
     public Direction DIRECTION;   // キャラクターの向き,0から

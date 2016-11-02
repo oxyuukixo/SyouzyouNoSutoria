@@ -35,11 +35,13 @@ public class CharaControl : MonoBehaviour {
     protected Material m_Material;
 
     public bool bColorState;
+    public GameObject oldMapChip;
 
     NavMeshAgent agent;
     UICtrl m_UIClass;
     BattleMain m_BMClass;
     Status m_StatusClass;
+    StageInfo m_StageInfoClass;
 
     // 彩術用
     //一度に壁を置ける数
@@ -68,9 +70,10 @@ public class CharaControl : MonoBehaviour {
         CharactorCount = 6;
         once = false;
         agent = GetComponent<NavMeshAgent>();
-        m_UIClass = GameObject.Find("Common/GameManager").GetComponent<UICtrl>();
-        m_BMClass = GameObject.Find("Common/GameManager").GetComponent<BattleMain>();
+        m_UIClass = GameObject.Find("SceneManager/GameManager").GetComponent<UICtrl>();
+        m_BMClass = GameObject.Find("SceneManager/GameManager").GetComponent<BattleMain>();
         m_StatusClass = GetComponent<Status>();
+        m_StageInfoClass = GetComponent<StageInfo>();
 
         // 彩術用
         InstWall = new GameObject[WallMaxNum];
@@ -325,10 +328,14 @@ public class CharaControl : MonoBehaviour {
             {
                 // 当たったオブジェクトを取得
                 CharactorNumber(hit.collider.gameObject);
+                
                 // ステージ上
                 if (iPlayerNum == (int)PlayerNumber.Default)
                 {
                     m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
+                    m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
+                    m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
+
                     iSelectCommand = 0;
                 }
             }
@@ -414,6 +421,7 @@ public class CharaControl : MonoBehaviour {
     public void End()
     {
         CommandUIFalse(0);
+        m_BMClass.TurnElapsedNum++; // ターン経過
     }
 
     public void Psy()

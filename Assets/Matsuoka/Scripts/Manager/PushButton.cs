@@ -53,28 +53,28 @@ public class PushButton : MonoBehaviour {
         switch (m_Command)
         {
             case 0:
-                cc.Move();
+                cc.Move();  // 移動
                 break;
             case 1:
-                cc.Attack();
+                cc.Attack();// 攻撃
                 break;
             case 2:
-                cc.Magic();
+                cc.Magic(); // 魔法
                 break;
             case 3:
-                cc.Skil();
+                cc.Skil();  // スキル
                 break;
             case 4:
-                cc.Item();
+                cc.Item();  // アイテム
                 break;
             case 5:
-                cc.Wait();
+                cc.Wait();  // 構え
                 break;
             case 6:
-                cc.End();
+                cc.End();   // ターンエンド
                 break;
             case 7:
-                cc.Psy();
+                cc.Psy();   // 彩術
                 break;
         }
     }
