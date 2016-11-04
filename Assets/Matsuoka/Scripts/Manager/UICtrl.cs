@@ -7,6 +7,7 @@ public class UICtrl : MonoBehaviour {
     public Image[] m_Chara;
     public GameObject[] m_Command;
     public Image[] m_Status;
+    public Text m_Turn;
 
 	// Use this for initialization
 	void Start () {
