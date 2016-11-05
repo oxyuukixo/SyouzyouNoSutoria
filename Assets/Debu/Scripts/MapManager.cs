@@ -1,16 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MapManager : MonoBehaviour
 {
-    public struct TileState
-    {
-        int height;
-    }
+    public GameObject m_StageObject;
 
-    public GameObject res;
+    //マップのサイズ
+    [HideInInspector]
+    public int m_MapX;
+    [HideInInspector]
+    public int m_MapY;
 
-    public TileState[] MapChip;
+    //マップの配列
+    [HideInInspector]
+    public List<List<GameObject>> m_MapList = new List<List<GameObject>>();
+
+    //マスの間隔
+    [HideInInspector]
+    public float m_StageInterval;
 
     // Use this for initialization
     void Start()
@@ -21,6 +29,6 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 }
