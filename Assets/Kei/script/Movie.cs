@@ -9,7 +9,6 @@ public class Movie : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
         StartCoroutine(moviePlay(_movieFile));
     }
 
@@ -44,7 +43,7 @@ public class Movie : MonoBehaviour
         movieTexture.Play();
 
 #if false
-            //オーディオを使用する場合はこの部分を有効にしてください
+            //オーディオを使用する場合はこの部分を有効にする
             var audioSource = GetComponent<AudioSource>();
             audioSource.clip = movieTexture.audioClip;
             audioSource.loop = true;

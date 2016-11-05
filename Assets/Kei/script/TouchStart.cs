@@ -14,12 +14,14 @@ public class TouchStart : MonoBehaviour {
 	void Update () {
         if (CrossPlatformInputManager.GetButtonDown("Fire1"))
         {
-            //Invoke("SceneChange", 2f);
-            SceneManager.LoadScene("Game");
+            //Invoke("SceneChange", 1f);
+            //SceneManager.LoadScene("Game");
+            FadeManager.Instance.LoadLevel("Game", 1.0f);
         }
     }
 
-    //void SceneChange () {
-    //    SceneManager.LoadScene("Game");
+    //void SceneChange()
+    //{
+    //    FadeManager.Instance.LoadLevel("Game", 1.0f);
     //}
 }
