@@ -769,6 +769,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bColorState: 0
+  oldMapChip: {fileID: 0}
   WallMaxNum: 3
   WallObject: {fileID: 0}
   IsSaizyutsu: 0
@@ -1017,7 +1018,7 @@ Prefab:
         type: 2}
       propertyPath: prefabNormal
       value: 
-      objectReference: {fileID: 1000010080563042, guid: b9a2bf460d7a2d94394dbbfe209f561d,
+      objectReference: {fileID: 1000011286196936, guid: f4d299a5ecad3bf4f9e3e030a23e9ccf,
         type: 2}
     - target: {fileID: 1000010988370272, guid: be08e030039f900469a5b604bff40547, type: 2}
       propertyPath: m_Name

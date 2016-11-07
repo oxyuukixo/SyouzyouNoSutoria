@@ -9,7 +9,7 @@ enum PlayerNumber
     Leo,
     Mashira,
     Lune,
-    Cuon,
+    Akane,
     Ciel,
     Ignir
 }
@@ -279,6 +279,10 @@ public class CharaControl : MonoBehaviour {
         {
             iPlayerNum = (int)PlayerNumber.Mashira;
         }
+        if(obj.name == "Akane")
+        {
+            iPlayerNum = (int)PlayerNumber.Akane;
+        }
         if (obj.name == "Enemy1")
         {
             iPlayerNum = (int)EnemyNumber.Enemy1;
@@ -302,19 +306,8 @@ public class CharaControl : MonoBehaviour {
         iSelectCommand = 1;
         CommandUIFalse(0);
 
-        //if (!once)
-        //{
-        //    int i;
-        //    for (i = m_StatusClass.MOV; i > 1;)
-        //    {
-        //        i = MoveSearch(i);
-        //    }
-        //    if (i == 1)
-        //    {
-        //        once = true;
-        //    }
-        //}
-        
+        //PermitSarchRange(GameObject[][] stage, this, m_StatusClass.MOV);
+
         if (CrossPlatformInputManager.GetButtonDown("Fire1"))
         {
             RaycastHit hit;  // 光線に当たったオブジェクトを受け取るクラス
@@ -328,7 +321,9 @@ public class CharaControl : MonoBehaviour {
             {
                 // 当たったオブジェクトを取得
                 CharactorNumber(hit.collider.gameObject);
-                
+                StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
+                stage.possible = true;
+
                 // ステージ上
                 if (iPlayerNum == (int)PlayerNumber.Default)
                 {
@@ -339,31 +334,8 @@ public class CharaControl : MonoBehaviour {
                     iSelectCommand = 0;
                 }
             }
-
-            //if (m_SelectPlayer.transform.position.x < m_BMClass.m_MapSize - 1)
-            //{
-            //    m_SelectPlayer.transform.position += new Vector3(1, 0, 0);
-            //    iSelectCommand = 0;
-            //    once = false;
-            //}
         }
     }
-
-    //private int MoveSearch(int MovePow)
-    //{
-    //    Vector3 Posx1z = transform.position + new Vector3(1.0f, 0.0f, 0.0f);
-    //    Vector3 Posxz1 = transform.position + new Vector3(0.0f, 0.0f, 1.0f);
-    //    Vector3 Posx_1z = transform.position + new Vector3(-1.0f, 0.0f, 0.0f);
-    //    Vector3 Posxz_1 = transform.position + new Vector3(0.0f, 0.0f, -1.0f);
-
-    //    Instantiate(m_MoveSprite, Posx1z, new Quaternion());
-    //    Instantiate(m_MoveSprite, Posxz1, new Quaternion());
-    //    Instantiate(m_MoveSprite, Posx_1z, new Quaternion(90, 0, 0, 0));
-    //    Instantiate(m_MoveSprite, Posxz_1, new Quaternion(90, 0, 0, 0));
-
-    //    MovePow--;
-    //    return MovePow;
-    //}
 
     public void Attack()
     {

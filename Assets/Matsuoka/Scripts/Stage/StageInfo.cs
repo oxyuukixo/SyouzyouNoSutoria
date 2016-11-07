@@ -7,6 +7,7 @@ public class StageInfo : MonoBehaviour {
     public int[] position = new int[2];     // 位置,原点は(1,1) [0] = x.[1] = z
     public bool possible;                   // 障害物有る無し trueなら無し
     public GameObject charaCategory;        // 上にいるキャラクターの種類
+    public GameObject stageLook;            // マスの見た目(テクスチャの種類)
 
 	// Use this for initialization
 	void Start () {
