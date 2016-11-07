@@ -298,7 +298,7 @@ public class MapEditorWidow : EditorWindow
     void ChangeStage()
     {
         //オブジェクトを生成
-        GameObject RespawnObject = Instantiate(m_MapManager.m_StageObject);
+        GameObject RespawnObject = Instantiate(SelectObject.stageLook);
 
         m_MapManager.m_MapList[SelectObject.position[1]][SelectObject.position[0]] = RespawnObject;
 
@@ -325,7 +325,7 @@ public class MapEditorWidow : EditorWindow
         for (int HeightNum = 0; HeightNum < SelectObject.height; HeightNum++)
         {
             //オブジェクトを生成
-            ChildObject = Instantiate(m_MapManager.m_StageObject);
+            ChildObject = Instantiate(SelectObject.stageLook);
 
             //子オブジェクトにする
             ChildObject.transform.parent = RespawnObject.transform;
