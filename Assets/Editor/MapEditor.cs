@@ -41,6 +41,8 @@ public class MapEditorWidow : EditorWindow
 
     float IntervalY = 1;
 
+    float ObjectHeight = 1;
+
     [MenuItem("Window/MapEditorWindow")]
     public static void ShowWindow()
     {
@@ -80,8 +82,11 @@ public class MapEditorWidow : EditorWindow
                         {
                             CreateMap();
                         }
+
                     }
                     EditorGUILayout.EndHorizontal();
+
+                    ObjectHeight = EditorGUILayout.FloatField("HeightInterval", ObjectHeight);
 
                     EditorGUILayout.BeginHorizontal();
                     {
@@ -160,9 +165,18 @@ public class MapEditorWidow : EditorWindow
                     {
                         EditorGUILayout.BeginVertical(GUI.skin.box);
                         {
+                            EditorGUI.BeginChangeCheck();
+
                             EditorGUILayout.LabelField("Stage[" + SelectObject.position[0] + "][" + SelectObject.position[1] + "]");
 
                             SelectObject.height = EditorGUILayout.IntField("Height", SelectObject.height);
+
+                            SelectObject.stageLook = (GameObject)EditorGUILayout.ObjectField("MeshObj", SelectObject.stageLook, typeof(GameObject), true);
+
+                            if (EditorGUI.EndChangeCheck())
+                            {
+                                ChangeStage();
+                            }
                         }
                         EditorGUILayout.EndVertical();
                     }
@@ -203,9 +217,14 @@ public class MapEditorWidow : EditorWindow
 
                         m_MapManager.m_MapList[y].Add(RespawnObject);
 
+                        RespawnObject.AddComponent<StageInfo>();
+
+                        RespawnObject.GetComponent<StageInfo>().stageLook = m_MapManager.m_StageObject;
+
+                        RespawnObject.GetComponent<StageInfo>().height = 1;
+
                         //子オブジェクトにする
                         RespawnObject.transform.parent = m_MapManager.transform;
-
 
                         //生成時パラメーターの設定
                         RespawnObject.GetComponent<StageInfo>().position[0] = x;
@@ -242,6 +261,12 @@ public class MapEditorWidow : EditorWindow
 
                     m_MapManager.m_MapList[y].Add(RespawnObject);
 
+                    RespawnObject.AddComponent<StageInfo>();
+
+                    RespawnObject.GetComponent<StageInfo>().stageLook = m_MapManager.m_StageObject;
+
+                    RespawnObject.GetComponent<StageInfo>().height = 1;
+
                     //子オブジェクトにする
                     RespawnObject.transform.parent = m_MapManager.transform;
 
@@ -270,6 +295,50 @@ public class MapEditorWidow : EditorWindow
         }
     }
 
+    void ChangeStage()
+    {
+        //オブジェクトを生成
+        GameObject RespawnObject = Instantiate(m_MapManager.m_StageObject);
+
+        m_MapManager.m_MapList[SelectObject.position[1]][SelectObject.position[0]] = RespawnObject;
+
+        //子オブジェクトにする
+        RespawnObject.transform.parent = m_MapManager.transform;
+
+        RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(SelectObject.position[0] * IntervalX, (SelectObject.height -1) * ObjectHeight, SelectObject.position[1] * IntervalY);
+
+        RespawnObject.AddComponent<StageInfo>();
+
+        //生成時パラメーターの設定
+        RespawnObject.GetComponent<StageInfo>().position = SelectObject.position;
+
+        RespawnObject.GetComponent<StageInfo>().height = SelectObject.height;
+
+        RespawnObject.GetComponent<StageInfo>().possible = SelectObject.possible;
+
+        RespawnObject.GetComponent<StageInfo>().charaCategory = SelectObject.charaCategory;
+
+        RespawnObject.GetComponent<StageInfo>().stageLook = SelectObject.stageLook;
+
+        GameObject ChildObject;
+
+        for (int HeightNum = 0; HeightNum < SelectObject.height; HeightNum++)
+        {
+            //オブジェクトを生成
+            ChildObject = Instantiate(m_MapManager.m_StageObject);
+
+            //子オブジェクトにする
+            ChildObject.transform.parent = RespawnObject.transform;
+
+            ChildObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(SelectObject.position[0] * IntervalX, RespawnObject.transform.position.y - ObjectHeight * HeightNum, SelectObject.position[1] * IntervalY);
+        }
+
+        GameObject.DestroyImmediate(SelectObject.gameObject);
+
+        SelectObject = RespawnObject.GetComponent<StageInfo>();
+    }
+
+    //マップの間隔によるオブジェクトの生成
     void SetMapPossion()
     {
         for (int y = 0; y < m_MapManager.m_MapY; y++)

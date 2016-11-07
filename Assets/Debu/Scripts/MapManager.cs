@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class MapManager : MonoBehaviour
 {
+    //デフォルトで生成するオブジェクト
     public GameObject m_StageObject;
 
     //マップのサイズ
