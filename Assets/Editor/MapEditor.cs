@@ -23,6 +23,29 @@ public class MapEditor : Editor
             MapEditorWidow.m_MapManager = m_MapManager;
         }
     }
+
+    void OnEnable()
+    {
+        MapManager m_MapManager = target as MapManager;
+
+        for (int y = m_MapManager.m_MapList.Count; y < m_MapManager.m_MapY; y++)
+        {
+            m_MapManager.m_MapList.Add(new List<GameObject>());
+
+            for (int x = m_MapManager.m_MapList[y].Count; x < m_MapManager.m_MapX; x++)
+            {
+                m_MapManager.m_MapList[y].Add(null);
+            }
+        }
+
+        foreach (Transform child in m_MapManager.gameObject.transform)
+        {
+            StageInfo a = child.gameObject.GetComponent<StageInfo>();
+
+            m_MapManager.m_MapList[a.position[1]][a.position[0]] = child.gameObject;
+        }
+
+    }
 }
 
 
@@ -36,12 +59,6 @@ public class MapEditorWidow : EditorWindow
 
     //現在選択されているステージオブジェクト
     private StageInfo SelectObject;
-
-    float IntervalX = 1;
-
-    float IntervalY = 1;
-
-    float ObjectHeight = 1;
 
     [MenuItem("Window/MapEditorWindow")]
     public static void ShowWindow()
@@ -86,22 +103,22 @@ public class MapEditorWidow : EditorWindow
                     }
                     EditorGUILayout.EndHorizontal();
 
-                    ObjectHeight = EditorGUILayout.FloatField("HeightInterval", ObjectHeight);
+                    m_MapManager.ObjectHeight = EditorGUILayout.FloatField("HeightInterval", m_MapManager.ObjectHeight);
 
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUI.BeginChangeCheck();
 
-                        float TempX = EditorGUILayout.FloatField("IntervalX", IntervalX);
+                        float TempX = EditorGUILayout.FloatField("IntervalX", m_MapManager.IntervalX);
 
-                        float TempY = EditorGUILayout.FloatField("IntervalY", IntervalY);
+                        float TempY = EditorGUILayout.FloatField("IntervalY", m_MapManager.IntervalY);
 
                         //間隔がマイナスになっていたら変更しない
                         if (TempX > 0 && TempY > 0)
                         {
-                            IntervalX = TempX;
+                            m_MapManager.IntervalX = TempX;
 
-                            IntervalY = TempY;
+                            m_MapManager.IntervalY = TempY;
                         }
 
                         //オブジェクトの数が変わっていたら変更する
@@ -125,8 +142,8 @@ public class MapEditorWidow : EditorWindow
 
                         m_MapManager.m_MapX = 0;
                         m_MapManager.m_MapY = 0;
-                        IntervalX = 1;
-                        IntervalY = 1;
+                        m_MapManager.IntervalX = 1;
+                        m_MapManager.IntervalY = 1;
                     }
                 }
                 EditorGUILayout.EndVertical();
@@ -200,6 +217,8 @@ public class MapEditorWidow : EditorWindow
                 break;
             }
         }
+
+        EditorGUI.FocusTextInControl(null);
     }
 
     void CreateMap()
@@ -229,7 +248,7 @@ public class MapEditorWidow : EditorWindow
                         //生成時パラメーターの設定
                         RespawnObject.GetComponent<StageInfo>().position[0] = x;
                         RespawnObject.GetComponent<StageInfo>().position[1] = y;
-                        RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * IntervalX, 0, y * IntervalY);
+                        RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * m_MapManager.IntervalX, 0, y * m_MapManager.IntervalY);
                     }
                 }
             }
@@ -275,7 +294,7 @@ public class MapEditorWidow : EditorWindow
 
                     RespawnObject.GetComponent<StageInfo>().position[1] = y;
 
-                    RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * IntervalX, 0, y * IntervalY);
+                    RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * m_MapManager.IntervalX, 0, y * m_MapManager.IntervalY);
                 }
             }
         }
@@ -293,6 +312,8 @@ public class MapEditorWidow : EditorWindow
                 m_MapManager.m_MapList.Remove(m_MapManager.m_MapList[y]);
             }
         }
+
+        EditorGUI.FocusTextInControl(null);
     }
 
     void ChangeStage()
@@ -305,7 +326,7 @@ public class MapEditorWidow : EditorWindow
         //子オブジェクトにする
         RespawnObject.transform.parent = m_MapManager.transform;
 
-        RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(SelectObject.position[0] * IntervalX, (SelectObject.height -1) * ObjectHeight, SelectObject.position[1] * IntervalY);
+        RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(SelectObject.position[0] * m_MapManager.IntervalX, (SelectObject.height - 1) * m_MapManager.ObjectHeight, SelectObject.position[1] * m_MapManager.IntervalY);
 
         RespawnObject.AddComponent<StageInfo>();
 
@@ -330,12 +351,20 @@ public class MapEditorWidow : EditorWindow
             //子オブジェクトにする
             ChildObject.transform.parent = RespawnObject.transform;
 
-            ChildObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(SelectObject.position[0] * IntervalX, RespawnObject.transform.position.y - ObjectHeight * HeightNum, SelectObject.position[1] * IntervalY);
+            ChildObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(SelectObject.position[0] * m_MapManager.IntervalX, RespawnObject.transform.position.y - m_MapManager.ObjectHeight * HeightNum, SelectObject.position[1] * m_MapManager.IntervalY);
         }
 
         GameObject.DestroyImmediate(SelectObject.gameObject);
 
         SelectObject = RespawnObject.GetComponent<StageInfo>();
+
+        List<Object> objects = new List<Object>();
+
+        objects.Add(SelectObject.gameObject);
+
+        Selection.objects = objects.ToArray();
+
+        EditorGUI.FocusTextInControl(null);
     }
 
     //マップの間隔によるオブジェクトの生成
@@ -343,10 +372,12 @@ public class MapEditorWidow : EditorWindow
     {
         for (int y = 0; y < m_MapManager.m_MapY; y++)
         {
-            for (int x = 0;x < m_MapManager.m_MapX;x++)
+            for (int x = 0; x < m_MapManager.m_MapX; x++)
             {
-                m_MapManager.m_MapList[y][x].transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * IntervalX, 0, y * IntervalY);
+                m_MapManager.m_MapList[y][x].transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * m_MapManager.IntervalX, 0, y * m_MapManager.IntervalY);
             }
         }
+
+        EditorGUI.FocusTextInControl(null);
     }
 }
