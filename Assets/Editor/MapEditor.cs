@@ -349,7 +349,7 @@ public class MapEditorWidow : EditorWindow
             //子オブジェクトにする
             ChildObject.transform.parent = RespawnObject.transform;
 
-            ChildObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(SelectObject.position[0] * m_MapManager.IntervalX, RespawnObject.transform.position.y - m_MapManager.ObjectHeight * HeightNum, SelectObject.position[1] * m_MapManager.IntervalY);
+            ChildObject.transform.position = new Vector3(SelectObject.position[0] * m_MapManager.IntervalX, RespawnObject.transform.position.y - m_MapManager.ObjectHeight * HeightNum, SelectObject.position[1] * m_MapManager.IntervalY);
         }
 
         GameObject.DestroyImmediate(SelectObject.gameObject);
