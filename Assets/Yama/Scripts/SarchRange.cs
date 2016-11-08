@@ -56,7 +56,7 @@ public class SarchRange : MonoBehaviour {
     public static Vector2[] SarchMoveRoute(GameObject[][] stage, GameObject character, GameObject movePosition, int moveRange)
     {
         Vector2[] moveRoute;            //移動経路
-        List<Vector2> moveRouteDammy;       //移動経路のダミー
+        List<Vector2> moveRouteDammy;   //移動経路のダミー
         Vector2 characterPosition;      //キャラクター座標
         Vector2 position;               //移動先の座標
         int moveRangeMin;
@@ -74,7 +74,6 @@ public class SarchRange : MonoBehaviour {
     List<Vector2> moveRouteDammy, int moveRange, int moveRangeMin, int moveRageMax)
     {
         Vector2 sarchPosition;      //探索座標
-        sarchPosition = characterPosition;
         //キャラクター座標と移動先の座標が一致していたら
         if(characterPosition == position)
         {
@@ -92,7 +91,8 @@ public class SarchRange : MonoBehaviour {
         if (moveRange <= 0) return;
         for (SarchDirection i = SarchDirection.top; i < SarchDirection.number; i++)
         {
-            if (!SarchPosition(stage, sarchPosition, position, i)) continue;
+            sarchPosition = characterPosition;
+            if (!SarchPosition(stage, sarchPosition, position, i)) continue;     
             moveRouteDammy.Add(sarchPosition);
             SarchRoute(stage, sarchPosition, position, moveRoute, moveRouteDammy, moveRange, moveRangeMin - 1, moveRageMax);
             moveRouteDammy.RemoveAt(moveRouteDammy.Count - 1);
@@ -125,6 +125,7 @@ public class SarchRange : MonoBehaviour {
             default:
                 break;
         }
+        //高さの差の絶対値を出す
         height = Mathf.Abs(stage[(int)sarchPosition.y][(int)sarchPosition.x].GetComponent<StageInfo>().height
             - stage[(int)position.y][(int)position.x].GetComponent<StageInfo>().height);
         if (stage[(int)sarchPosition.y][(int)sarchPosition.x] == null) return false;

@@ -20,30 +20,30 @@ public class BattleMain : MonoBehaviour
     void Start()
     {
         // 配置元のオブジェクト指定
-        GameObject stageObject = GameObject.FindWithTag("Stage");
-        // ステージ配置
-        for (int i = 0; i < 20; i++)
-        {
-            for (int j = 0; j < 20; j++)
-            {
-                Vector3 tile_pos = new Vector3(
-                    0 + prefabNormal.transform.localScale.x * i,
-                    0,
-                    0 + prefabNormal.transform.localScale.z * j
+        //GameObject stageObject = GameObject.FindWithTag("Stage");
+        //// ステージ配置
+        //for (int i = 0; i < 20; i++)
+        //{
+        //    for (int j = 0; j < 20; j++)
+        //    {
+        //        Vector3 tile_pos = new Vector3(
+        //            0 + prefabNormal.transform.localScale.x * i,
+        //            0,
+        //            0 + prefabNormal.transform.localScale.z * j
 
-                  );
+        //          );
 
-                if (prefabNormal != null)
-                {
-                    // プレハブの複製 
-                    GameObject instant_object =
-                      (GameObject)GameObject.Instantiate(prefabNormal,
-                                                          tile_pos, Quaternion.identity);
-                    // 生成元の下に複製したプレハブをくっつける 
-                    instant_object.transform.parent = stageObject.transform;
-                }
-            }
-        }
+        //        if (prefabNormal != null)
+        //        {
+        //            // プレハブの複製 
+        //            GameObject instant_object =
+        //              (GameObject)GameObject.Instantiate(prefabNormal,
+        //                                                  tile_pos, Quaternion.identity);
+        //            // 生成元の下に複製したプレハブをくっつける
+        //            instant_object.transform.parent = stageObject.transform;
+        //        }
+        //    }
+        //}
         // 生成元の下に複製したプレハブをくっつける
         //Vector3 tile_pos = new Vector3(
         //-1 + prefabNormal.transform.localScale.x,
@@ -85,8 +85,9 @@ public class BattleMain : MonoBehaviour
                     // ステージ上
                     if (hit.collider.gameObject.tag == "Stage")
                     {
+                        StageInfo stage = hit.collider.gameObject.GetComponentInParent<StageInfo>();
                         Player[m_iPlayerNum].SetActive(true);
-                        Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
+                        Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
                         m_iPlayerNum++;
                     }
                 }

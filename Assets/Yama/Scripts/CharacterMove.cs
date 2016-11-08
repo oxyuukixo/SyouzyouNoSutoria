@@ -4,26 +4,39 @@ using System.Collections;
 public class CharacterMove : MonoBehaviour {
 
     public GameObject[][] m_stage;
-    public GameObject m_movePoint;      //移動場所
     public float m_speed;               //移動速度
     public bool m_move;                 //移動判定
 
     private Vector2[] m_moveRoute;      //移動ルート
     private int m_routeCount;           //移動ルート番号
 
-	//フレーム単位で更新
-	void Update ()
+    private MapManager m_MMClass;
+
+    void Start()
+    {
+        m_routeCount = 0;
+        m_MMClass = GameObject.Find("Stage").GetComponent<MapManager>();
+
+        m_stage = new GameObject[m_MMClass.m_MapList.Count][];
+        for (int i = 0; i < m_MMClass.m_MapList.Count; i++)
+        {
+            m_stage[i] = m_MMClass.m_MapList[i].ToArray();
+        }
+    }
+
+	//移動
+	public void Move()
     {
         if (!m_move) return;
-        Move();
+        MoveLenge();
         if (m_moveRoute.Length != m_routeCount) return;
         m_move = false;
         m_moveRoute = null;
         m_routeCount = 0;
 	}
 
-    //移動
-    void Move()
+    //移動距離を出して移動
+    void MoveLenge()
     {
         Vector2 movePoint;          //移動地点
         Vector2 moveLouteLenge;     //移動ルートまでの距離
@@ -59,9 +72,9 @@ public class CharacterMove : MonoBehaviour {
     }
 
     //移動ルートを検索する
-    void SelectMovePoiont()
+    public void SelectMovePoiont(GameObject movePoint)
     {
-        m_moveRoute = SarchRange.SarchMoveRoute(m_stage, gameObject, m_movePoint, GetComponent<Status>().MOV);
+        m_moveRoute = SarchRange.SarchMoveRoute(m_stage, gameObject, movePoint, GetComponent<Status>().MOV);
         m_move = true;
     }
 }

@@ -22,11 +22,27 @@ public class MapManager : MonoBehaviour
     public float IntervalY = 1;
 
     public float ObjectHeight = 1;
-
+    
     // Use this for initialization
-    void Start()
+    void Awake()
     {
-        
+
+        for (int y = m_MapList.Count; y < m_MapY; y++)
+        {
+            m_MapList.Add(new List<GameObject>());
+
+            for (int x = m_MapList[y].Count; x < m_MapX; x++)
+            {
+                m_MapList[y].Add(null);
+            }
+        }
+
+        foreach (Transform child in gameObject.transform)
+        {
+            StageInfo a = child.gameObject.GetComponent<StageInfo>();
+
+            m_MapList[a.position[1]][a.position[0]] = child.gameObject;
+        }
     }
 
     // Update is called once per frame

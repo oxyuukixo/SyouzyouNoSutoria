@@ -8,7 +8,7 @@ enum PlayerNumber
     Default,
     Leo,
     Mashira,
-    Lune,
+    Ryunne,
     Akane,
     Ciel,
     Ignir
@@ -42,6 +42,7 @@ public class CharaControl : MonoBehaviour {
     Status m_StatusClass;
     StageInfo m_StageInfoClass;
     CameraControl m_CamCtrlClass;
+    CharacterMove m_CharaMoveClass;
 
     // 彩術用
     //一度に壁を置ける数
@@ -74,6 +75,7 @@ public class CharaControl : MonoBehaviour {
         m_CamCtrlClass = GameObject.Find("Camera").GetComponent<CameraControl>();
         m_StatusClass = GetComponent<Status>();
         m_StageInfoClass = GetComponent<StageInfo>();
+        m_CharaMoveClass = GetComponent<CharacterMove>();
 
         // 彩術用
         InstWall = new GameObject[WallMaxNum];
@@ -119,6 +121,8 @@ public class CharaControl : MonoBehaviour {
                 Psy();
                 break;
         }
+
+        m_CharaMoveClass.Move();    // 移動
     }
 
     public void Idle()
@@ -203,7 +207,7 @@ public class CharaControl : MonoBehaviour {
                     break;
                 case 3: // リュンヌ
                     m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[1].enabled = true;
+                    m_UIClass.m_Status[2].enabled = true;
 
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
@@ -225,7 +229,7 @@ public class CharaControl : MonoBehaviour {
                     break;
                 case 4: // 紅音
                     m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[1].enabled = true;
+                    m_UIClass.m_Status[3].enabled = true;
 
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
@@ -314,7 +318,11 @@ public class CharaControl : MonoBehaviour {
         {
             iPlayerNum = (int)PlayerNumber.Mashira;
         }
-        if(obj.name == "Akane")
+        if(obj.name == "Ryunne")
+        {
+            iPlayerNum = (int)PlayerNumber.Ryunne;
+        }
+        if (obj.name == "Akane")
         {
             iPlayerNum = (int)PlayerNumber.Akane;
         }
@@ -362,7 +370,7 @@ public class CharaControl : MonoBehaviour {
                 CharactorNumber(hit.collider.gameObject);
                 if (oldMapChip != null)
                 {
-                    StageInfo oldStage = oldMapChip.GetComponent<StageInfo>();
+                    StageInfo oldStage = oldMapChip.gameObject.GetComponent<StageInfo>();
                     oldStage.possible = false;
                 }
                 StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
@@ -371,7 +379,9 @@ public class CharaControl : MonoBehaviour {
                 // ステージ上
                 if (iPlayerNum == (int)PlayerNumber.Default)
                 {
-                    m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
+                    m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject);
+
+                    //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
                     m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
                     m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
 
