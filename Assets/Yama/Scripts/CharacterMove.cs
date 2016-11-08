@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CharacterMove : MonoBehaviour {
 
+    private const float m_space = 0.5f;
+
     public GameObject[][] m_stage;
     public float m_speed;               //移動速度
     public bool m_move;                 //移動判定
@@ -40,6 +42,7 @@ public class CharacterMove : MonoBehaviour {
     {
         Vector2 movePoint;          //移動地点
         Vector2 moveLouteLenge;     //移動ルートまでの距離
+        Vector3 stagePosition;      //ステージポジション
         int stageX;                 //ステージX
         int stageY;                 //ステージY
         float height;               //高さ
@@ -48,26 +51,38 @@ public class CharacterMove : MonoBehaviour {
         float radian;               //ラジアン角
         stageX = (int)m_moveRoute[m_routeCount].x;
         stageY = (int)m_moveRoute[m_routeCount].y;
+        stagePosition = new Vector3
+        (
+            m_stage[stageY][stageX].transform.position.x + m_space,
+            m_stage[stageY][stageX].transform.position.y + m_space,
+            m_stage[stageY][stageX].transform.position.z + m_space
+        );
+        //バグ回避
+        if (gameObject.transform.position == stagePosition)
+        {
+            m_routeCount++;
+            return;
+        }
         moveLouteLenge = new Vector2
         (
-         gameObject.transform.position.z - m_stage[stageY][stageX].transform.position.z,
-         gameObject.transform.position.x - m_stage[stageY][stageX].transform.position.x
+         gameObject.transform.position.x - stagePosition.x,
+         gameObject.transform.position.z - stagePosition.z
         );
         radian = Mathf.Atan2(moveLouteLenge.y, moveLouteLenge.x);
         routeLenge = Mathf.Abs(Mathf.Sqrt(Mathf.Pow(moveLouteLenge.y, 2) + Mathf.Pow(moveLouteLenge.x, 2)));
         //自分の座標と移動座標の差が移動速度未満だったら
         if (routeLenge < m_speed) speed = routeLenge;
         else speed = m_speed;
-        movePoint.x = gameObject.transform.position.x + Mathf.Cos(radian) * speed;
-        movePoint.y = gameObject.transform.position.z + Mathf.Sin(radian) * speed;
-        height = m_stage[Mathf.RoundToInt(movePoint.y)][Mathf.RoundToInt(movePoint.x)].transform.position.y;
+        movePoint.x = gameObject.transform.position.x - Mathf.Cos(radian) * speed;
+        movePoint.y = gameObject.transform.position.z - Mathf.Sin(radian) * speed;
+        height = m_stage[Mathf.RoundToInt(movePoint.y - m_space)][Mathf.RoundToInt(movePoint.x - m_space)].transform.position.y + m_space;
         gameObject.transform.position = new Vector3
         (
          movePoint.x,
          height,
          movePoint.y
         );
-        if (gameObject.transform.position != m_stage[stageY][stageX].transform.position) return;
+        if (gameObject.transform.position != stagePosition) return;
         m_routeCount++;
     }
 

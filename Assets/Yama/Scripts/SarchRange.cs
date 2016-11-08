@@ -63,7 +63,7 @@ public class SarchRange : MonoBehaviour {
         moveRoute = new Vector2[moveRange];
         moveRouteDammy = new List<Vector2>();
         characterPosition = new Vector2(character.transform.position.x, character.transform.position.z);
-        position = new Vector2(movePosition.transform.position.x, movePosition.transform.position.z);
+        position = new Vector2(movePosition.transform.position.x + 0.5f, movePosition.transform.position.z + 0.5f);
         moveRangeMin = moveRange;
         SarchRoute(stage, characterPosition, position, moveRoute, moveRouteDammy, moveRange, moveRangeMin, moveRange);
         return moveRoute;
@@ -78,7 +78,7 @@ public class SarchRange : MonoBehaviour {
         if(characterPosition == position)
         {
             //移動量の最小値を移動回数が超えたら何もしない
-            if (moveRangeMin > moveRageMax - moveRange) return;
+            if (moveRangeMin < moveRageMax - moveRange) return;
             moveRangeMin = moveRageMax - moveRange;
             moveRoute = moveRouteDammy.ToArray();
             return;
@@ -86,7 +86,7 @@ public class SarchRange : MonoBehaviour {
         //移動先の座標とキャラクター座標の差が移動量を超えたら何もしない
         if (Mathf.Abs((int)(characterPosition.x - position.x) + Mathf.Abs(characterPosition.y - position.y)) > moveRange) return;
         //移動量の最小値を移動回数が超えたら何もしない
-        if (moveRangeMin > moveRageMax - moveRange) return;
+        if (moveRangeMin < moveRageMax - moveRange) return;
         //移動量がなくなったら何もしない
         if (moveRange <= 0) return;
         for (SarchDirection i = SarchDirection.top; i < SarchDirection.number; i++)
@@ -107,20 +107,16 @@ public class SarchRange : MonoBehaviour {
         switch (sarch)
         {
             case SarchDirection.top:
-                sarchPosition.x = position.x;
-                if ((sarchPosition.y = position.y + 1.0f) >= stage[0].Length) return false;
+                if ((sarchPosition.y += 1.0f) >= stage.Length) return false;
                 break;
             case SarchDirection.left:
-                if ((sarchPosition.x = position.x - 1.0f) < 0) return false;
-                sarchPosition.y = position.y;
+                if ((sarchPosition.x -= 1.0f) < 0) return false;
                 break;
             case SarchDirection.bottom:
-                sarchPosition.x = position.x;
-                if ((sarchPosition.y = position.y - 1.0f) < 0) return false;
+                if ((sarchPosition.y -= 1.0f) < 0) return false;
                 break;
             case SarchDirection.right:
-                if ((sarchPosition.x = position.x + 1.0f) >= stage.Length) return false;
-                sarchPosition.y = position.y;
+                if ((sarchPosition.x += 1.0f) >= stage[0].Length) return false;
                 break;
             default:
                 break;
