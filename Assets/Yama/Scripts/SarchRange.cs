@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SarchRange : MonoBehaviour {
 
@@ -55,24 +56,22 @@ public class SarchRange : MonoBehaviour {
     public static Vector2[] SarchMoveRoute(GameObject[][] stage, GameObject character, GameObject movePosition, int moveRange)
     {
         Vector2[] moveRoute;            //移動経路
-        Vector2[] moveRouteDammy;       //移動経路のダミー
+        List<Vector2> moveRouteDammy;       //移動経路のダミー
         Vector2 characterPosition;      //キャラクター座標
         Vector2 position;               //移動先の座標
         int moveRangeMin;
         moveRoute = new Vector2[moveRange];
-        moveRouteDammy = new Vector2[moveRange];
+        moveRouteDammy = new List<Vector2>();
         characterPosition = new Vector2(character.transform.position.x, character.transform.position.z);
         position = new Vector2(movePosition.transform.position.x, movePosition.transform.position.z);
         moveRangeMin = moveRange;
-
         SarchRoute(stage, characterPosition, position, moveRoute, moveRouteDammy, moveRange, moveRangeMin, moveRange);
-
         return moveRoute;
     }
 
     //最短の移動経路を出す
     private static void SarchRoute(GameObject[][] stage, Vector2 characterPosition, Vector2 position, Vector2[] moveRoute,
-    Vector2[] moveRouteDammy, int moveRange, int moveRangeMin, int moveRageMax)
+    List<Vector2> moveRouteDammy, int moveRange, int moveRangeMin, int moveRageMax)
     {
         Vector2 sarchPosition;      //探索座標
         sarchPosition = characterPosition;
@@ -82,7 +81,7 @@ public class SarchRange : MonoBehaviour {
             //移動量の最小値を移動回数が超えたら何もしない
             if (moveRangeMin > moveRageMax - moveRange) return;
             moveRangeMin = moveRageMax - moveRange;
-            moveRoute = moveRouteDammy;
+            moveRoute = moveRouteDammy.ToArray();
             return;
         }
         //移動先の座標とキャラクター座標の差が移動量を超えたら何もしない
@@ -94,9 +93,9 @@ public class SarchRange : MonoBehaviour {
         for (SarchDirection i = SarchDirection.top; i < SarchDirection.number; i++)
         {
             if (!SarchPosition(stage, sarchPosition, position, i)) continue;
-            moveRouteDammy[moveRageMax - moveRange] = sarchPosition;
-
+            moveRouteDammy.Add(sarchPosition);
             SarchRoute(stage, sarchPosition, position, moveRoute, moveRouteDammy, moveRange, moveRangeMin - 1, moveRageMax);
+            moveRouteDammy.RemoveAt(moveRouteDammy.Count - 1);
         }
         return;
     }
