@@ -312,8 +312,6 @@ public class MapEditorWidow : EditorWindow
                 m_MapManager.m_MapList.Remove(m_MapManager.m_MapList[y]);
             }
         }
-
-        EditorGUI.FocusTextInControl(null);
     }
 
     void ChangeStage()
@@ -343,7 +341,7 @@ public class MapEditorWidow : EditorWindow
 
         GameObject ChildObject;
 
-        for (int HeightNum = 0; HeightNum < SelectObject.height; HeightNum++)
+        for (int HeightNum = 1; HeightNum < SelectObject.height; HeightNum++)
         {
             //オブジェクトを生成
             ChildObject = Instantiate(SelectObject.stageLook);
