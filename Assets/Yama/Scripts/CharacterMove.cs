@@ -14,6 +14,7 @@ public class CharacterMove : MonoBehaviour {
 
     private MapManager m_MMClass;
 
+    //初期化
     void Start()
     {
         m_routeCount = 0;
@@ -73,8 +74,14 @@ public class CharacterMove : MonoBehaviour {
         //自分の座標と移動座標の差が移動速度未満だったら
         if (routeLenge < m_speed) speed = routeLenge;
         else speed = m_speed;
-        movePoint.x = gameObject.transform.position.x - Mathf.Cos(radian) * speed;
-        movePoint.y = gameObject.transform.position.z - Mathf.Sin(radian) * speed;
+        movePoint.x = - Mathf.Cos(radian) * speed;
+        movePoint.y = - Mathf.Sin(radian) * speed;
+        if (movePoint.x > 0) gameObject.GetComponent<Status>().DIRECTION = Direction.right;
+        else if (movePoint.x < 0) gameObject.GetComponent<Status>().DIRECTION = Direction.left;
+        if (movePoint.x > 0) gameObject.GetComponent<Status>().DIRECTION = Direction.top;
+        else if (movePoint.y < 0) gameObject.GetComponent<Status>().DIRECTION = Direction.bottom;
+        movePoint.x += gameObject.transform.position.x;
+        movePoint.y += gameObject.transform.position.z;
         height = m_stage[Mathf.RoundToInt(movePoint.y - m_space)][Mathf.RoundToInt(movePoint.x - m_space)].transform.position.y + m_space;
         gameObject.transform.position = new Vector3
         (
@@ -90,6 +97,7 @@ public class CharacterMove : MonoBehaviour {
     public void SelectMovePoiont(GameObject movePoint)
     {
         m_moveRoute = SarchRange.SarchMoveRoute(m_stage, gameObject, movePoint, GetComponent<Status>().MOV);
+        if (m_moveRoute == null) return;
         m_move = true;
     }
 }
