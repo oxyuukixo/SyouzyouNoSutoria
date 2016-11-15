@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SarchRange : MonoBehaviour {
 
-    private static bool[][] sarchRange;        //探索範囲
+    private static bool[][] m_sarchRange;        //探索範囲
     private static Vector2[] m_moveRoute;   //移動ルート
     private static float m_moveMin;         //最小値
 
@@ -24,21 +24,19 @@ public class SarchRange : MonoBehaviour {
        
         Vector2 position;           //探索地点
         position = new Vector2(character.transform.position.x, character.transform.position.z);
-        sarchRange = new bool[stage.Length][];
+        m_sarchRange = null;
+        m_sarchRange = new bool[stage.Length][];
         for (int i = 0; i < stage.Length; i++) 
         {
-            sarchRange[i] = new bool[stage[i].Length];
+            m_sarchRange[i] = new bool[stage[i].Length];
             for (int j = 0; j < stage[0].Length; j++) 
             {
-                sarchRange[i][j] = false;
+                m_sarchRange[i][j] = false;
             }
         }
-        sarchRange[(int)position.y][(int)position.x] = true;
-
+        m_sarchRange[(int)position.y][(int)position.x] = true;
         Sarch(stage, position, moveRange);
-
-        sarchRange = null;
-        return sarchRange;
+        return m_sarchRange;
     }
 
     //探索をする
@@ -50,7 +48,7 @@ public class SarchRange : MonoBehaviour {
         {
             sarchPosition = SarchPosition(stage, position, i);
             if (sarchPosition == position) continue;
-            sarchRange[(int)sarchPosition.y][(int)sarchPosition.x] = true;
+            m_sarchRange[Mathf.FloorToInt(sarchPosition.y)][Mathf.FloorToInt(sarchPosition.x)] = true;
 
             Sarch(stage, sarchPosition, moveRange - 1);
         }

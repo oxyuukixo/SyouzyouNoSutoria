@@ -5,7 +5,7 @@ public class CharacterMove : MonoBehaviour {
 
     private const float m_space = 0.5f;
 
-    public GameObject[][] m_stage;
+    public GameObject[][] m_stage;      //ステージデータ
     public float m_speed;               //移動速度
     public bool m_move;                 //移動判定
 
@@ -36,6 +36,7 @@ public class CharacterMove : MonoBehaviour {
         m_move = false;
         m_moveRoute = null;
         m_routeCount = 0;
+        MoveArea.ResetMoveArea();
 	}
 
     //移動距離を出して移動
