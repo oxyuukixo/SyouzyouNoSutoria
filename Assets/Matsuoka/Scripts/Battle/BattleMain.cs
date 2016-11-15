@@ -85,13 +85,12 @@ public class BattleMain : MonoBehaviour
                     // ステージ上
                     if (hit.collider.gameObject.tag == "Stage")
                     {
-                        StageInfo stage = hit.collider.gameObject.GetComponentInParent<StageInfo>();
+                        StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
                         Player[m_iPlayerNum].SetActive(true);
-                        Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
+                        Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
                         m_iPlayerNum++;
                     }
                 }
-
             }
         }
         m_UIClass.m_Turn.text = TurnElapsedNum.ToString();
