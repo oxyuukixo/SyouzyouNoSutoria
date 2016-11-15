@@ -95,10 +95,11 @@ public class CharacterMove : MonoBehaviour {
     }
 
     //移動ルートを検索する
-    public void SelectMovePoiont(GameObject movePoint)
+    public bool SelectMovePoiont(GameObject movePoint)
     {
         m_moveRoute = SarchRange.SarchMoveRoute(m_stage, gameObject, movePoint, GetComponent<Status>().MOV);
-        if (m_moveRoute == null) return;
+        if (m_moveRoute == null) return false;
         m_move = true;
+        return true;
     }
 }
