@@ -1,3 +1,16 @@
-*1 Player1**2 Player2*$1 Leo_nomal$$2 Mashira_nomal$
-てすとだよおおおおおおおおおおおお@#
-てへぺろ#
+*1 レオ**2 マシラ*
+$1 Leo/Leo_nomal$$2 Mashira/Mashira_nomal$
+テキストのテスト@|
+レオが笑うよ@$1 Leo/Leo_laugh$@|
+キャラの場所を入れ替えたり@#
+*1 マシラ**2 レオ*
+$1 Mashira/Mashira_nomal$$2 Leo/Leo_nomal$@
+キャラクターの画像を変えることもできます!@
+*1 アカネ*
+$1 Akane/Akane_normal$@|
+追加してほしい機能があったら教えてください！@|
+テスト終わり！！@
+
+
+
+

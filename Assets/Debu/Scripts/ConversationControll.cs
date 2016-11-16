@@ -63,9 +63,6 @@ public class ConversationControll : MonoBehaviour {
     //入力待ちをするかどうかのフラグ
     private bool m_IsWait = false;
 
-    //フォントサイズに足すテキストボックスの幅
-    private int m_BoxOffset = 3;
-
     //前の文字を表示してからの時間
     private float m_ReadCurrentTime;
 
@@ -81,6 +78,9 @@ public class ConversationControll : MonoBehaviour {
     //スクロールするかどうかのフラグ
     private bool m_IsScroll = false;
 
+    //テキストをすべてクリアするかのフラグ(すべてスクロールさせる)
+    private bool m_IsListClear = false;
+
     // Use this for initialization
     void Start () {
 
@@ -88,15 +88,13 @@ public class ConversationControll : MonoBehaviour {
 
         m_GraphicPath = "Conversation/";
 
-        //TextRead();
+        TextRead();
 
         if (m_Use2byte)
         {
             m_WeightNum *= 2;
         }
         
-        m_Text = "aaaあふぁaddddddddd@dd、、、。、、、、tttttttt、、dddふぇ*1 testKUN*あっふ$1 Leo/Leo_laugh$ぇあふぁ@sffaf#gaｓ\n\nｇ@ｓ@";
-
         CreateTextBox();
     }
 	
@@ -106,6 +104,10 @@ public class ConversationControll : MonoBehaviour {
         if(m_IsScroll)
         {
             ScrollText();
+        }
+        else if(m_IsListClear)
+        {
+            ListClear();
         }
         //入力待ちじゃなかったら
         else if(!m_IsWait && !m_IsFinish)
@@ -176,19 +178,19 @@ public class ConversationControll : MonoBehaviour {
         RectTransform RTransform = NewTextBox.AddComponent<RectTransform>();
         Text TextComp = NewTextBox.AddComponent<Text>();
 
-        //基準となる座標を左上にする
-        RTransform.position = new Vector3(0, -(m_FontSize + m_BoxOffset) * m_TextLIst.Count, 0);
-        RTransform.sizeDelta = new Vector2(m_TextBox.GetComponent<RectTransform>().rect.width, m_FontSize + m_BoxOffset);
-        RTransform.anchorMin = new Vector2(0, 1);
-        RTransform.anchorMax = new Vector2(0, 1);
-        RTransform.pivot = new Vector2(0, 1);
-
         //パラメーターを設定
         TextComp.font = m_Font;
         TextComp.fontStyle = m_FontStyle;
         TextComp.fontSize = m_FontSize;
         TextComp.supportRichText = m_IsRichText;
         TextComp.color = m_Color;
+
+        //基準となる座標を左上にする
+        RTransform.position = new Vector3(0, -(TextComp.preferredHeight) * m_TextLIst.Count, 0);
+        RTransform.sizeDelta = new Vector2(m_TextBox.GetComponent<RectTransform>().rect.width,TextComp.preferredHeight);
+        RTransform.anchorMin = new Vector2(0, 1);
+        RTransform.anchorMax = new Vector2(0, 1);
+        RTransform.pivot = new Vector2(0, 1);
 
         NewTextBox.transform.SetParent(m_TextBox.transform,false);
         m_TextLIst.Add(NewTextBox);
@@ -198,6 +200,8 @@ public class ConversationControll : MonoBehaviour {
     void AddText()
     {
         m_TextLIst[m_TextLIst.Count - 1].GetComponent<Text>().text += m_Text[m_CurrentTextNum];
+
+        char a = m_Text[m_CurrentTextNum];
 
         m_WeightCurrentNum += m_EncodingShiftJIS.GetByteCount(m_Text[m_TextLIst.Count - 1].ToString());
 
@@ -210,9 +214,9 @@ public class ConversationControll : MonoBehaviour {
         {
             m_TextLIst[i].GetComponent<RectTransform>().localPosition += new Vector3(0, m_ScrollSpeed, 0);
 
-            if (m_TextLIst[i].GetComponent<RectTransform>().localPosition.y >= -(m_FontSize + m_BoxOffset) * (i - 1))
+            if (m_TextLIst[i].GetComponent<RectTransform>().localPosition.y >= -(m_TextLIst[i].GetComponent<Text>().preferredHeight) * (i - 1))
             {
-                m_TextLIst[i].GetComponent<RectTransform>().localPosition = new Vector2(0, -(m_FontSize + m_BoxOffset) * (i - 1));
+                m_TextLIst[i].GetComponent<RectTransform>().localPosition = new Vector2(0, -(m_TextLIst[i].GetComponent<Text>().preferredHeight) * (i - 1));
 
                 m_IsScroll = false;
             }
@@ -225,11 +229,36 @@ public class ConversationControll : MonoBehaviour {
         }
     }
 
+    void ListClear()
+    {
+        for (int i = 0; i < m_TextLIst.Count && i >= 0; i++)
+        {
+            m_TextLIst[i].GetComponent<RectTransform>().localPosition += new Vector3(0, m_ScrollSpeed, 0);
+
+            if (m_TextLIst[i].GetComponent<RectTransform>().localPosition.y >= -(m_TextLIst[i].GetComponent<Text>().preferredHeight) * (i - 1))
+            {
+                Destroy(m_TextLIst[i]);
+
+                m_TextLIst.RemoveAt(i);
+
+                i--;
+            }
+        }
+
+        if (m_TextLIst.Count == 0)
+        {
+            m_IsListClear = false;
+
+            CreateTextBox();
+        }
+    }
+   
     //通常文字かのチェック
     bool CheckWord()
     {
        switch(m_Text[m_CurrentTextNum])
         {
+            case '\r':
             case '\n':
 
                 m_CurrentTextNum++;
@@ -246,6 +275,16 @@ public class ConversationControll : MonoBehaviour {
                 {
                     m_IsScroll = true;
                 }
+
+                m_CurrentTextNum++;
+
+                break;
+
+            case '|':
+
+                m_IsListClear = true;
+
+                m_WeightCurrentNum = 0;
 
                 m_CurrentTextNum++;
 
@@ -307,6 +346,10 @@ public class ConversationControll : MonoBehaviour {
 
             case '、':
             case '。':
+            case '!':
+            case '?':
+            case '！':
+            case '？':
 
                 AddText();
 
