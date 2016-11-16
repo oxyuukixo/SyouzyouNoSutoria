@@ -176,10 +176,6 @@ public class CharaControl : MonoBehaviour {
                                 m_UIClass.m_Status[i].enabled = false;
                             }
                         }
-                        for(int i = 0; i < m_UIClass.m_Cover.Length; i++)
-                        {
-                            m_UIClass.m_Cover[i].SetActive(true);
-                        }
                         CommandUITrue(0);
                     }
                     break;
