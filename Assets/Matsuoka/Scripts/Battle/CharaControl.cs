@@ -346,6 +346,7 @@ public class CharaControl : MonoBehaviour {
 
     public void Move()
     {
+        if (iSelectCommand == 0) MoveArea.MoveAreaSarch(gameObject);
         iSelectCommand = 1;
         CommandUIFalse(0);
         for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
