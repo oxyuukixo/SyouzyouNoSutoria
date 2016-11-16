@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Resources/Conversation.meta
 guid: 9c7a04a081ff83e4285bb8765c5b4e91
 folderAsset: yes
 timeCreated: 1479201447
+=======
+guid: b62e28742a9e11247b37194e6f40df9e
+folderAsset: yes
+timeCreated: 1479195265
+>>>>>>> 701be5fa454ee8c030e4da2733e3345bf4ff1be2:Assets/Resources/Conversation.meta
 licenseType: Free
 DefaultImporter:
   userData: 

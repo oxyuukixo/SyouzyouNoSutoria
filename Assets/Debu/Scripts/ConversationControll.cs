@@ -15,6 +15,9 @@ public class ConversationControll : MonoBehaviour {
     //文字を表示するスピード
     public float m_ReadSpeed;
 
+    //スクロールするスピード
+    public float m_ScrollSpeed = 1;
+
     //文字を表示する数(1バイト文字での計算)
     public int m_WeightNum;
     public int m_HeightNum;
@@ -29,6 +32,12 @@ public class ConversationControll : MonoBehaviour {
     public bool m_IsRichText = true;
     public Color m_Color = new Color(1,1,1,1);
 
+    //名前を表示するためのテキスト
+    public GameObject[] m_NameText;
+
+    //画像を表示するためのオブジェクト
+    public Image[] m_Graphic;
+
     //読み込むテキストのパス(シーン移動する前に設定)
     [HideInInspector]
     public static string m_TextPath = "Test.txt";
@@ -36,6 +45,8 @@ public class ConversationControll : MonoBehaviour {
     //テキストをすべて読み終わったか
     [HideInInspector]
     public bool m_IsFinish = false;
+
+
 
     //テキストボックスのリスト
     private List<GameObject> m_TextLIst = new List<GameObject>();
@@ -61,40 +72,90 @@ public class ConversationControll : MonoBehaviour {
     //現在の文字の位置
     private int m_CurrentTextNum = 0;
 
+    //現在の行の文字数
+    private int m_WeightCurrentNum = 0;
+
+    //画像があるフォルダまでのパス
+    private string m_GraphicPath;
+
+    //スクロールするかどうかのフラグ
+    private bool m_IsScroll = false;
+
     // Use this for initialization
     void Start () {
+
         m_EncodingShiftJIS = Encoding.GetEncoding("Shift_JIS");
+
+        m_GraphicPath = "Conversation/";
 
         //TextRead();
 
-        m_Text = "aaaあふぁふ\nぁふぁsfgaｓｇｓ\n\n";
-
-        Debug.Log(m_Text);
-
-        for (int i = 0; i < m_Text.Length; i++)
+        if (m_Use2byte)
         {
-            Debug.Log(i + ":" + m_Text[i] + ":" + m_EncodingShiftJIS.GetByteCount(m_Text[i].ToString()));
+            m_WeightNum *= 2;
         }
+        
+        m_Text = "aaaあふぁaddddddddd@dd、、、。、、、、tttttttt、、dddふぇ*1 testKUN*あっふ$1 Leo/Leo_laugh$ぇあふぁ@sffaf#gaｓ\n\nｇ@ｓ@";
+
+        CreateTextBox();
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        if(!m_IsWait)
+        if(m_IsScroll)
+        {
+            ScrollText();
+        }
+        //入力待ちじゃなかったら
+        else if(!m_IsWait && !m_IsFinish)
         {
            if((m_ReadCurrentTime += Time.deltaTime) > m_ReadSpeed)
             {
-                
-            }
+                //まだ全部読んでいなかったら
+                if(m_CurrentTextNum < m_Text.Length)
+                {
+                    if(CheckWord())
+                    {
+                        if(m_WeightCurrentNum >= m_WeightNum)
+                        {
+                            CreateTextBox();
+                            m_WeightCurrentNum = 0;
+                            
+                            if(m_TextLIst.Count > m_HeightNum)
+                            {
+                                m_IsScroll = true;
+                            }
+
+                        }
+                        else
+                        {
+                            AddText();
+                        }
+                    }
+                }
+                else
+                {
+                    m_IsFinish = true;
+                }
+
+                m_ReadCurrentTime = 0;
+            }      
         }
 
+        //クリックされたら
         if(CrossPlatformInputManager.GetButtonDown("Fire1"))
         {
-            CreateTextBox();
+            if(m_IsWait)
+            {
+                m_IsWait = false;
 
-            m_TextLIst[m_TextLIst.Count - 1].GetComponent<Text>().text = "aaaaaaaaaaaaaaaaaaaa";
+                m_CurrentTextNum++;
+            }
 
-            m_IsWait = false;
+            //CreateTextBox();
+
+            //m_TextLIst[m_TextLIst.Count - 1].GetComponent<Text>().text = "aaaaaaaaaaaaaaaaaaaa";
         }
 
 	}
@@ -133,7 +194,39 @@ public class ConversationControll : MonoBehaviour {
         m_TextLIst.Add(NewTextBox);
     }
 
-    void CheckWord()
+    //現在の行に現在の文字を追加
+    void AddText()
+    {
+        m_TextLIst[m_TextLIst.Count - 1].GetComponent<Text>().text += m_Text[m_CurrentTextNum];
+
+        m_WeightCurrentNum += m_EncodingShiftJIS.GetByteCount(m_Text[m_TextLIst.Count - 1].ToString());
+
+        m_CurrentTextNum++;
+    }
+
+    void ScrollText()
+    {
+        for(int i = 0;i < m_TextLIst.Count;i++)
+        {
+            m_TextLIst[i].GetComponent<RectTransform>().localPosition += new Vector3(0, m_ScrollSpeed, 0);
+
+            if (m_TextLIst[i].GetComponent<RectTransform>().localPosition.y >= -(m_FontSize + m_BoxOffset) * (i - 1))
+            {
+                m_TextLIst[i].GetComponent<RectTransform>().localPosition = new Vector2(0, -(m_FontSize + m_BoxOffset) * (i - 1));
+
+                m_IsScroll = false;
+            }
+        }
+
+        if(!m_IsScroll)
+        {
+            Destroy(m_TextLIst[0]);
+            m_TextLIst.RemoveAt(0);
+        }
+    }
+
+    //通常文字かのチェック
+    bool CheckWord()
     {
        switch(m_Text[m_CurrentTextNum])
         {
@@ -141,25 +234,89 @@ public class ConversationControll : MonoBehaviour {
 
                 m_CurrentTextNum++;
 
-                CheckWord();
-
                 break;
 
             case '#':
+
+                CreateTextBox();
+
+                m_WeightCurrentNum = 0;
+
+                if(m_TextLIst.Count > m_HeightNum)
+                {
+                    m_IsScroll = true;
+                }
+
+                m_CurrentTextNum++;
 
                 break;
 
             case '@':
 
+                m_IsWait = true;
+
                 break;
 
             case '*':
+
+                string Name = null;
+
+                int NameNum = int.Parse(m_Text[m_CurrentTextNum + 1].ToString()) - 1;
+
+                //現在の文字から"*","名前の番号","スペース"を飛ばした数から最後まで調べる
+                for(int i = m_CurrentTextNum + 3;i < m_Text.Length;i++)
+                {
+                    //*が見つかったら終了
+                    if(m_Text[i] == '\n' || m_Text[i] == '*')
+                    {
+                        m_CurrentTextNum = i + 1;
+
+                        break;
+                    }
+
+                    Name += m_Text[i];
+                }
+
+                m_NameText[NameNum].GetComponent<Text>().text = Name;
 
                 break;
 
             case '$':
 
+                string GraphicPath = null;
+
+                int GraphicNum = int.Parse(m_Text[m_CurrentTextNum + 1].ToString()) - 1;
+
+                //現在の文字から"*","名前の番号","スペース"を飛ばした数から最後まで調べる
+                for (int i = m_CurrentTextNum + 3; i < m_Text.Length; i++)
+                {
+                    //*が見つかったら終了
+                    if (m_Text[i] == '\n' || m_Text[i] == '$')
+                    {
+                        m_CurrentTextNum = i + 1;
+
+                        break;
+                    }
+
+                    GraphicPath += m_Text[i];
+                }
+
+                m_Graphic[GraphicNum].sprite = Resources.Load<Sprite>(m_GraphicPath + GraphicPath);
+
                 break;
+
+            case '、':
+            case '。':
+
+                AddText();
+
+                break;
+
+            default:
+
+                return true;
         }
+
+        return false;
     }
 }
