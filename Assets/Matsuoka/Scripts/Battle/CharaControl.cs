@@ -90,7 +90,7 @@ public class CharaControl : MonoBehaviour {
         {
             m_Material.color = select_color;
         }
-        
+        if (gameObject != TurnController.m_turnCharacter) return;
         switch (iSelectCommand)
         {
             case 0: //待機
@@ -428,6 +428,7 @@ public class CharaControl : MonoBehaviour {
 
     public void Magic()
     {
+        if (iSelectCommand == 0) MagicData.MagicAttackRange(gameObject,MagicName.fire);
         CommandUIFalse(0);
         for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
         {
@@ -469,7 +470,9 @@ public class CharaControl : MonoBehaviour {
         {
             m_UIClass.m_Cover[i].SetActive(false);
         }
-        m_BMClass.TurnElapsedNum++; // ターン経過
+        //m_BMClass.TurnElapsedNum++;
+        // ターン経過
+        TurnController.NextMoveCharacter();
     }
 
     public void Psy()

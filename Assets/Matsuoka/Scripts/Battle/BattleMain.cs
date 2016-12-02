@@ -89,6 +89,7 @@ public class BattleMain : MonoBehaviour
                         Player[m_iPlayerNum].SetActive(true);
                         Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
                         m_iPlayerNum++;
+                        if (m_iPlayerNum == Player.Length) TurnController.SetCharacter();
                     }
                 }
             }

@@ -6,10 +6,10 @@ public class CharacterMove : MonoBehaviour {
     private const float m_space = 0.5f;
 
     public GameObject[][] m_stage;      //ステージデータ
+    public Vector2[] m_moveRoute;      //移動ルート
     public float m_speed;               //移動速度
     public bool m_move;                 //移動判定
 
-    private Vector2[] m_moveRoute;      //移動ルート
     private int m_routeCount;           //移動ルート番号
 
     private MapManager m_MMClass;

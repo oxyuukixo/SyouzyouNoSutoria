@@ -28,7 +28,7 @@ public class MoveArea : MonoBehaviour {
         {
             for (int j = 0; j < m_stage[i].Length; j++)
             {
-                m_stage[i][j].GetComponent<StageInfo>().m_displayMoveArea[(int)moveAreaType] = moveArea[i][j];
+                m_stage[i][j].GetComponent<StageInfo>().m_displayArea[(int)moveAreaType] = moveArea[i][j];
             }
         }
     }
@@ -43,7 +43,7 @@ public class MoveArea : MonoBehaviour {
             {
                 for (int k = 0; k < (int)MoveAreaType.number; k++)
                 {
-                    m_stage[i][j].GetComponent<StageInfo>().m_displayMoveArea[k] = false;
+                    m_stage[i][j].GetComponent<StageInfo>().m_displayArea[k] = false;
                 }
             }
         }

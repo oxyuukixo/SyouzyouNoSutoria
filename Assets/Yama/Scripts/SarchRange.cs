@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public class SarchRange : MonoBehaviour {
 
-    private static bool[][] m_sarchRange;        //探索範囲
+    private static bool[][] m_sarchRange;   //探索範囲
     private static Vector2[] m_moveRoute;   //移動ルート
     private static float m_moveMin;         //最小値
+    private static bool m_reachMovePoint;   //移動地点に到達したか
 
     //探索方向
     private enum SarchDirection
@@ -62,11 +63,17 @@ public class SarchRange : MonoBehaviour {
         Vector2 characterPosition;      //キャラクター座標
         Vector2 position;               //移動先の座標
         m_moveRoute = null;
+        m_reachMovePoint = false;
         moveRouteDammy = new List<Vector2>();
         characterPosition = new Vector2(character.transform.position.x, character.transform.position.z);
-        position = new Vector2(movePosition.transform.position.x + 0.5f, movePosition.transform.position.z + 0.5f);
+
+        if (movePosition.tag == "Stage")
+            position = new Vector2(movePosition.transform.position.x + 0.5f, movePosition.transform.position.z + 0.5f);
+        else
+            position = new Vector2(movePosition.transform.position.x, movePosition.transform.position.z);
         m_moveMin = moveRange;
         SarchRoute(stage, characterPosition, position, moveRouteDammy, moveRange, moveRange);
+        if(!m_reachMovePoint) m_moveRoute = null;
         return m_moveRoute;
     }
 
@@ -80,6 +87,7 @@ public class SarchRange : MonoBehaviour {
         {
             //移動量の最小値を移動回数が超えたら何もしない
             if (m_moveMin < moveRageMax - moveRange) return;
+            m_reachMovePoint = true;
             m_moveMin = moveRageMax - moveRange;
             m_moveRoute = moveRouteDammy.ToArray();
             return;
@@ -106,6 +114,7 @@ public class SarchRange : MonoBehaviour {
     {
         Vector2 sarchPosition;  //探索ポジション
         int height;             //移動前と移動後の位置の高さの差
+        if (characterPosition == null) return characterPosition;
         sarchPosition = characterPosition;
         switch (sarch)
         {
