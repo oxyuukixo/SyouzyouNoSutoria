@@ -4,12 +4,18 @@ using System.Collections;
 public class PushButton : MonoBehaviour {
 
     int m_Command;
-    CharaControl cc;
+    CharaControl[] cc;
 
 	// Use this for initialization
 	void Start () {
-        cc = GameObject.Find("Leo").GetComponent<CharaControl>();
-	}
+        GameObject[] player;
+        player = GameObject.FindGameObjectsWithTag("Player");
+        cc = new CharaControl[player.Length];
+        for (int i = 0; i < player.Length; i++)
+        {
+            cc[i] = player[i].GetComponent<CharaControl>();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -18,6 +24,15 @@ public class PushButton : MonoBehaviour {
 
     public void ButtonPush()
     {
+        CharaControl player;
+        player = null;
+        for (int i = 0; i < cc.Length; i++)
+        {
+            if (cc[i].gameObject != TurnController.m_turnCharacter) continue;
+            player = cc[i];
+            break;
+        }
+        if (player == null) return;
         if (gameObject.name == "Move")
         {
             m_Command = 0;
@@ -53,28 +68,28 @@ public class PushButton : MonoBehaviour {
         switch (m_Command)
         {
             case 0:
-                cc.Move();  // 移動
+                player.Move();  // 移動
                 break;
             case 1:
-                cc.Attack();// 攻撃
+                player.Attack();// 攻撃
                 break;
             case 2:
-                cc.Magic(); // 魔法
+                player.Magic(); // 魔法
                 break;
             case 3:
-                cc.Skil();  // スキル
+                player.Skil();  // スキル
                 break;
             case 4:
-                cc.Item();  // アイテム
+                player.Item();  // アイテム
                 break;
             case 5:
-                cc.Wait();  // 構え
+                player.Wait();  // 構え
                 break;
             case 6:
-                cc.End();   // ターンエンド
+                player.End();   // ターンエンド
                 break;
             case 7:
-                cc.Psy();   // 彩術
+                player.Psy();   // 彩術
                 break;
         }
     }

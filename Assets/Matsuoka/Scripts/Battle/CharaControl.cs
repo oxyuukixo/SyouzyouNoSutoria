@@ -90,7 +90,6 @@ public class CharaControl : MonoBehaviour {
         {
             m_Material.color = select_color;
         }
-        if (gameObject != TurnController.m_turnCharacter) return;
         switch (iSelectCommand)
         {
             case 0: //待機
