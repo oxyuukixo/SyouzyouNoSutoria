@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+
 
 public class FadeManager : SingletonMonoBehaviour<FadeManager>
 {
@@ -66,7 +68,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         }
 
         //シーン切替
-        Application.LoadLevel(scene);
+        SceneManager.LoadScene(scene);
 
         //だんだん明るく
         time = 0;
