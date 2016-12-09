@@ -15,7 +15,7 @@ public class CharacterMove : MonoBehaviour {
     private MapManager m_MMClass;
 
     //初期化
-    void Start()
+    private void Start()
     {
         m_routeCount = 0;
         m_MMClass = GameObject.Find("Stage").GetComponent<MapManager>();
@@ -40,7 +40,7 @@ public class CharacterMove : MonoBehaviour {
 	}
 
     //移動距離を出して移動
-    void MoveLenge()
+    private void MoveLenge()
     {
         Vector2 movePoint;          //移動地点
         Vector2 moveLouteLenge;     //移動ルートまでの距離
@@ -102,4 +102,5 @@ public class CharacterMove : MonoBehaviour {
         m_move = true;
         return true;
     }
+
 }

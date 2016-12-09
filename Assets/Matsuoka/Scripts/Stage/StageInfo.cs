@@ -48,4 +48,5 @@ public class StageInfo : MonoBehaviour {
             else m_moveArea[i].SetActive(false);
         }
     }
+
 }

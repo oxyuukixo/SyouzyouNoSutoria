@@ -378,6 +378,7 @@ public class CharaControl : MonoBehaviour {
                     m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject);
 
                     //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
+
                     m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
                     m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
 
@@ -427,7 +428,7 @@ public class CharaControl : MonoBehaviour {
 
     public void Magic()
     {
-        if (iSelectCommand == 0) MagicData.MagicAttackRange(gameObject,MagicName.fire);
+        if (iSelectCommand == 0) AttackDataList.MagicAttackRange(gameObject,MagicName.fire);
         CommandUIFalse(0);
         for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
         {
