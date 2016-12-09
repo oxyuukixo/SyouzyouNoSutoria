@@ -8,15 +8,15 @@ enum PlayerNumber
     Default,
     Leo,
     Mashira,
-    Lune,
-    Cuon,
+    Ryunne,
+    Akane,
     Ciel,
     Ignir
 }
 
 enum EnemyNumber
 {
-    Enemy1 = 7
+    Enemy1 = 11
 }
 
 
@@ -36,12 +36,13 @@ public class CharaControl : MonoBehaviour {
 
     public bool bColorState;
     public GameObject oldMapChip;
-
-    NavMeshAgent agent;
+    
     UICtrl m_UIClass;
     BattleMain m_BMClass;
     Status m_StatusClass;
     StageInfo m_StageInfoClass;
+    CameraControl m_CamCtrlClass;
+    CharacterMove m_CharaMoveClass;
 
     // 彩術用
     //一度に壁を置ける数
@@ -69,11 +70,12 @@ public class CharaControl : MonoBehaviour {
         bColorState = false;
         CharactorCount = 6;
         once = false;
-        agent = GetComponent<NavMeshAgent>();
         m_UIClass = GameObject.Find("SceneManager/GameManager").GetComponent<UICtrl>();
         m_BMClass = GameObject.Find("SceneManager/GameManager").GetComponent<BattleMain>();
+        m_CamCtrlClass = GameObject.Find("Camera").GetComponent<CameraControl>();
         m_StatusClass = GetComponent<Status>();
         m_StageInfoClass = GetComponent<StageInfo>();
+        m_CharaMoveClass = GetComponent<CharacterMove>();
 
         // 彩術用
         InstWall = new GameObject[WallMaxNum];
@@ -88,7 +90,6 @@ public class CharaControl : MonoBehaviour {
         {
             m_Material.color = select_color;
         }
-        
         switch (iSelectCommand)
         {
             case 0: //待機
@@ -119,6 +120,8 @@ public class CharaControl : MonoBehaviour {
                 Psy();
                 break;
         }
+
+        m_CharaMoveClass.Move();    // 移動
     }
 
     public void Idle()
@@ -139,9 +142,14 @@ public class CharaControl : MonoBehaviour {
                 case 0: // ステージ
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
+                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
                         {
                             CommandUIFalse(i);
+                        }
+                        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+                        {
+                            m_UIClass.m_Cover[i].SetActive(false);
                         }
                     }
                     for (int i = 0; i < CharactorCount; i++)
@@ -158,9 +166,10 @@ public class CharaControl : MonoBehaviour {
 
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
+                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
                         {
-                            CommandUIFalse(i);
+                            //CommandUIFalse(i);
                             if (!m_UIClass.m_Command[i].activeInHierarchy)
                             {
                                 m_UIClass.m_Status[i].enabled = false;
@@ -175,6 +184,7 @@ public class CharaControl : MonoBehaviour {
 
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
+                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
                         {
                             CommandUIFalse(i);
@@ -182,16 +192,21 @@ public class CharaControl : MonoBehaviour {
                             {
                                 m_UIClass.m_Status[i].enabled = false;
                             }
+                        }
+                        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+                        {
+                            m_UIClass.m_Cover[i].SetActive(true);
                         }
                         CommandUITrue(1);
                     }
                     break;
                 case 3: // リュンヌ
                     m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[1].enabled = true;
+                    m_UIClass.m_Status[2].enabled = true;
 
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
+                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
                         {
                             CommandUIFalse(i);
@@ -200,15 +215,20 @@ public class CharaControl : MonoBehaviour {
                                 m_UIClass.m_Status[i].enabled = false;
                             }
                         }
+                        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+                        {
+                            m_UIClass.m_Cover[i].SetActive(true);
+                        }
                         CommandUITrue(1);
                     }
                     break;
                 case 4: // 紅音
                     m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[1].enabled = true;
+                    m_UIClass.m_Status[3].enabled = true;
 
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
+                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
                         {
                             CommandUIFalse(i);
@@ -216,6 +236,10 @@ public class CharaControl : MonoBehaviour {
                             {
                                 m_UIClass.m_Status[i].enabled = false;
                             }
+                        }
+                        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+                        {
+                            m_UIClass.m_Cover[i].SetActive(true);
                         }
                         CommandUITrue(1);
                     }
@@ -226,6 +250,7 @@ public class CharaControl : MonoBehaviour {
 
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
+                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
                         {
                             CommandUIFalse(i);
@@ -233,6 +258,10 @@ public class CharaControl : MonoBehaviour {
                             {
                                 m_UIClass.m_Status[i].enabled = false;
                             }
+                        }
+                        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+                        {
+                            m_UIClass.m_Cover[i].SetActive(true);
                         }
                         CommandUITrue(1);
                     }
@@ -243,6 +272,7 @@ public class CharaControl : MonoBehaviour {
 
                     if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
+                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
                         {
                             CommandUIFalse(i);
@@ -250,6 +280,10 @@ public class CharaControl : MonoBehaviour {
                             {
                                 m_UIClass.m_Status[i].enabled = false;
                             }
+                        }
+                        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+                        {
+                            m_UIClass.m_Cover[i].SetActive(true);
                         }
                         CommandUITrue(1);
                     }
@@ -279,6 +313,14 @@ public class CharaControl : MonoBehaviour {
         {
             iPlayerNum = (int)PlayerNumber.Mashira;
         }
+        if(obj.name == "Ryunne")
+        {
+            iPlayerNum = (int)PlayerNumber.Ryunne;
+        }
+        if (obj.name == "Akane")
+        {
+            iPlayerNum = (int)PlayerNumber.Akane;
+        }
         if (obj.name == "Enemy1")
         {
             iPlayerNum = (int)EnemyNumber.Enemy1;
@@ -299,22 +341,16 @@ public class CharaControl : MonoBehaviour {
 
     public void Move()
     {
+        if (iSelectCommand == 0) MoveArea.MoveAreaSarch(gameObject);
         iSelectCommand = 1;
         CommandUIFalse(0);
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
 
-        //if (!once)
-        //{
-        //    int i;
-        //    for (i = m_StatusClass.MOV; i > 1;)
-        //    {
-        //        i = MoveSearch(i);
-        //    }
-        //    if (i == 1)
-        //    {
-        //        once = true;
-        //    }
-        //}
-        
+        //PermitSarchRange(GameObject[][] stage, this, m_StatusClass.MOV);
+
         if (CrossPlatformInputManager.GetButtonDown("Fire1"))
         {
             RaycastHit hit;  // 光線に当たったオブジェクトを受け取るクラス
@@ -328,42 +364,29 @@ public class CharaControl : MonoBehaviour {
             {
                 // 当たったオブジェクトを取得
                 CharactorNumber(hit.collider.gameObject);
-                
+                if (oldMapChip != null)
+                {
+                    StageInfo oldStage = oldMapChip.gameObject.GetComponent<StageInfo>();
+                    oldStage.possible = false;
+                }
+                StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
+                stage.possible = true;
+
                 // ステージ上
                 if (iPlayerNum == (int)PlayerNumber.Default)
                 {
-                    m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
+                    m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject);
+
+                    //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
                     m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
                     m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
 
                     iSelectCommand = 0;
                 }
+                oldMapChip = hit.collider.gameObject;
             }
-
-            //if (m_SelectPlayer.transform.position.x < m_BMClass.m_MapSize - 1)
-            //{
-            //    m_SelectPlayer.transform.position += new Vector3(1, 0, 0);
-            //    iSelectCommand = 0;
-            //    once = false;
-            //}
         }
     }
-
-    //private int MoveSearch(int MovePow)
-    //{
-    //    Vector3 Posx1z = transform.position + new Vector3(1.0f, 0.0f, 0.0f);
-    //    Vector3 Posxz1 = transform.position + new Vector3(0.0f, 0.0f, 1.0f);
-    //    Vector3 Posx_1z = transform.position + new Vector3(-1.0f, 0.0f, 0.0f);
-    //    Vector3 Posxz_1 = transform.position + new Vector3(0.0f, 0.0f, -1.0f);
-
-    //    Instantiate(m_MoveSprite, Posx1z, new Quaternion());
-    //    Instantiate(m_MoveSprite, Posxz1, new Quaternion());
-    //    Instantiate(m_MoveSprite, Posx_1z, new Quaternion(90, 0, 0, 0));
-    //    Instantiate(m_MoveSprite, Posxz_1, new Quaternion(90, 0, 0, 0));
-
-    //    MovePow--;
-    //    return MovePow;
-    //}
 
     public void Attack()
     {
@@ -374,6 +397,10 @@ public class CharaControl : MonoBehaviour {
 
         iSelectCommand = 2;
         CommandUIFalse(0);
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
 
         if (!CrossPlatformInputManager.GetButtonDown("Fire1")) return;
         // スクリーン座標に対してマウスの位置の光線を取得
@@ -400,34 +427,61 @@ public class CharaControl : MonoBehaviour {
 
     public void Magic()
     {
+        if (iSelectCommand == 0) MagicData.MagicAttackRange(gameObject,MagicName.fire);
         CommandUIFalse(0);
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
     }
 
     public void Skil()
     {
         CommandUIFalse(0);
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
     }
 
     public void Item()
     {
         CommandUIFalse(0);
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
     }
 
     public void Wait()
     {
         CommandUIFalse(0);
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
     }
 
     public void End()
     {
         CommandUIFalse(0);
-        m_BMClass.TurnElapsedNum++; // ターン経過
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
+        //m_BMClass.TurnElapsedNum++;
+        // ターン経過
+        TurnController.NextMoveCharacter();
     }
 
     public void Psy()
     {
         iSelectCommand = 8;
         CommandUIFalse(0);
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
 
         //彩術を使用する
         if (/*IsSaizyutsu &&*/CrossPlatformInputManager.GetButton("Fire1") && InstNum < WallMaxNum)

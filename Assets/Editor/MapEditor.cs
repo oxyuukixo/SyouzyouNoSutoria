@@ -8,16 +8,6 @@ using System.Reflection;
 public class MapEditor : Editor
 {
     [MenuItem("MyTools/Test Selected Object")]
-    static void Create()
-    {
-        Debug.Log(Selection.gameObjects.Length);
-
-        foreach (GameObject go in Selection.gameObjects)
-        {
-            Debug.Log(go.name);
-        }
-    }
-
     public override void OnInspectorGUI()
     {
         //元のInspector部分を表示
@@ -26,110 +16,366 @@ public class MapEditor : Editor
         MapManager m_MapManager = target as MapManager;
 
         //ボタンを表示
-        if (GUILayout.Button("Button"))
-        {
-            //オブジェクトをすべて削除
-            for (int i = m_MapManager.transform.childCount - 1; i >= 0; --i)
-            {
-                GameObject.DestroyImmediate(m_MapManager.transform.GetChild(i).gameObject);
-            }
-
-            //オブジェクトを生成
-            GameObject RespawnObject = Instantiate(m_MapManager.res);
-
-            List<Object> objects = new List<Object>();
-
-            objects.Add(RespawnObject);
-
-            Selection.objects = objects.ToArray();
-
-            //子オブジェクトにする
-            RespawnObject.transform.parent = m_MapManager.transform;
-        }
-
-        //ボタンを表示
-        if (GUILayout.Button("Button"))
-        {
-            //オブジェクトを生成
-            GameObject RespawnObject = Instantiate(m_MapManager.res);
-
-            //子オブジェクトにする
-            RespawnObject.transform.parent = m_MapManager.transform;
-        }
-
-        //ボタンを表示
         if (GUILayout.Button("Open MapEditorWindow"))
         {
             EditorWindow.GetWindow(typeof(MapEditorWidow));
+
+            MapEditorWidow.m_MapManager = m_MapManager;
         }
+    }
+
+    void OnEnable()
+    {
+        MapManager m_MapManager = target as MapManager;
+
+        for (int y = m_MapManager.m_MapList.Count; y < m_MapManager.m_MapY; y++)
+        {
+            m_MapManager.m_MapList.Add(new List<GameObject>());
+
+            for (int x = m_MapManager.m_MapList[y].Count; x < m_MapManager.m_MapX; x++)
+            {
+                m_MapManager.m_MapList[y].Add(null);
+            }
+        }
+
+        foreach (Transform child in m_MapManager.gameObject.transform)
+        {
+            StageInfo a = child.gameObject.GetComponent<StageInfo>();
+
+            m_MapManager.m_MapList[a.position[1]][a.position[0]] = child.gameObject;
+        }
+
     }
 }
 
 
 public class MapEditorWidow : EditorWindow
 {
-    int rightSize = 10;
-    Vector2 rightScrollPos = Vector2.zero;
+    //編集するマップのマネージャー
+    public static MapManager m_MapManager;
+
+    //スクロールの座標
+    Vector2 ScrollPos = Vector2.zero;
+
+    //現在選択されているステージオブジェクト
+    private StageInfo SelectObject;
 
     [MenuItem("Window/MapEditorWindow")]
     public static void ShowWindow()
     {
-        //Show existing window instance. If one doesn't exist, make one.
+        //ウィンドウの作成
         EditorWindow.GetWindow(typeof(MapEditorWidow));
     }
 
     void OnGUI()
     {
-        foreach (GameObject go in Selection.gameObjects)
+        if (m_MapManager)
         {
-            Debug.Log(go.name);
-        }
-
-        EditorGUILayout.BeginVertical(GUI.skin.box);
-        {
-            EditorGUILayout.PrefixLabel("MapSize");
-
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical(GUI.skin.box);
             {
-                EditorGUILayout.IntField("X",rightSize);
-
-                EditorGUILayout.IntField("Y", rightSize);
-            }
-            EditorGUILayout.EndHorizontal();
-
-            //rightSize = EditorGUILayout.IntSlider("Size", rightSize, 10, 100, GUILayout.ExpandWidth(false));
-
-            // 右側のスクロール
-            rightScrollPos = EditorGUILayout.BeginScrollView(rightScrollPos, GUI.skin.box);
-            {
-                // スクロール範囲
-
-                for (int y = 0; y < rightSize; y++)
+                //マップ全体のオプションの表示
+                EditorGUILayout.BeginVertical(GUI.skin.box);
                 {
-                    EditorGUILayout.BeginHorizontal(GUI.skin.box);
+                    EditorGUILayout.PrefixLabel("MapSize");
+
+                    EditorGUILayout.BeginHorizontal();
                     {
-                        // ここの範囲は横並び
+                        EditorGUI.BeginChangeCheck();
 
-                        EditorGUILayout.PrefixLabel("Index " + y);
+                        int TempX = EditorGUILayout.IntField("X", m_MapManager.m_MapX);
 
-                        // 下に行くほどボタン数増やす
-                        for (int i = 0; i < y + 1; i++)
+                        int TempY = EditorGUILayout.IntField("Y", m_MapManager.m_MapY);
+
+                        //1000個以上になっていたら変更しない
+                        if (TempX * TempY < 1000)
                         {
-                            // ボタン(横幅100px)
-                            if (GUILayout.Button("Button" + i, GUILayout.Width(100)))
-                            {
-                                Debug.Log("Button" + i + "押したよ");
-                            }
+                            m_MapManager.m_MapX = TempX;
+
+                            m_MapManager.m_MapY = TempY;
+                        }
+
+                        //オブジェクトの数が変わっていたら変更する
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            CreateMap();
+                        }
+
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    m_MapManager.ObjectHeight = EditorGUILayout.FloatField("HeightInterval", m_MapManager.ObjectHeight);
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUI.BeginChangeCheck();
+
+                        float TempX = EditorGUILayout.FloatField("IntervalX", m_MapManager.IntervalX);
+
+                        float TempY = EditorGUILayout.FloatField("IntervalY", m_MapManager.IntervalY);
+
+                        //間隔がマイナスになっていたら変更しない
+                        if (TempX > 0 && TempY > 0)
+                        {
+                            m_MapManager.IntervalX = TempX;
+
+                            m_MapManager.IntervalY = TempY;
+                        }
+
+                        //オブジェクトの数が変わっていたら変更する
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            SetMapPossion();
                         }
                     }
                     EditorGUILayout.EndHorizontal();
+
+                    //ボタンを表示
+                    if (GUILayout.Button("Clear"))
+                    {
+                        //オブジェクトをすべて削除
+                        for (int i = m_MapManager.transform.childCount - 1; i >= 0; --i)
+                        {
+                            GameObject.DestroyImmediate(m_MapManager.transform.GetChild(i).gameObject);
+                        }
+
+                        m_MapManager.m_MapList.Clear();
+
+                        m_MapManager.m_MapX = 0;
+                        m_MapManager.m_MapY = 0;
+                        m_MapManager.IntervalX = 1;
+                        m_MapManager.IntervalY = 1;
+                    }
                 }
-                // こんな感じで横幅固定しなくても、範囲からはみ出すときにスクロールバー出してくれる。
+                EditorGUILayout.EndVertical();
+
+                //ステージを選択するボタンの表示
+                if (m_MapManager.m_MapX * m_MapManager.m_MapY > 0)
+                {
+                    ScrollPos = EditorGUILayout.BeginScrollView(ScrollPos, GUI.skin.box);
+                    {
+                        // スクロール範囲
+                        for (int y = 0; y < m_MapManager.m_MapY; y++)
+                        {
+                            EditorGUILayout.BeginHorizontal(GUI.skin.box);
+                            {
+                                for (int x = 0; x < m_MapManager.m_MapX; x++)
+                                {
+                                    if (GUILayout.Button("[" + x + "][" + y + "]", GUILayout.Width(75)))
+                                    {
+                                        SelectObject = m_MapManager.m_MapList[y][x].GetComponent<StageInfo>();
+
+                                        List<Object> objects = new List<Object>();
+
+                                        objects.Add(SelectObject.gameObject);
+
+                                        Selection.objects = objects.ToArray();
+                                    }
+                                }
+                            }
+                            EditorGUILayout.EndHorizontal();
+                        }
+                    }
+                    EditorGUILayout.EndScrollView();
+
+                    //オブジェクトが選択されていたら
+                    if (SelectObject != null)
+                    {
+                        EditorGUILayout.BeginVertical(GUI.skin.box);
+                        {
+                            EditorGUI.BeginChangeCheck();
+
+                            EditorGUILayout.LabelField("Stage[" + SelectObject.position[0] + "][" + SelectObject.position[1] + "]");
+
+                            SelectObject.height = EditorGUILayout.IntField("Height", SelectObject.height);
+
+                            SelectObject.stageLook = (GameObject)EditorGUILayout.ObjectField("MeshObj", SelectObject.stageLook, typeof(GameObject), true);
+
+                            if (EditorGUI.EndChangeCheck())
+                            {
+                                ChangeStage();
+                            }
+                        }
+                        EditorGUILayout.EndVertical();
+                    }
+                }
+                EditorGUILayout.EndVertical();
             }
-            EditorGUILayout.EndScrollView();
+        }
+    }
+
+    //オブジェクトが選択されたときの関数
+    void OnSelectionChange()
+    {
+        foreach (GameObject go in Selection.gameObjects)
+        {
+            if (go.GetComponentInParent(typeof(MapManager)) != null)
+            {
+                SelectObject = go.GetComponent<StageInfo>();
+
+                FocusWindowIfItsOpen(typeof(MapEditorWidow));
+
+                break;
+            }
         }
 
-        EditorGUILayout.EndVertical();
+        EditorGUI.FocusTextInControl(null);
+    }
 
+    void CreateMap()
+    {
+        if (m_MapManager.m_MapList.Count > 0)
+        {
+            if (m_MapManager.m_MapList[0].Count < m_MapManager.m_MapX)
+            {
+                for (int y = 0; y < m_MapManager.m_MapList.Count; y++)
+                {
+                    for (int x = m_MapManager.m_MapList[y].Count; x < m_MapManager.m_MapX; x++)
+                    {
+                        //オブジェクトを生成
+                        GameObject RespawnObject = Instantiate(m_MapManager.m_StageObject);
+
+                        m_MapManager.m_MapList[y].Add(RespawnObject);
+
+                        RespawnObject.AddComponent<StageInfo>();
+
+                        RespawnObject.GetComponent<StageInfo>().stageLook = m_MapManager.m_StageObject;
+
+                        RespawnObject.GetComponent<StageInfo>().height = 1;
+
+                        //子オブジェクトにする
+                        RespawnObject.transform.parent = m_MapManager.transform;
+
+                        //生成時パラメーターの設定
+                        RespawnObject.GetComponent<StageInfo>().position[0] = x;
+                        RespawnObject.GetComponent<StageInfo>().position[1] = y;
+                        RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * m_MapManager.IntervalX, 0, y * m_MapManager.IntervalY);
+                    }
+                }
+            }
+            else
+            {
+                for (int y = 0; y < m_MapManager.m_MapList.Count; y++)
+                {
+                    for (int x = m_MapManager.m_MapList[y].Count - 1; x >= m_MapManager.m_MapX; x--)
+                    {
+                        GameObject.DestroyImmediate(m_MapManager.m_MapList[y][x]);
+
+                        m_MapManager.m_MapList[y].Remove(m_MapManager.m_MapList[y][x]);
+                    }
+                }
+            }
+        }
+
+
+        if (m_MapManager.m_MapList.Count < m_MapManager.m_MapY)
+        {
+            for (int y = m_MapManager.m_MapList.Count; y < m_MapManager.m_MapY; y++)
+            {
+                m_MapManager.m_MapList.Add(new List<GameObject>());
+
+                for (int x = 0; x < m_MapManager.m_MapX; x++)
+                {
+                    //オブジェクトを生成
+                    GameObject RespawnObject = Instantiate(m_MapManager.m_StageObject);
+
+                    m_MapManager.m_MapList[y].Add(RespawnObject);
+
+                    RespawnObject.AddComponent<StageInfo>();
+
+                    RespawnObject.GetComponent<StageInfo>().stageLook = m_MapManager.m_StageObject;
+
+                    RespawnObject.GetComponent<StageInfo>().height = 1;
+
+                    //子オブジェクトにする
+                    RespawnObject.transform.parent = m_MapManager.transform;
+
+                    //生成時パラメーターの設定
+                    RespawnObject.GetComponent<StageInfo>().position[0] = x;
+
+                    RespawnObject.GetComponent<StageInfo>().position[1] = y;
+
+                    RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * m_MapManager.IntervalX, 0, y * m_MapManager.IntervalY);
+                }
+            }
+        }
+        else
+        {
+            for (int y = m_MapManager.m_MapList.Count - 1; y >= m_MapManager.m_MapY; y--)
+            {
+                for (int x = m_MapManager.m_MapList[y].Count - 1; x >= 0; x--)
+                {
+                    GameObject.DestroyImmediate(m_MapManager.m_MapList[y][x]);
+
+                    m_MapManager.m_MapList[y].Remove(m_MapManager.m_MapList[y][x]);
+                }
+
+                m_MapManager.m_MapList.Remove(m_MapManager.m_MapList[y]);
+            }
+        }
+    }
+
+    void ChangeStage()
+    {
+        //オブジェクトを生成
+        GameObject RespawnObject = Instantiate(SelectObject.stageLook);
+
+        m_MapManager.m_MapList[SelectObject.position[1]][SelectObject.position[0]] = RespawnObject;
+
+        //子オブジェクトにする
+        RespawnObject.transform.parent = m_MapManager.transform;
+
+        RespawnObject.transform.position = m_MapManager.gameObject.transform.position + new Vector3(SelectObject.position[0] * m_MapManager.IntervalX, (SelectObject.height - 1) * m_MapManager.ObjectHeight, SelectObject.position[1] * m_MapManager.IntervalY);
+
+        RespawnObject.AddComponent<StageInfo>();
+
+        //生成時パラメーターの設定
+        RespawnObject.GetComponent<StageInfo>().position = SelectObject.position;
+
+        RespawnObject.GetComponent<StageInfo>().height = SelectObject.height;
+
+        RespawnObject.GetComponent<StageInfo>().possible = SelectObject.possible;
+
+        RespawnObject.GetComponent<StageInfo>().charaCategory = SelectObject.charaCategory;
+
+        RespawnObject.GetComponent<StageInfo>().stageLook = SelectObject.stageLook;
+
+        GameObject ChildObject;
+
+        for (int HeightNum = 1; HeightNum < SelectObject.height; HeightNum++)
+        {
+            //オブジェクトを生成
+            ChildObject = Instantiate(SelectObject.stageLook);
+
+            //子オブジェクトにする
+            ChildObject.transform.parent = RespawnObject.transform;
+
+            ChildObject.transform.position = new Vector3(SelectObject.position[0] * m_MapManager.IntervalX, RespawnObject.transform.position.y - m_MapManager.ObjectHeight * HeightNum, SelectObject.position[1] * m_MapManager.IntervalY);
+        }
+
+        GameObject.DestroyImmediate(SelectObject.gameObject);
+
+        SelectObject = RespawnObject.GetComponent<StageInfo>();
+
+        List<Object> objects = new List<Object>();
+
+        objects.Add(SelectObject.gameObject);
+
+        Selection.objects = objects.ToArray();
+
+        EditorGUI.FocusTextInControl(null);
+    }
+
+    //マップの間隔によるオブジェクトの生成
+    void SetMapPossion()
+    {
+        for (int y = 0; y < m_MapManager.m_MapY; y++)
+        {
+            for (int x = 0; x < m_MapManager.m_MapX; x++)
+            {
+                m_MapManager.m_MapList[y][x].transform.position = m_MapManager.gameObject.transform.position + new Vector3(x * m_MapManager.IntervalX, 0, y * m_MapManager.IntervalY);
+            }
+        }
+
+        EditorGUI.FocusTextInControl(null);
     }
 }

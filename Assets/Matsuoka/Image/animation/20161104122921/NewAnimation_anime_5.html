@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript">
+	    function doPreview() {
+	        var canvas = document.getElementById("canvas");
+	        var ctx = canvas.getContext("2d");
+
+			var imglist = [
+				'./NewAnimation_anime_50000.png',
+				'./NewAnimation_anime_50001.png',
+				'./NewAnimation_anime_50002.png',
+				'./NewAnimation_anime_50003.png',
+				'./NewAnimation_anime_50004.png',
+				'./NewAnimation_anime_50005.png',
+				'./NewAnimation_anime_50006.png',
+				'./NewAnimation_anime_50007.png',
+				'./NewAnimation_anime_50008.png',
+				'./NewAnimation_anime_50009.png',
+				'./NewAnimation_anime_50010.png',
+				'./NewAnimation_anime_50011.png',
+				'./NewAnimation_anime_50012.png',
+				'./NewAnimation_anime_50013.png',
+				'./NewAnimation_anime_50014.png',
+				'./NewAnimation_anime_50015.png',
+				'./NewAnimation_anime_50016.png',
+				'./NewAnimation_anime_50017.png',
+				'./NewAnimation_anime_50018.png',
+				'./NewAnimation_anime_50019.png',
+				'./NewAnimation_anime_50020.png',
+
+			];
+			
+			var imglistsize = imglist.length;
+			var img = new Array(imglistsize);
+			for ( var i = 0 ; i < imglistsize ; i++ )
+			{
+				img[i] = new Image();
+				img[i].src = imglist[i];
+			}
+			
+			var cnt = 0;
+	        setInterval(function () {
+	            ctx.save();
+	            ctx.clearRect(-500, -500, 500 * 2, 500 * 2);
+				ctx.drawImage( img[cnt] , 0 , 0 );
+	            ctx.restore();
+				cnt++;
+				if (cnt >= imglistsize ) cnt = 0;
+	        }, 33);
+
+	    };
+	</script>
+</head>
+
+<body onLoad="doPreview()">
+    <div id="Screen" style="font-size:8px;text-align:center;"></div>
+	<canvas id="canvas" width="500" height="500">
+	</canvas>
+</body>
+
+</html>
