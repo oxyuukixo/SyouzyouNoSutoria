@@ -6,7 +6,6 @@ public class UICtrl : MonoBehaviour {
 
     public Image[] m_Chara;
     public GameObject[] m_Command;
-    public GameObject[] m_Cover;
     public Image[] m_Status;
     public Text m_Turn;
 
@@ -17,10 +16,6 @@ public class UICtrl : MonoBehaviour {
             m_Chara[i].enabled = false;
             m_Command[i].SetActive(false);
             m_Status[i].enabled = false;
-        }
-        for(int i = 0; i < m_Cover.Length; i++)
-        {
-            m_Cover[i].SetActive(false);
         }
 	}
 	
