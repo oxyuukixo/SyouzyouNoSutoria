@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public class SarchRange : MonoBehaviour {
 
-    private static bool[][] m_sarchRange;        //探索範囲
+    private static bool[][] m_sarchRange;   //探索範囲
     private static Vector2[] m_moveRoute;   //移動ルート
     private static float m_moveMin;         //最小値
+    private static bool m_reachMovePoint;   //移動地点に到達したか
 
     //探索方向
     private enum SarchDirection
@@ -47,9 +48,9 @@ public class SarchRange : MonoBehaviour {
         for (SarchDirection i = SarchDirection.top; i < SarchDirection.number; i++)
         {
             sarchPosition = SarchPosition(stage, position, i);
+            if (stage[(int)sarchPosition.y][(int)sarchPosition.x].GetComponent<StageInfo>().charaCategory != null) continue;
             if (sarchPosition == position) continue;
             m_sarchRange[Mathf.FloorToInt(sarchPosition.y)][Mathf.FloorToInt(sarchPosition.x)] = true;
-
             Sarch(stage, sarchPosition, moveRange - 1);
         }
         return;
@@ -61,25 +62,35 @@ public class SarchRange : MonoBehaviour {
         List<Vector2> moveRouteDammy;   //移動経路のダミー
         Vector2 characterPosition;      //キャラクター座標
         Vector2 position;               //移動先の座標
+        string enemyTag;                //敵のタグ
         m_moveRoute = null;
+        m_reachMovePoint = false;
         moveRouteDammy = new List<Vector2>();
         characterPosition = new Vector2(character.transform.position.x, character.transform.position.z);
-        position = new Vector2(movePosition.transform.position.x + 0.5f, movePosition.transform.position.z + 0.5f);
+        if (movePosition.tag == "Stage")
+            position = new Vector2(movePosition.transform.position.x + 0.5f, movePosition.transform.position.z + 0.5f);
+        else
+            position = new Vector2(movePosition.transform.position.x, movePosition.transform.position.z);
+        if (character.tag == "Player") enemyTag = "Enemy";
+        else enemyTag = "Player";
         m_moveMin = moveRange;
-        SarchRoute(stage, characterPosition, position, moveRouteDammy, moveRange, moveRange);
+        SarchRoute(stage, characterPosition, position, moveRouteDammy, moveRange, moveRange, enemyTag);
+        if(!m_reachMovePoint) m_moveRoute = null;
         return m_moveRoute;
     }
 
     //最短の移動経路を出す
     private static void SarchRoute(GameObject[][] stage, Vector2 characterPosition, Vector2 position,
-    List<Vector2> moveRouteDammy, int moveRange, int moveRageMax)
+    List<Vector2> moveRouteDammy, int moveRange, int moveRageMax, string enemyTag)
     {
         Vector2 sarchPosition;      //探索座標
         //キャラクター座標と移動先の座標が一致していたら
         if(characterPosition == position)
         {
+            if (stage[(int)characterPosition.y][(int)characterPosition.x].GetComponent<StageInfo>().charaCategory != null) return;
             //移動量の最小値を移動回数が超えたら何もしない
             if (m_moveMin < moveRageMax - moveRange) return;
+            m_reachMovePoint = true;
             m_moveMin = moveRageMax - moveRange;
             m_moveRoute = moveRouteDammy.ToArray();
             return;
@@ -94,8 +105,9 @@ public class SarchRange : MonoBehaviour {
         {
             sarchPosition = SarchPosition(stage, characterPosition, i);
             if (sarchPosition == characterPosition) continue;
+
             moveRouteDammy.Add(sarchPosition);
-            SarchRoute(stage, sarchPosition, position, moveRouteDammy, moveRange - 1, moveRageMax);
+            SarchRoute(stage, sarchPosition, position, moveRouteDammy, moveRange - 1, moveRageMax, enemyTag);
             moveRouteDammy.RemoveAt(moveRouteDammy.Count - 1);
         }
         return;
@@ -106,6 +118,7 @@ public class SarchRange : MonoBehaviour {
     {
         Vector2 sarchPosition;  //探索ポジション
         int height;             //移動前と移動後の位置の高さの差
+        if (characterPosition == null) return characterPosition;
         sarchPosition = characterPosition;
         switch (sarch)
         {

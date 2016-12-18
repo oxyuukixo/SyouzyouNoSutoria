@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class Movie : MonoBehaviour
-{
-
+{ 
     public string _movieFile;
 
     // Use this for initialization

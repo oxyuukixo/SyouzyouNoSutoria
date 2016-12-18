@@ -90,7 +90,6 @@ public class CharaControl : MonoBehaviour {
         {
             m_Material.color = select_color;
         }
-        
         switch (iSelectCommand)
         {
             case 0: //待機
@@ -352,9 +351,16 @@ public class CharaControl : MonoBehaviour {
                     {
                         m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject);
 
+<<<<<<< HEAD
                         //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
                         m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
                         m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
+=======
+                    //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
+
+                    m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
+                    m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
+>>>>>>> 8cb388bfa7dc414b7ab0c107f4416d42a669ec3d
 
                         iSelectCommand = 0;
                     }
@@ -399,6 +405,7 @@ public class CharaControl : MonoBehaviour {
 
     public void Magic()
     {
+        if (iSelectCommand == 0) AttackDataList.MagicAttackRange(gameObject,MagicName.fire);
         CommandUIFalse(0);
     }
 
@@ -420,7 +427,17 @@ public class CharaControl : MonoBehaviour {
     public void End()
     {
         CommandUIFalse(0);
+<<<<<<< HEAD
         m_BMClass.TurnElapsedNum++; // ターン経過
+=======
+        for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
+        {
+            m_UIClass.m_Cover[i].SetActive(false);
+        }
+        //m_BMClass.TurnElapsedNum++;
+        // ターン経過
+        TurnController.NextMoveCharacter();
+>>>>>>> 8cb388bfa7dc414b7ab0c107f4416d42a669ec3d
     }
 
     public void Psy()
