@@ -110,7 +110,7 @@ public class ConversationControll : MonoBehaviour {
     private int m_WeightCurrentNum = 0;
 
     //画像があるフォルダまでのパス
-    private string m_GraphicPath;
+    private string m_ConversationPath;
 
     //何行スクロールするか
     private int m_ScrollNum = 0;
@@ -161,7 +161,7 @@ public class ConversationControll : MonoBehaviour {
         m_EncodingShiftJIS = Encoding.GetEncoding("Shift_JIS");
 
         //会話シーンよう画像のパス
-        m_GraphicPath = "Conversation/";
+        m_ConversationPath = "Conversation/";
 
         //現在設定されているテキストを読み込む
         TextRead();
@@ -259,7 +259,7 @@ public class ConversationControll : MonoBehaviour {
     void TextRead()
     {
         //ストリームリーダーを作成
-        m_Sr = new StreamReader(Application.dataPath + "/Text/" + m_TextPath + ".txt", m_EncodingShiftJIS);
+        m_Sr = new StreamReader(Application.dataPath + "/Resources/" + m_ConversationPath + "Text/" + m_TextPath + ".txt", m_EncodingShiftJIS);
 
         //最後まで読み込む
         m_Text = m_Sr.ReadToEnd();
@@ -865,8 +865,8 @@ public class ConversationControll : MonoBehaviour {
 
                             if(SplitText.Count == 2)
                             {
-                                m_PlaceObject.transform.FindChild("Name").GetComponent<Text>().text = SplitText[0];
-                                m_PlaceObject.transform.FindChild("BackGround").GetComponent<Image>().sprite = Resources.Load<Sprite>(m_GraphicPath + SplitText[1]);
+                                m_PlaceObject.transform.FindChild("NameImage").GetComponent<Image>().sprite = Resources.Load<Sprite>(m_ConversationPath + SplitText[0]);
+                                m_PlaceObject.transform.FindChild("BackGround").GetComponent<Image>().sprite = Resources.Load<Sprite>(m_ConversationPath + SplitText[1]);
 
                                 m_PlaceViewState = 0;
                                 m_State = ConversationState.Place;
@@ -908,7 +908,7 @@ public class ConversationControll : MonoBehaviour {
 
                                         m_ChangeGraphicNum = 1;
 
-                                        m_ChangeGraphcPath = m_GraphicPath + SplitText[1];
+                                        m_ChangeGraphcPath = m_ConversationPath + SplitText[1];
 
                                         m_State = ConversationState.CharaChange;
 
@@ -918,7 +918,7 @@ public class ConversationControll : MonoBehaviour {
 
                                         m_ChangeGraphicNum = 2;
 
-                                        m_ChangeGraphcPath = m_GraphicPath + SplitText[1];
+                                        m_ChangeGraphcPath = m_ConversationPath + SplitText[1];
 
                                         m_State = ConversationState.CharaChange;
 
@@ -952,13 +952,13 @@ public class ConversationControll : MonoBehaviour {
                                 {
                                     case "1":
 
-                                        m_GraphicLeft.sprite = Resources.Load<Sprite>(m_GraphicPath + SplitText[1]);
+                                        m_GraphicLeft.sprite = Resources.Load<Sprite>(m_ConversationPath + SplitText[1]);
 
                                         break;
 
                                     case "2":
 
-                                        m_GraphicRight.sprite = Resources.Load<Sprite>(m_GraphicPath + SplitText[1]);
+                                        m_GraphicRight.sprite = Resources.Load<Sprite>(m_ConversationPath + SplitText[1]);
 
                                         break;
 
@@ -982,7 +982,7 @@ public class ConversationControll : MonoBehaviour {
                         //文字列が返ってきたら
                         if (OperationText != null)
                         {
-                            m_BackGround.sprite = Resources.Load<Sprite>(m_GraphicPath + OperationText);
+                            m_BackGround.sprite = Resources.Load<Sprite>(m_ConversationPath + OperationText);
                         }
 
                         break;
