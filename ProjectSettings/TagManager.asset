@@ -3,17 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Stage
-  - Wall
-  - Enemy
-  - StageEmpty
-<<<<<<< HEAD
-  - UI
-=======
-  - MoveArea
-  - TargetCamera
->>>>>>> 8cb388bfa7dc414b7ab0c107f4416d42a669ec3d
+  tags: []
   layers:
   - Default
   - TransparentFX
