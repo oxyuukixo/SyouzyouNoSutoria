@@ -64,7 +64,7 @@ public class ConversationControll : MonoBehaviour {
     public float m_ChangeSpeed;
 
     //読み込むテキストのパス(シーン移動する前に設定)
-    public static string m_TextPath = "Test";
+    public static string m_TextPath = "Conversation_1220";
 
     //テキストをスキップするか
     [HideInInspector]
