@@ -444,7 +444,7 @@ public class ConversationControll : MonoBehaviour {
             //現在ある行の数だけ繰り返す
             for (int i = 0; i < m_TextLIst.Count; i++)
             {
-                m_TextLIst[i].GetComponent<RectTransform>().localPosition += new Vector3(0, m_ScrollSpeed, 0);
+                m_TextLIst[i].GetComponent<RectTransform>().localPosition += new Vector3(0, m_ScrollSpeed * Time.deltaTime, 0);
 
                 if(m_Skip)
                 {
@@ -576,7 +576,7 @@ public class ConversationControll : MonoBehaviour {
 
                 if (m_ChangeGraphicNum == 1)
                 {
-                    m_GraphicLeft.rectTransform.localPosition -= new Vector3(m_ChangeSpeed, 0, 0);
+                    m_GraphicLeft.rectTransform.localPosition -= new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
 
                     if (m_GraphicLeft.rectTransform.localPosition.x < -m_GraphicLeft.rectTransform.sizeDelta.x)
                     {
@@ -587,7 +587,7 @@ public class ConversationControll : MonoBehaviour {
                 }
                 else
                 {
-                    m_GraphicRight.rectTransform.localPosition += new Vector3(m_ChangeSpeed, 0, 0);
+                    m_GraphicRight.rectTransform.localPosition += new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
 
                     if (m_GraphicRight.rectTransform.localPosition.x > m_Canvas.GetComponent<RectTransform>().sizeDelta.x)
                     {
@@ -603,7 +603,7 @@ public class ConversationControll : MonoBehaviour {
 
                 if (m_ChangeGraphicNum == 1)
                 {
-                    m_GraphicLeft.rectTransform.localPosition += new Vector3(m_ChangeSpeed, 0, 0);
+                    m_GraphicLeft.rectTransform.localPosition += new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
 
                     if (m_GraphicLeft.rectTransform.localPosition.x > 0)
                     {
@@ -614,7 +614,7 @@ public class ConversationControll : MonoBehaviour {
                 }
                 else
                 {
-                    m_GraphicRight.rectTransform.localPosition -= new Vector3(m_ChangeSpeed, 0, 0);
+                    m_GraphicRight.rectTransform.localPosition -= new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
 
                     if (m_GraphicRight.rectTransform.localPosition.x < m_Canvas.GetComponent<RectTransform>().sizeDelta.x - m_GraphicRight.rectTransform.sizeDelta.x)
                     {
@@ -676,11 +676,11 @@ public class ConversationControll : MonoBehaviour {
 
         if (FadeIn)
         {
-            m_FadeObjectComponent.FadeIn();
+            m_FadeObjectComponent.FadeIn(m_FadeSpeed);
         }
         else
         {
-            m_FadeObjectComponent.FadeOut();
+            m_FadeObjectComponent.FadeOut(m_FadeSpeed);
         }
 
         //フェード後の状態のセット

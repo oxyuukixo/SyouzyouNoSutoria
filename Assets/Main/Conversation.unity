@@ -308,7 +308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e54ffc1f6519c714a86576da9327e1d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FadeSpeed: 0.01
+  m_FadeSpeed: 0.03
   m_IsFadeFinish: 0
 --- !u!114 &260579701
 MonoBehaviour:
@@ -962,7 +962,7 @@ MonoBehaviour:
   m_ChoiceObject: {fileID: 1000011386671958, guid: 805b77bc09655294c86c75a2536e73dd,
     type: 2}
   m_ReadSpeed: 0.05
-  m_ScrollSpeed: 3
+  m_ScrollSpeed: 150
   m_PlaceTime: 1
   m_WeightNum: 24
   m_HeightNum: 3
@@ -972,8 +972,8 @@ MonoBehaviour:
   m_FontSize: 25
   m_IsRichText: 1
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_FadeSpeed: 1
-  m_ChangeSpeed: 10
+  m_FadeSpeed: 0.03
+  m_ChangeSpeed: 1500
   m_Skip: 0
 --- !u!1 &1501737212
 GameObject:
