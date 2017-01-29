@@ -3,50 +3,50 @@ using System.Collections;
 
 public class Movie : MonoBehaviour
 { 
-    public string _movieFile;
+//    public string _movieFile;
 
-    // Use this for initialization
-    void Start()
-    {
-        StartCoroutine(moviePlay(_movieFile));
-    }
+//    // Use this for initialization
+//    void Start()
+//    {
+//        StartCoroutine(moviePlay(_movieFile));
+//    }
 
-    // Update is called once per frame
-    void Update()
-    {
+//    // Update is called once per frame
+//    void Update()
+//    {
 
-    }
+//    }
 
-    private IEnumerator moviePlay(string movieFile)
-    {
-        string movieTexturePath = Application.streamingAssetsPath + "/" + movieFile;
-        string url = "file://" + movieTexturePath;
-        WWW movie = new WWW(url);
+//    private IEnumerator moviePlay(string movieFile)
+//    {
+//        string movieTexturePath = Application.streamingAssetsPath + "/" + movieFile;
+//        string url = "file://" + movieTexturePath;
+//        WWW movie = new WWW(url);
 
-        while (!movie.isDone)
-        {
-            yield return null;
-        }
+//        while (!movie.isDone)
+//        {
+//            yield return null;
+//        }
 
-        MovieTexture movieTexture = movie.movie;
+//        MovieTexture movieTexture = movie.movie;
 
-        while (!movieTexture.isReadyToPlay)
-        {
-            yield return null;
-        }
+//        while (!movieTexture.isReadyToPlay)
+//        {
+//            yield return null;
+//        }
 
-        var renderer = GetComponent<MeshRenderer>();
-        renderer.material.mainTexture = movieTexture;
+//        var renderer = GetComponent<MeshRenderer>();
+//        renderer.material.mainTexture = movieTexture;
 
-        movieTexture.loop = true;
-        movieTexture.Play();
+//        movieTexture.loop = true;
+//        movieTexture.Play();
 
-#if false
-            //オーディオを使用する場合はこの部分を有効にする
-            var audioSource = GetComponent<AudioSource>();
-            audioSource.clip = movieTexture.audioClip;
-            audioSource.loop = true;
-            audioSource.Play ();
-#endif
-    }
+//#if false
+//            //オーディオを使用する場合はこの部分を有効にする
+//            var audioSource = GetComponent<AudioSource>();
+//            audioSource.clip = movieTexture.audioClip;
+//            audioSource.loop = true;
+//            audioSource.Play ();
+//#endif
+//    }
 }

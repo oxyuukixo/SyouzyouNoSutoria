@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityStandardAssets.CrossPlatformInput;
+using System.Text.RegularExpressions;
 
 public class ConversationControll : MonoBehaviour {
 
@@ -157,8 +158,8 @@ public class ConversationControll : MonoBehaviour {
 
         m_FadeObjectComponent = m_FadeObject.GetComponent<Fade>();
 
-        //Shift_JISのエンコーダーを取得
-        m_EncodingShiftJIS = Encoding.GetEncoding("Shift_JIS");
+        ////Shift_JISのエンコーダーを取得
+        //m_EncodingShiftJIS = Encoding.GetEncoding("Shift_JIS");
 
         //会話シーンよう画像のパス
         m_ConversationPath = "Conversation/";
@@ -258,12 +259,16 @@ public class ConversationControll : MonoBehaviour {
     //=============================================================================
     void TextRead()
     {
-        //ストリームリーダーを作成
-        m_Sr = new StreamReader(Application.dataPath + "/Resources/" + m_ConversationPath + "Text/" + m_TextPath + ".txt", m_EncodingShiftJIS);
+        ////ストリームリーダーを作成
+        //m_Sr = new StreamReader(Application.dataPath + "/Resources/" + m_ConversationPath + "Text/" + m_TextPath + ".txt", m_EncodingShiftJIS);
 
-        //最後まで読み込む
-        m_Text = m_Sr.ReadToEnd();
-        m_Sr.Close();
+        ////最後まで読み込む
+        //m_Text = m_Sr.ReadToEnd();
+        //m_Sr.Close();
+
+        TextAsset t = Resources.Load<TextAsset>(/*Application.dataPath + "/Resources/" + */m_ConversationPath + "Text/" + m_TextPath/* + ".txt"*/);
+
+        m_Text = t.text;
     }
 
     //=============================================================================
@@ -313,6 +318,8 @@ public class ConversationControll : MonoBehaviour {
         }
     }
 
+
+
     //=============================================================================
     //
     // Purpose : 現在表示してあるテキストをすべてクリアして行を1番上にする
@@ -344,9 +351,16 @@ public class ConversationControll : MonoBehaviour {
     {
         m_TextLIst[m_TextLIst.Count - 1].GetComponent<Text>().text += m_Text[m_CurrentTextNum];
 
-        char a = m_Text[m_CurrentTextNum];
+        if(new Regex("^[\u0020-\u007E\uFF66-\uFF9F]+$").IsMatch(m_Text[m_CurrentTextNum].ToString()))
+        {
+            m_WeightCurrentNum += 1;
+        }
+        else
+        {
+            m_WeightCurrentNum += 2;
+        }
 
-        m_WeightCurrentNum += m_EncodingShiftJIS.GetByteCount(m_Text[m_TextLIst.Count - 1].ToString());
+        //m_WeightCurrentNum += m_EncodingShiftJIS.GetByteCount(m_Text[m_TextLIst.Count - 1].ToString());
 
         m_CurrentTextNum++;
     }
@@ -402,7 +416,7 @@ public class ConversationControll : MonoBehaviour {
     void Wait()
     {
         //クリックまたはタッチされたら
-        if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+        if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
         {
             //入力待ち状態だったら
             if (m_State == ConversationState.Wait)
@@ -551,7 +565,7 @@ public class ConversationControll : MonoBehaviour {
     //
     // Purpose : キャラクターの変更関数
     //
-    // Return : なし
+    // Return : なし3
     //
     //=============================================================================
     void CharaChange()
@@ -575,7 +589,7 @@ public class ConversationControll : MonoBehaviour {
                 {
                     m_GraphicRight.rectTransform.localPosition += new Vector3(m_ChangeSpeed, 0, 0);
 
-                    if (m_GraphicRight.rectTransform.localPosition.x > Screen.width)
+                    if (m_GraphicRight.rectTransform.localPosition.x > m_Canvas.GetComponent<RectTransform>().sizeDelta.x)
                     {
                         m_GraphicRight.sprite = Resources.Load<Sprite>(m_ChangeGraphcPath);
 
@@ -602,9 +616,9 @@ public class ConversationControll : MonoBehaviour {
                 {
                     m_GraphicRight.rectTransform.localPosition -= new Vector3(m_ChangeSpeed, 0, 0);
 
-                    if (m_GraphicRight.rectTransform.localPosition.x < Screen.width - m_GraphicRight.rectTransform.sizeDelta.x)
+                    if (m_GraphicRight.rectTransform.localPosition.x < m_Canvas.GetComponent<RectTransform>().sizeDelta.x - m_GraphicRight.rectTransform.sizeDelta.x)
                     {
-                        m_GraphicRight.rectTransform.localPosition = new Vector3(Screen.width - m_GraphicRight.rectTransform.sizeDelta.x, m_GraphicRight.rectTransform.localPosition.y, m_GraphicRight.rectTransform.localPosition.z);
+                        m_GraphicRight.rectTransform.localPosition = new Vector3(m_Canvas.GetComponent<RectTransform>().sizeDelta.x - m_GraphicRight.rectTransform.sizeDelta.x, m_GraphicRight.rectTransform.localPosition.y, m_GraphicRight.rectTransform.localPosition.z);
 
                         m_State = ConversationState.Read;
                     }
