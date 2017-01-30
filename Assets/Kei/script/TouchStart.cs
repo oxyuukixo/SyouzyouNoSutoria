@@ -14,7 +14,7 @@ public class TouchStart : MonoBehaviour {
 	void Update () {
         if (CrossPlatformInputManager.GetButtonDown("Fire1"))
         {
-            FadeManager.Instance.LoadLevel("Game", 1.0f);
+            FadeManager.Instance.LoadLevel("Main", 1.0f);
         }
     }
 
