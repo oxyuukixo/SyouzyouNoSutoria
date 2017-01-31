@@ -18,8 +18,12 @@ public class ConversationControll : MonoBehaviour {
     //場所を表示するためのテキスト
     public GameObject m_PlaceObject;
 
+    public GameObject m_LeftTextUI;
+    public GameObject m_RightTextUI;
+
     //名前を表示するためのテキスト
-    public Text m_NameText;
+    public Text m_LeftNameText;
+    public Text m_RightNameText;
 
     //画像を表示するためのオブジェクト
     public Image m_GraphicLeft;
@@ -883,7 +887,35 @@ public class ConversationControll : MonoBehaviour {
                         //文字列が返ってきたら
                         if (OperationText != null)
                         {
-                            m_NameText.text = OperationText;
+                            SplitText = SplitString(OperationText, '|');
+
+                            switch (SplitText[0])
+                            {
+                                case "1":
+
+                                    m_LeftTextUI.SetActive(true);
+                                    m_RightTextUI.SetActive(false);
+
+                                    m_LeftNameText.text = SplitText[1];
+
+                                    break;
+
+                                case "2":
+
+                                    m_RightTextUI.SetActive(true);
+                                    m_LeftTextUI.SetActive(false);
+
+                                    m_RightNameText.text = SplitText[1];
+
+                                    break;
+
+                                default:
+
+                                    //エラーログの表示
+                                    Debug.Log("存在しない番号です。/nテキストを確認してください。");
+
+                                    break;
+                            }
                         }
 
                         break;
