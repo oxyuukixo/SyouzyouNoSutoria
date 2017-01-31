@@ -5,11 +5,13 @@ public class EnemyControl : MonoBehaviour {
 
     Status m_StatusClass;
     StageInfo m_StageInfoClass;
+    UICtrl m_UIClass;
 
     // Use this for initialization
     void Start () {
         m_StatusClass = GetComponent<Status>();
         m_StageInfoClass = GetComponent<StageInfo>();
+        m_UIClass = GameObject.Find("GameManager").GetComponent<UICtrl>();
     }
 	
 	// Update is called once per frame

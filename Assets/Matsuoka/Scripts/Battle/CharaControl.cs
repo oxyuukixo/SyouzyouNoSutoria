@@ -398,6 +398,7 @@ public class CharaControl : MonoBehaviour {
                 {
                     status.HP = 0;
                     Destroy(hit.collider.gameObject);
+                    m_UIClass.m_End.enabled = true;
                 }
                 iSelectCommand = 0;
             }
