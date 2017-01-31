@@ -144,6 +144,7 @@ public class AttackDataList : MonoBehaviour {
                 if (int.Parse(values[i]) == 0) attackArea[count].Add(false);
                 else attackArea[count].Add(true);
             }
+            count++;
         }
         //攻撃範囲を入力
         m_magicData[(int)magic].m_range = new bool[attackArea.Count][];

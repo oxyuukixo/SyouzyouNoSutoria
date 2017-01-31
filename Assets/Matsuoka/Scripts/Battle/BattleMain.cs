@@ -72,8 +72,10 @@ public class BattleMain : MonoBehaviour
         {
             if (CrossPlatformInputManager.GetButtonDown("Fire1"))
             {
-                RaycastHit hit;  // 光線に当たったオブジェクトを受け取るクラス
-                Ray ray;  // 光線クラス
+                m_UIClass.m_Start.enabled = false;
+
+                RaycastHit hit;     // 光線に当たったオブジェクトを受け取るクラス
+                Ray ray;            // 光線クラス
 
                 // スクリーン座標に対してマウスの位置の光線を取得
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);

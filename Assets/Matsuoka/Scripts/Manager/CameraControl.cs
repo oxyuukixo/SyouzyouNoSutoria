@@ -6,20 +6,36 @@ public class CameraControl : MonoBehaviour {
 
     public GameObject m_CenterObj;  // カメラの中心のオブジェクト
 
+    private Animation m_CamAni;
+    private UICtrl ui;
     private Camera m_Camera;
-    private Vector3 m_Offset;   //カメラの距離 
+    private Vector3 m_Offset;   // カメラの距離 
     private float wheel;        // ホイールの回転量
+    private bool m_ScrolFlg = true;    // 開始時のカメラのスクロールフラグ
 
     // Use this for initialization
     void Start () {
-        m_Camera = transform.FindChild("Main Camera").GetComponent<Camera>();
-        m_Offset = transform.position;
+        m_CamAni = GetComponent<Animation>();
+        ui = GameObject.Find("GameManager").GetComponent<UICtrl>();
+        m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        m_Offset = new Vector3(0, 0, -20);
+        m_CamAni.Play();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        transform.position = m_CenterObj.transform.position + m_Offset;
+        if (Input.GetMouseButton(0))
+        {
+            m_CamAni.Stop();
+        }
+        if (!m_CamAni.IsPlaying("CameraAnimation") && m_ScrolFlg)
+        {
+            ui.m_Start.enabled = true;
+            m_ScrolFlg = false;
+        }
+        transform.position = m_CenterObj.transform.position;
+        m_Camera.transform.localPosition = m_Offset;
 
         if(wheel > 0)
         {
