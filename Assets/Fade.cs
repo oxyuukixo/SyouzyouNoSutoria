@@ -7,15 +7,18 @@ public class Fade : MonoBehaviour {
     //フェードの速さ
     public float m_FadeSpeed = 0.3f;
 
+    public bool m_IsAutoFadeIn;
+
     //フェードが完了したかどうかのフラグ
     [HideInInspector]
     public bool m_IsFadeFinish = false;
 
+    //フェードインするかのフラグ
+    [HideInInspector]
+    public bool m_IsFadeIn = true;
+
     //フェードするかどうかのフラグ
     private bool m_IsFade = false;
-
-    //フェードインするかのフラグ
-    private bool m_IsFadeIn = true;
 
     private Image m_Image;
 
@@ -23,6 +26,11 @@ public class Fade : MonoBehaviour {
 	void Start () {
 
         m_Image = GetComponent<Image>();
+
+        if(m_IsAutoFadeIn)
+        {
+            FadeIn();
+        }
 	}
 	
 	// Update is called once per frame
