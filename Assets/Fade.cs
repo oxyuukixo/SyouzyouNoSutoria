@@ -26,7 +26,7 @@ public class Fade : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 	
         if(m_IsFade)
         {
@@ -59,17 +59,27 @@ public class Fade : MonoBehaviour {
 
 	}
 
-    public void FadeIn()
+    public void FadeIn(float FadeSpeed = -0.1f)
     {
         m_IsFade = true;
         m_IsFadeIn = true;
         m_IsFadeFinish = false;
+
+        if(FadeSpeed > 0)
+        {
+            m_FadeSpeed = FadeSpeed;
+        }
     }
 
-    public void FadeOut()
+    public void FadeOut(float FadeSpeed = -0.1f)
     {
         m_IsFade = true;
         m_IsFadeIn = false;
         m_IsFadeFinish = false;
+
+        if (FadeSpeed > 0)
+        {
+            m_FadeSpeed = FadeSpeed;
+        }
     }
 }

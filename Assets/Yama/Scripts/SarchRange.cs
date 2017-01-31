@@ -48,7 +48,6 @@ public class SarchRange : MonoBehaviour {
         for (SarchDirection i = SarchDirection.top; i < SarchDirection.number; i++)
         {
             sarchPosition = SarchPosition(stage, position, i);
-            if (stage[(int)sarchPosition.y][(int)sarchPosition.x].tag != "Stage") continue;
             if (stage[(int)sarchPosition.y][(int)sarchPosition.x].GetComponent<StageInfo>().charaCategory != null) continue;
             if (sarchPosition == position) continue;
             m_sarchRange[Mathf.FloorToInt(sarchPosition.y)][Mathf.FloorToInt(sarchPosition.x)] = true;
