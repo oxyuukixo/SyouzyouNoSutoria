@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class OptionButton : MonoBehaviour {
+public class ApplyButton : MonoBehaviour {
+
     private Fade m_Fade;
     public GameObject OptionObj;
     private bool Option = false;
@@ -11,7 +12,6 @@ public class OptionButton : MonoBehaviour {
     void Start()
     {
         m_Fade = OptionObj.GetComponent<Fade>();
-
     }
 
     // Update is called once per frame
@@ -21,7 +21,7 @@ public class OptionButton : MonoBehaviour {
         {
             if (Option)
             {
-                SceneManager.LoadScene("Option");
+                SceneManager.LoadScene("Title");
             }
         }
     }
