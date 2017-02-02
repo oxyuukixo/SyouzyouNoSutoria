@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
+using GodTouches;
 
 public class BattleMain : MonoBehaviour
 {
@@ -70,10 +71,12 @@ public class BattleMain : MonoBehaviour
         // プレイアブルキャラクターの初期配置
         if (m_iPlayerNum < Player.Length)
         {
-            if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+            if (CrossPlatformInputManager.GetButtonDown("Fire1") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
             {
-                RaycastHit hit;  // 光線に当たったオブジェクトを受け取るクラス
-                Ray ray;  // 光線クラス
+                m_UIClass.m_Start.enabled = false;
+
+                RaycastHit hit;     // 光線に当たったオブジェクトを受け取るクラス
+                Ray ray;            // 光線クラス
 
                 // スクリーン座標に対してマウスの位置の光線を取得
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);

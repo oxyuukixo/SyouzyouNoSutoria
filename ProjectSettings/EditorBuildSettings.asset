@@ -5,13 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Kei/scene/Title.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Kei/scene/Load.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Kei/scene/Option.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Kei/scene/Game.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Main/Conversation.unity
+  - enabled: 1
+    path: Assets/Matsuoka/Scene/Main.unity
