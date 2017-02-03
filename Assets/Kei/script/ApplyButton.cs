@@ -2,14 +2,16 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class CancelButton : MonoBehaviour {
+public class ApplyButton : MonoBehaviour {
+
     private Fade m_Fade;
-    public GameObject refObj;
+    public GameObject OptionObj;
+    private bool Option = false;
 
     // Use this for initialization
     void Start()
     {
-        m_Fade = refObj.GetComponent<Fade>();
+        m_Fade = OptionObj.GetComponent<Fade>();
     }
 
     // Update is called once per frame
@@ -17,11 +19,16 @@ public class CancelButton : MonoBehaviour {
     {
         if (!m_Fade.m_IsFadeIn & m_Fade.m_IsFadeFinish)
         {
-            SceneManager.LoadScene("Title");
+            if (Option)
+            {
+                SceneManager.LoadScene("Title");
+            }
         }
     }
     public void ButtonPush()
     {
         m_Fade.FadeOut();
+        Option = true;
+        Debug.Log("op");
     }
 }
