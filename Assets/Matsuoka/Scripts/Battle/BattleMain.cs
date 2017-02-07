@@ -13,7 +13,7 @@ public class BattleMain : MonoBehaviour
     public int TurnElapsedNum;      // ターン数
 
     protected int m_SceneTask;
-
+    
     private int m_iPlayerNum;   // 呼び出すキャラクターの番号
     private UICtrl m_UIClass;
 
@@ -68,6 +68,7 @@ public class BattleMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // プレイアブルキャラクターの初期配置
         if (m_iPlayerNum < Player.Length)
         {

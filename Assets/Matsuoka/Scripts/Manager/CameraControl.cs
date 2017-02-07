@@ -13,6 +13,9 @@ public class CameraControl : MonoBehaviour {
     private Vector3 m_Offset;   // カメラの距離 
     private float wheel;        // ホイールの回転量
     private bool m_ScrolFlg = true;    // 開始時のカメラのスクロールフラグ
+    private Vector3 startPos;
+    private Vector3 moveDistance;
+    private Vector3 endPos;
 
     public float StartPos;
     public float EndPos;
@@ -24,6 +27,7 @@ public class CameraControl : MonoBehaviour {
         m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
         m_Offset = new Vector3(0, 0, -20);
         m_CamAni.Play();
+        startPos = m_Camera.transform.localPosition;
 	}
 
     // Update is called once per frame
@@ -65,7 +69,33 @@ public class CameraControl : MonoBehaviour {
 
     void MoveCamera()
     {
-
+        //if (Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        //{
+        //    // タッチを検出して動かす
+        //    var phase = GodTouch.GetPhase();
+        //    if (phase == GodPhase.Began)
+        //    {
+        //        startPos = m_Camera.transform.localPosition;
+        //    }
+        //    else if (phase == GodPhase.Moved)
+        //    {
+        //        m_Camera.transform.localPosition = GodTouch.GetPosition();
+        //        //				Move.position += GodTouch.GetDeltaPosition(); 
+        //    }
+        //    else if (phase == GodPhase.Ended)
+        //    {
+        //        m_Camera.transform.localPosition = startPos;
+        //    }
+        //}
+        if (Input.GetMouseButtonDown(0))
+        {
+            startPos = Input.mousePosition;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            // マウス(タップ)の移動量
+//            m_Camera.transform.localPosition += 
+        }
     }
 
     void InputWheel()
