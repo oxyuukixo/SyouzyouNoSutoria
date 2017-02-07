@@ -92,8 +92,10 @@ public class BattleMain : MonoBehaviour
                         StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
                         Player[m_iPlayerNum].SetActive(true);
                         Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
+                        Player[m_iPlayerNum].GetComponent<CharaControl>().oldMapChip = hit.collider.gameObject;
                         m_iPlayerNum++;
                         if (m_iPlayerNum == Player.Length) TurnController.SetCharacter();
+                        stage.possible = true;
                     }
                 }
             }
