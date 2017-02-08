@@ -30,6 +30,5 @@ public class NewGameButton: MonoBehaviour {
     {
         m_Fade.FadeOut();
         NewGame = true;
-        Debug.Log("New");
     }
 }

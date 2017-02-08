@@ -29,6 +29,5 @@ public class OptionButton : MonoBehaviour {
     {
         m_Fade.FadeOut();
         Option = true;
-        Debug.Log("op");
     }
 }

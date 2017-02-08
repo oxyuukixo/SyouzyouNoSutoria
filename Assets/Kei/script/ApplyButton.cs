@@ -29,6 +29,5 @@ public class ApplyButton : MonoBehaviour {
     {
         m_Fade.FadeOut();
         Option = true;
-        Debug.Log("op");
     }
 }
