@@ -12,9 +12,11 @@ public class StageInfo : MonoBehaviour {
     public GameObject charaCategory;        // 上にいるキャラクターの種類
     public GameObject stageLook;            // マスの見た目(テクスチャの種類)
     public GameObject[] m_moveArea;         // 移動許可範囲
+    public Color[] m_color;                 // 移動エリアの色
+    public bool[] m_moveAriaActive;         // 移動範囲の表示判定
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         // 地面の高さを取得
         float pos_y = transform.position.y * 2;
         height = Mathf.RoundToInt(pos_y);
@@ -25,6 +27,8 @@ public class StageInfo : MonoBehaviour {
         //追加部分
         m_displayArea = new bool[(int)MoveAreaType.number];
         m_moveArea = new GameObject[(int)MoveAreaType.number];
+        m_color = new Color[(int)MoveAreaType.number];
+        m_moveAriaActive = new bool[(int)MoveAreaType.number];
         for (MoveAreaType i = 0; i < MoveAreaType.number; i++)
         {
             m_moveArea[(int)i] = Instantiate(Resources.Load(MoveArea.MoveAreaAssetsName(i)), transform.position, transform.rotation) as GameObject;
@@ -36,15 +40,32 @@ public class StageInfo : MonoBehaviour {
             );
             m_moveArea[(int)i].name = MoveArea.RemoveNameClone(m_moveArea[(int)i].name);
             m_moveArea[(int)i].transform.parent = gameObject.transform;
+            m_color[(int)i] = m_moveArea[(int)i].GetComponent<Renderer>().material.color;
             m_moveArea[(int)i].SetActive(false);
         }
     }
 	
 	// Update is called once per frame
 	void Update () {
+        Color color;
+        m_moveArea[0].SetActive(true);
+        color = Color.black;
+        color.a = m_color[0].a / 2;
+        m_moveArea[0].GetComponent<Renderer>().material.color = color;
         for (int i = 0; i < (int)MoveAreaType.number; i++)
         {
-            if (m_displayArea[i]) m_moveArea[i].SetActive(true);
+            if (i != 0) return;
+            if (m_moveAriaActive[i])
+            {
+                m_moveArea[i].SetActive(true);
+                if (m_displayArea[i]) color = m_color[i];
+                else
+                {
+                    color = Color.black;
+                    color.a = m_color[i].a / 2;
+                }
+                m_moveArea[i].GetComponent<Renderer>().material.color = color;
+            }
             else m_moveArea[i].SetActive(false);
         }
     }

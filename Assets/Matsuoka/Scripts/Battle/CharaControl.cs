@@ -90,6 +90,7 @@ public class CharaControl : MonoBehaviour {
         {
             m_Material.color = select_color;
         }
+        if (gameObject != TurnController.m_turnCharacter) return;
         switch (iSelectCommand)
         {
             case 0: //待機
@@ -329,7 +330,6 @@ public class CharaControl : MonoBehaviour {
         CommandUIFalse(0);
         m_UIClass.m_Cover[0].SetActive(false);
 
-        //PermitSarchRange(GameObject[][] stage, this, m_StatusClass.MOV);
 
         if (CrossPlatformInputManager.GetButtonUp("Fire1"))
         {
@@ -351,19 +351,17 @@ public class CharaControl : MonoBehaviour {
                         StageInfo oldStage = oldMapChip.gameObject.GetComponent<StageInfo>();
                         oldStage.possible = false;
                     }
-                    StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
-                    stage.possible = true;
-
                     // ステージ上
                     if (iPlayerNum == (int)PlayerNumber.Default)
                     {
                         m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject);
-
                         //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
                         m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
                         m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
                         iSelectCommand = 0;
                     }
+                    StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
+                    stage.possible = true;
                     oldMapChip = hit.collider.gameObject;
                 }
             }
@@ -398,6 +396,7 @@ public class CharaControl : MonoBehaviour {
                 {
                     status.HP = 0;
                     Destroy(hit.collider.gameObject);
+                    m_UIClass.m_End.enabled = true;
                 }
                 iSelectCommand = 0;
             }
@@ -498,6 +497,11 @@ public class CharaControl : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void ChangeOnStagePossible(bool flag)
+    {
+        oldMapChip.GetComponent<StageInfo>().possible = flag;
     }
 }
 

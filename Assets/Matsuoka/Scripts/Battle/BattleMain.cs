@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
+using GodTouches;
 
 public class BattleMain : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class BattleMain : MonoBehaviour
     public int TurnElapsedNum;      // ターン数
 
     protected int m_SceneTask;
-
+    
     private int m_iPlayerNum;   // 呼び出すキャラクターの番号
     private UICtrl m_UIClass;
 
@@ -67,13 +68,16 @@ public class BattleMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // プレイアブルキャラクターの初期配置
         if (m_iPlayerNum < Player.Length)
         {
-            if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+            if (CrossPlatformInputManager.GetButtonDown("Fire1") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
             {
-                RaycastHit hit;  // 光線に当たったオブジェクトを受け取るクラス
-                Ray ray;  // 光線クラス
+                m_UIClass.m_Start.enabled = false;
+
+                RaycastHit hit;     // 光線に当たったオブジェクトを受け取るクラス
+                Ray ray;            // 光線クラス
 
                 // スクリーン座標に対してマウスの位置の光線を取得
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -88,8 +92,10 @@ public class BattleMain : MonoBehaviour
                         StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
                         Player[m_iPlayerNum].SetActive(true);
                         Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
+                        Player[m_iPlayerNum].GetComponent<CharaControl>().oldMapChip = hit.collider.gameObject;
                         m_iPlayerNum++;
                         if (m_iPlayerNum == Player.Length) TurnController.SetCharacter();
+                        stage.possible = true;
                     }
                 }
             }
