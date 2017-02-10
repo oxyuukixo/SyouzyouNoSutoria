@@ -24,24 +24,20 @@ public class CharaControl : MonoBehaviour {
 
     private GameObject m_MoveSprite;
     private GameObject m_AttackSprite;
-    private GameObject m_SelectPlayer;
     private Color default_color;     // 初期化カラー
     private Color select_color;      // 選択時カラー
-    private int iSelectCommand;
-    private int iPlayerNum;
-    private int CharactorCount;
     private bool once;
 
     protected Material m_Material;
 
+    public int iSelectCommand;
     public bool bColorState;
     public GameObject oldMapChip;
-    
+
     UICtrl m_UIClass;
     BattleMain m_BMClass;
     Status m_StatusClass;
     StageInfo m_StageInfoClass;
-    CameraControl m_CamCtrlClass;
     CharacterMove m_CharaMoveClass;
 
     // 彩術用
@@ -68,11 +64,9 @@ public class CharaControl : MonoBehaviour {
         default_color = m_Material.color;
         select_color = Color.magenta;
         bColorState = false;
-        CharactorCount = 6;
         once = false;
         m_UIClass = GameObject.Find("SceneManager/GameManager").GetComponent<UICtrl>();
         m_BMClass = GameObject.Find("SceneManager/GameManager").GetComponent<BattleMain>();
-        m_CamCtrlClass = GameObject.Find("Camera").GetComponent<CameraControl>();
         m_StatusClass = GetComponent<Status>();
         m_StageInfoClass = GetComponent<StageInfo>();
         m_CharaMoveClass = GetComponent<CharacterMove>();
@@ -94,7 +88,6 @@ public class CharaControl : MonoBehaviour {
         switch (iSelectCommand)
         {
             case 0: //待機
-                Idle();
                 break;
             case 1: // 移動
                 Move();
@@ -125,192 +118,6 @@ public class CharaControl : MonoBehaviour {
         m_CharaMoveClass.Move();    // 移動
     }
 
-    public void Idle()
-    {
-        RaycastHit hit;  // 光線に当たったオブジェクトを受け取るクラス
-        Ray ray;  // 光線クラス
-
-        // スクリーン座標に対してマウスの位置の光線を取得
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        // マウスの光線の先にオブジェクトが存在していたら hit に入る
-        if (Physics.Raycast(ray, out hit))
-        {
-            // 当たったオブジェクトを取得
-            CharactorNumber(hit.collider.gameObject);
-            switch(iPlayerNum)
-            {
-                case 0: // ステージ
-                    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
-                    {
-                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
-                        for (int i = 0; i < CharactorCount; i++)
-                        {
-                            CommandUIFalse(i);
-                            m_UIClass.m_Cover[0].SetActive(false);
-                        }
-                    }
-                    for (int i = 0; i < CharactorCount; i++)
-                    {
-                        if (!m_UIClass.m_Command[i].activeInHierarchy)
-                        {
-                            m_UIClass.m_Status[i].enabled = false;
-                        }
-                    }
-                    break;
-                case 1: // レオ
-                    m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[0].enabled = true;
-
-                    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
-                    {
-                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
-                        for (int i = 0; i < CharactorCount; i++)
-                        {
-                            //CommandUIFalse(i);
-                            if (!m_UIClass.m_Command[i].activeInHierarchy)
-                            {
-                                m_UIClass.m_Status[i].enabled = false;
-                            }
-                        }
-                        CommandUITrue(0);
-                        m_UIClass.m_Cover[0].SetActive(true);
-                    }
-                    break;
-                case 2: // マシラ
-                    m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[1].enabled = true;
-
-                    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
-                    {
-                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
-                        for (int i = 0; i < CharactorCount; i++)
-                        {
-                            CommandUIFalse(i);
-                            if (!m_UIClass.m_Command[i].activeInHierarchy)
-                            {
-                                m_UIClass.m_Status[i].enabled = false;
-                            }
-                        }
-                        CommandUITrue(1);
-                        m_UIClass.m_Cover[0].SetActive(true);
-                    }
-                    break;
-                case 3: // リュンヌ
-                    m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[2].enabled = true;
-
-                    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
-                    {
-                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
-                        for (int i = 0; i < CharactorCount; i++)
-                        {
-                            CommandUIFalse(i);
-                            if (!m_UIClass.m_Command[i].activeInHierarchy)
-                            {
-                                m_UIClass.m_Status[i].enabled = false;
-                            }
-                        }
-                        CommandUITrue(1);
-                        m_UIClass.m_Cover[0].SetActive(true);
-                    }
-                    break;
-                case 4: // 紅音
-                    m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[3].enabled = true;
-
-                    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
-                    {
-                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
-                        for (int i = 0; i < CharactorCount; i++)
-                        {
-                            CommandUIFalse(i);
-                            if (!m_UIClass.m_Command[i].activeInHierarchy)
-                            {
-                                m_UIClass.m_Status[i].enabled = false;
-                            }
-                        }
-                        CommandUITrue(1);
-                        m_UIClass.m_Cover[0].SetActive(true);
-                    }
-                    break;
-                case 5: // シエル
-                    m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[1].enabled = true;
-
-                    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
-                    {
-                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
-                        for (int i = 0; i < CharactorCount; i++)
-                        {
-                            CommandUIFalse(i);
-                            if (!m_UIClass.m_Command[i].activeInHierarchy)
-                            {
-                                m_UIClass.m_Status[i].enabled = false;
-                            }
-                        }
-                        CommandUITrue(1);
-                        m_UIClass.m_Cover[0].SetActive(true);
-                    }
-                    break;
-                case 6: // イーグニズル
-                    m_SelectPlayer = hit.collider.gameObject;
-                    m_UIClass.m_Status[1].enabled = true;
-
-                    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
-                    {
-                        m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
-                        for (int i = 0; i < CharactorCount; i++)
-                        {
-                            CommandUIFalse(i);
-                            if (!m_UIClass.m_Command[i].activeInHierarchy)
-                            {
-                                m_UIClass.m_Status[i].enabled = false;
-                            }
-                        }
-                        CommandUITrue(1);
-                        m_UIClass.m_Cover[0].SetActive(true);
-                    }
-                    break;
-                case -1:
-                    break;
-            }
-        }
-    }
-
-    // 選択されたキャラクター
-    public void CharactorNumber(GameObject obj)
-    {
-        if(obj.tag == "Untagged")
-        {
-            iPlayerNum = -1;
-        }
-        if(obj.tag == "Stage")
-        {
-            iPlayerNum = (int)PlayerNumber.Default;
-        }
-        if(obj.name == "Leo")
-        {
-            iPlayerNum = (int)PlayerNumber.Leo;
-        }
-        if (obj.name == "Mashira")
-        {
-            iPlayerNum = (int)PlayerNumber.Mashira;
-        }
-        if(obj.name == "Ryunne")
-        {
-            iPlayerNum = (int)PlayerNumber.Ryunne;
-        }
-        if (obj.name == "Akane")
-        {
-            iPlayerNum = (int)PlayerNumber.Akane;
-        }
-        if (obj.name == "Enemy1")
-        {
-            iPlayerNum = (int)EnemyNumber.Enemy1;
-        }
-    }
-
     // UIの一括管理
     public void CommandUITrue(int i)
     {
@@ -325,6 +132,7 @@ public class CharaControl : MonoBehaviour {
 
     public void Move()
     {
+        int number;     //オブジェクト番号
         if (iSelectCommand == 0) MoveArea.MoveAreaSarch(gameObject);
         iSelectCommand = 1;
         CommandUIFalse(0);
@@ -345,21 +153,25 @@ public class CharaControl : MonoBehaviour {
                 if (Physics.Raycast(ray, out hit))
                 {
                     // 当たったオブジェクトを取得
-                    CharactorNumber(hit.collider.gameObject);
+                    number = StatusController.CharactorNumber(hit.collider.gameObject);
                     if (oldMapChip != null)
                     {
                         StageInfo oldStage = oldMapChip.gameObject.GetComponent<StageInfo>();
                         oldStage.possible = false;
                     }
                     // ステージ上
-                    if (iPlayerNum == (int)PlayerNumber.Default)
+                    if (number == (int)PlayerNumber.Default)
                     {
-                        m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject);
+                        if(!m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject))
+                        {
+                            MoveArea.ResetMoveArea();
+                        }
                         //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
                         m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
                         m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
                         iSelectCommand = 0;
                     }
+                                  
                     StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
                     stage.possible = true;
                     oldMapChip = hit.collider.gameObject;
