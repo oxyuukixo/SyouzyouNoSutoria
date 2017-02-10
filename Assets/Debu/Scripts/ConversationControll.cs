@@ -11,7 +11,8 @@ using System.Text.RegularExpressions;
 public class ConversationControll : MonoBehaviour {
 
     //テキストを表示する親となるオブジェクト
-    public GameObject m_TextBox;
+    public GameObject m_LeftTextBox;
+    public GameObject m_RightTextBox;
 
     //フェードに使用するオブジェクト
     public Image m_FadeObject;
@@ -89,6 +90,8 @@ public class ConversationControll : MonoBehaviour {
         Fade,       //暗転中
         Finish      //テキスト読み込み終了    
     }
+
+    private GameObject m_TextBox;
 
     //テキストの状態
     private ConversationState m_State;
@@ -176,7 +179,9 @@ public class ConversationControll : MonoBehaviour {
         {
             m_WeightNum *= 2;
         }
-        
+
+        m_TextBox = m_LeftTextBox;
+
         //表示用のテキストボックスを作成
         CreateTextBox();
     }
@@ -300,7 +305,7 @@ public class ConversationControll : MonoBehaviour {
         TextComp.color = m_Color;
 
         //基準となる座標を左上にする
-        RTransform.position = new Vector3(0, -(TextComp.preferredHeight) * m_TextLIst.Count, 0);
+        RTransform.localPosition = new Vector3(0, -(TextComp.preferredHeight) * m_TextLIst.Count, 0);
         RTransform.sizeDelta = new Vector2(m_TextBox.GetComponent<RectTransform>().rect.width,TextComp.preferredHeight);
         RTransform.anchorMin = new Vector2(0, 1);
         RTransform.anchorMax = new Vector2(0, 1);
@@ -912,6 +917,17 @@ public class ConversationControll : MonoBehaviour {
 
                                     m_LeftNameText.text = SplitText[1];
 
+                                    foreach (Transform n in m_TextBox.transform)
+                                    {
+                                        GameObject.Destroy(n.gameObject);
+                                    }
+
+                                    m_TextLIst.Clear();
+
+                                    m_TextBox = m_LeftTextBox;
+
+                                    CreateTextBox();
+
                                     break;
 
                                 case "2":
@@ -920,6 +936,17 @@ public class ConversationControll : MonoBehaviour {
                                     m_LeftTextUI.SetActive(false);
 
                                     m_RightNameText.text = SplitText[1];
+
+                                    foreach (Transform n in m_TextBox.transform)
+                                    {
+                                        GameObject.Destroy(n.gameObject);
+                                    }
+
+                                    m_TextLIst.Clear();
+
+                                    m_TextBox = m_RightTextBox;
+
+                                    CreateTextBox();
 
                                     break;
 
