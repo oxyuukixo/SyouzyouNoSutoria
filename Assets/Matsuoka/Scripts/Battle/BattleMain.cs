@@ -8,6 +8,7 @@ public class BattleMain : MonoBehaviour
     // 配置するプレハブの読み込み
     public GameObject prefabNormal;
     public GameObject prefabWall;
+    public GameObject animationCamera;
     public GameObject[] Player;
     public GameObject[] Status_TAC; // 順番
     public int TurnElapsedNum;      // ターン数
@@ -68,7 +69,7 @@ public class BattleMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (animationCamera.GetComponent<Animation>().isPlaying) return;
         // プレイアブルキャラクターの初期配置
         if (m_iPlayerNum < Player.Length)
         {
@@ -90,6 +91,7 @@ public class BattleMain : MonoBehaviour
                     if (hit.collider.gameObject.tag == "Stage")
                     {
                         StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
+                        if (stage.possible) return;
                         Player[m_iPlayerNum].SetActive(true);
                         Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
                         Player[m_iPlayerNum].GetComponent<CharaControl>().oldMapChip = hit.collider.gameObject;
