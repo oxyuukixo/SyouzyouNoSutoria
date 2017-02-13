@@ -79,7 +79,6 @@ public class BattleMain : MonoBehaviour
 
                 RaycastHit hit;     // 光線に当たったオブジェクトを受け取るクラス
                 Ray ray;            // 光線クラス
-
                 // スクリーン座標に対してマウスの位置の光線を取得
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
