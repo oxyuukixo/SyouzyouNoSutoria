@@ -68,24 +68,24 @@ public class CameraControl : MonoBehaviour {
 
     void MoveCamera()
     {
-        //if (Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
-        //{
-        //    // タッチを検出して動かす
-        //    var phase = GodTouch.GetPhase();
-        //    if (phase == GodPhase.Began)
-        //    {
-        //        startPos = m_Camera.transform.localPosition;
-        //    }
-        //    else if (phase == GodPhase.Moved)
-        //    {
-        //        m_Camera.transform.localPosition = GodTouch.GetPosition();
-        //        //				Move.position += GodTouch.GetDeltaPosition(); 
-        //    }
-        //    else if (phase == GodPhase.Ended)
-        //    {
-        //        m_Camera.transform.localPosition = startPos;
-        //    }
-        //}
+        if (Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        {
+            // タッチを検出して動かす
+            var phase = GodTouch.GetPhase();
+            if (phase == GodPhase.Began)
+            {
+                startPos = m_Camera.transform.localPosition;
+            }
+            else if (phase == GodPhase.Moved)
+            {
+                m_Camera.transform.localPosition = GodTouch.GetPosition();
+                //				Move.position += GodTouch.GetDeltaPosition(); 
+            }
+            else if (phase == GodPhase.Ended)
+            {
+                m_Camera.transform.localPosition = startPos;
+            }
+        }
         if (Input.GetMouseButtonDown(0))
         {
             startPos = Input.mousePosition;

@@ -73,7 +73,7 @@ public class BattleMain : MonoBehaviour
         // プレイアブルキャラクターの初期配置
         if (m_iPlayerNum < Player.Length)
         {
-            if (CrossPlatformInputManager.GetButtonDown("Fire1") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            if (CrossPlatformInputManager.GetButtonUp("Fire1") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
             {
                 m_UIClass.m_Start.enabled = false;
 

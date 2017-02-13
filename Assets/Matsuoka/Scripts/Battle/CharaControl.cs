@@ -139,7 +139,7 @@ public class CharaControl : MonoBehaviour {
         m_UIClass.m_Cover[0].SetActive(false);
 
 
-        if (CrossPlatformInputManager.GetButtonUp("Fire1"))
+        if (CrossPlatformInputManager.GetButtonUp("Fire1") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
         {
             if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
