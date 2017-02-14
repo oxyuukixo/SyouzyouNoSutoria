@@ -3,12 +3,20 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class CancelButton : MonoBehaviour {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/development
     private Fade m_Fade;
     public GameObject refObj;
 
     // Use this for initialization
+<<<<<<< HEAD
     void Start()
     {
+=======
+    void Start () {
+>>>>>>> origin/development
         m_Fade = refObj.GetComponent<Fade>();
     }
 

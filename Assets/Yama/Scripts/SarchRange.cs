@@ -48,6 +48,10 @@ public class SarchRange : MonoBehaviour {
         for (SarchDirection i = SarchDirection.top; i < SarchDirection.number; i++)
         {
             sarchPosition = SarchPosition(stage, position, i);
+<<<<<<< HEAD
+=======
+            if (stage[(int)sarchPosition.y][(int)sarchPosition.x].tag != "Stage") continue;
+>>>>>>> origin/development
             if (stage[(int)sarchPosition.y][(int)sarchPosition.x].GetComponent<StageInfo>().charaCategory != null) continue;
             if (sarchPosition == position) continue;
             m_sarchRange[Mathf.FloorToInt(sarchPosition.y)][Mathf.FloorToInt(sarchPosition.x)] = true;
@@ -105,6 +109,10 @@ public class SarchRange : MonoBehaviour {
         {
             sarchPosition = SarchPosition(stage, characterPosition, i);
             if (sarchPosition == characterPosition) continue;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/development
             moveRouteDammy.Add(sarchPosition);
             SarchRoute(stage, sarchPosition, position, moveRouteDammy, moveRange - 1, moveRageMax, enemyTag);
             moveRouteDammy.RemoveAt(moveRouteDammy.Count - 1);
@@ -140,8 +148,11 @@ public class SarchRange : MonoBehaviour {
         height = Mathf.Abs(stage[(int)sarchPosition.y][(int)sarchPosition.x].GetComponent<StageInfo>().height
             - stage[(int)characterPosition.y][(int)characterPosition.x].GetComponent<StageInfo>().height);
         if (stage[(int)sarchPosition.y][(int)sarchPosition.x] == null) return characterPosition;
+<<<<<<< HEAD
         if (stage[(int)sarchPosition.y][(int)sarchPosition.x].GetComponent<StageInfo>().possible) return characterPosition;
         if (stage[(int)sarchPosition.y][(int)sarchPosition.x].tag != "Stage") return characterPosition;
+=======
+>>>>>>> origin/development
         if (height != 0 && height != 1) return characterPosition;
         return sarchPosition;
     }

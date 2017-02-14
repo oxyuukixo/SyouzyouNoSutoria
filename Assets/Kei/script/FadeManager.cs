@@ -2,9 +2,13 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+<<<<<<< HEAD
 /// <summary>
 /// シーン遷移時のフェードイン・アウトを制御するためのクラス
 /// </summary>
+=======
+
+>>>>>>> origin/development
 public class FadeManager : SingletonMonoBehaviour<FadeManager>
 {
     /// <summary>暗転用黒テクスチャ</summary>
@@ -26,7 +30,11 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
         //ここで黒テクスチャ作る
         this.blackTexture = new Texture2D(32, 32, TextureFormat.RGB24, false);
+<<<<<<< HEAD
         this.blackTexture.ReadPixels(new Rect(0, 0, 32, 32), 0, 0, false);
+=======
+        //this.blackTexture.ReadPixels(new Rect(0, 0, 32, 32), 0, 0, false);
+>>>>>>> origin/development
         this.blackTexture.SetPixel(0, 0, Color.white);
         this.blackTexture.Apply();
     }
@@ -51,6 +59,10 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         StartCoroutine(TransScene(scene, interval));
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/development
     /// <summary>
     /// シーン遷移用コルーチン
     /// </summary>
@@ -79,8 +91,16 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             time += Time.deltaTime;
             yield return 0;
         }
+<<<<<<< HEAD
 
         this.isFading = false;
     }
 
 }
+=======
+        this.isFading = false;
+    }
+    //
+    //
+}
+>>>>>>> origin/development

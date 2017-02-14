@@ -9,8 +9,12 @@ public class NewGameButton: MonoBehaviour {
     private bool NewGame = false;
 
     // Use this for initialization
+<<<<<<< HEAD
     void Start()
     {
+=======
+    void Start () {
+>>>>>>> origin/development
         m_Fade = NewGameObj.GetComponent<Fade>();
     }
 
@@ -19,10 +23,15 @@ public class NewGameButton: MonoBehaviour {
     {
         if (!m_Fade.m_IsFadeIn & m_Fade.m_IsFadeFinish)
         {
+<<<<<<< HEAD
             if (NewGame)
             {
                 SceneManager.LoadScene("Conversation");
             }
+=======
+            if(NewGame)
+            SceneManager.LoadScene("Conversation");
+>>>>>>> origin/development
         }
     }
 
@@ -30,5 +39,9 @@ public class NewGameButton: MonoBehaviour {
     {
         m_Fade.FadeOut();
         NewGame = true;
+<<<<<<< HEAD
+=======
+        Debug.Log("New");
+>>>>>>> origin/development
     }
 }

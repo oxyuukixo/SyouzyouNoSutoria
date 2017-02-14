@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using System.Collections;
+<<<<<<< HEAD
 using GodTouches;
+=======
+>>>>>>> origin/development
 
 public class CameraControl : MonoBehaviour {
 
@@ -13,12 +16,15 @@ public class CameraControl : MonoBehaviour {
     private Vector3 m_Offset;   // カメラの距離 
     private float wheel;        // ホイールの回転量
     private bool m_ScrolFlg = true;    // 開始時のカメラのスクロールフラグ
+<<<<<<< HEAD
     private Vector3 startPos;
     private Vector3 moveDistance;
     private Vector3 endPos;
 
     public float StartPos;
     public float EndPos;
+=======
+>>>>>>> origin/development
 
     // Use this for initialization
     void Start () {
@@ -27,6 +33,7 @@ public class CameraControl : MonoBehaviour {
         m_Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
         m_Offset = new Vector3(0, 0, -20);
         m_CamAni.Play();
+<<<<<<< HEAD
         startPos = m_Camera.transform.localPosition;
 	}
 
@@ -34,6 +41,13 @@ public class CameraControl : MonoBehaviour {
     void Update()
     {
         // カメラのアニメーション
+=======
+	}
+	
+	// Update is called once per frame
+	void Update ()
+    {
+>>>>>>> origin/development
         if (Input.GetMouseButton(0))
         {
             m_CamAni.Stop();
@@ -46,8 +60,12 @@ public class CameraControl : MonoBehaviour {
         transform.position = m_CenterObj.transform.position;
         m_Camera.transform.localPosition = m_Offset;
 
+<<<<<<< HEAD
         // ズーム・ルーズ
         if (wheel > 0)
+=======
+        if(wheel > 0)
+>>>>>>> origin/development
         {
             if (m_Camera.orthographicSize > 2)
             {
@@ -62,6 +80,7 @@ public class CameraControl : MonoBehaviour {
             }
         }
 
+<<<<<<< HEAD
         MoveCamera();
         InputWheel();
     }
@@ -97,6 +116,11 @@ public class CameraControl : MonoBehaviour {
         }
     }
 
+=======
+        InputWheel();
+    }
+
+>>>>>>> origin/development
     void InputWheel()
     {
         wheel = CrossPlatformInputManager.GetAxis("Mouse ScrollWheel");

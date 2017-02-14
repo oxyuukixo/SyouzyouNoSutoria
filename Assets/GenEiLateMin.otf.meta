@@ -1,6 +1,16 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: def280e95bcc09d4383ffe1947c0d088
 timeCreated: 1482224210
+=======
+<<<<<<< HEAD
+guid: 8c8e888c53555b247bb7bbce52d85f3f
+timeCreated: 1482224497
+=======
+guid: def280e95bcc09d4383ffe1947c0d088
+timeCreated: 1482224210
+>>>>>>> 1e8b0e905eef5cdac73810a76e6b83a6ff918bb1
+>>>>>>> origin/development
 licenseType: Free
 TrueTypeFontImporter:
   serializedVersion: 4

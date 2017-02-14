@@ -3,10 +3,15 @@ using System.Collections;
 
 public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 {
+<<<<<<< HEAD
 
     private static T instance;
     public static T Instance
 
+=======
+    private static T instance;
+    public static T Instance
+>>>>>>> origin/development
     {
         get
         {
@@ -19,6 +24,10 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
                     Debug.LogError(typeof(T) + "is nothing");
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/development
             return instance;
         }
     }

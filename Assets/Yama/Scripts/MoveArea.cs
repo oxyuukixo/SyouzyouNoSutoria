@@ -32,7 +32,10 @@ public class MoveArea : MonoBehaviour {
                 m_stage[i][j].GetComponent<StageInfo>().m_moveAriaActive[(int)moveAreaType] = true;
             }
         }
+<<<<<<< HEAD
         
+=======
+>>>>>>> origin/development
     }
 
     //移動可能範囲をリセットする
@@ -47,6 +50,10 @@ public class MoveArea : MonoBehaviour {
                 {
                     m_stage[i][j].GetComponent<StageInfo>().m_displayArea[k] = false;
                     m_stage[i][j].GetComponent<StageInfo>().m_moveAriaActive[k] = false;
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/development
                 }
             }
         }

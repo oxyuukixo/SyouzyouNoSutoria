@@ -1,20 +1,27 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+<<<<<<< HEAD
 using System;
 using GodTouches;
+=======
+>>>>>>> origin/development
 
 public class UICtrl : MonoBehaviour {
 
     public Image[] m_Chara;
     public GameObject[] m_Command;
+<<<<<<< HEAD
     public Image[] m_ComIcon;
+=======
+>>>>>>> origin/development
     public Image[] m_Status;
     public Text m_Turn;
     public GameObject[] m_Cover;
     public Text m_Start;
     public Text m_End;
 
+<<<<<<< HEAD
     private Vector3 startPos;
     private Vector3 moveDistance;
     private Vector3 endPos;
@@ -27,6 +34,10 @@ public class UICtrl : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+=======
+    // Use this for initialization
+    void Start () {
+>>>>>>> origin/development
         for (int i = 0; i < m_Chara.Length; i++)
         {
             m_Chara[i].enabled = false;
@@ -36,6 +47,7 @@ public class UICtrl : MonoBehaviour {
         m_Cover[0].SetActive(false);
         m_Start.enabled = false;
         m_End.enabled = false;
+<<<<<<< HEAD
 
         m_x = new float[m_ComIcon.Length];
         m_y = new float[m_ComIcon.Length];
@@ -90,4 +102,12 @@ public class UICtrl : MonoBehaviour {
             startPos = GodTouch.GetPosition();
         }
     }
+=======
+	}
+	
+	// Update is called once per frame
+	void Update () {
+        
+	}
+>>>>>>> origin/development
 }

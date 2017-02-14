@@ -1,20 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
+<<<<<<< HEAD
 using GodTouches;
+=======
+>>>>>>> origin/development
 
 public class BattleMain : MonoBehaviour
 {
     // 配置するプレハブの読み込み
     public GameObject prefabNormal;
     public GameObject prefabWall;
+<<<<<<< HEAD
     public GameObject animationCamera;
+=======
+>>>>>>> origin/development
     public GameObject[] Player;
     public GameObject[] Status_TAC; // 順番
     public int TurnElapsedNum;      // ターン数
 
     protected int m_SceneTask;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> origin/development
     private int m_iPlayerNum;   // 呼び出すキャラクターの番号
     private UICtrl m_UIClass;
 
@@ -69,16 +79,27 @@ public class BattleMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+<<<<<<< HEAD
         if (animationCamera.GetComponent<Animation>().isPlaying) return;
         // プレイアブルキャラクターの初期配置
         if (m_iPlayerNum < Player.Length)
         {
             if (CrossPlatformInputManager.GetButtonUp("Fire1") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
+=======
+        // プレイアブルキャラクターの初期配置
+        if (m_iPlayerNum < Player.Length)
+        {
+            if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+>>>>>>> origin/development
             {
                 m_UIClass.m_Start.enabled = false;
 
                 RaycastHit hit;     // 光線に当たったオブジェクトを受け取るクラス
                 Ray ray;            // 光線クラス
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/development
                 // スクリーン座標に対してマウスの位置の光線を取得
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -90,6 +111,7 @@ public class BattleMain : MonoBehaviour
                     if (hit.collider.gameObject.tag == "Stage")
                     {
                         StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
+<<<<<<< HEAD
                         if (stage.possible) return;
                         Player[m_iPlayerNum].SetActive(true);
                         Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
@@ -97,6 +119,12 @@ public class BattleMain : MonoBehaviour
                         m_iPlayerNum++;
                         if (m_iPlayerNum == Player.Length) TurnController.SetCharacter();
                         stage.possible = true;
+=======
+                        Player[m_iPlayerNum].SetActive(true);
+                        Player[m_iPlayerNum].transform.position = hit.transform.position + new Vector3(0.5f, 0.662f, 0.5f);
+                        m_iPlayerNum++;
+                        if (m_iPlayerNum == Player.Length) TurnController.SetCharacter();
+>>>>>>> origin/development
                     }
                 }
             }

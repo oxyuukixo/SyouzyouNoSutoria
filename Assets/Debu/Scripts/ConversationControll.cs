@@ -6,13 +6,20 @@ using System.Text;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityStandardAssets.CrossPlatformInput;
+<<<<<<< HEAD
 using System.Text.RegularExpressions;
+=======
+>>>>>>> origin/development
 
 public class ConversationControll : MonoBehaviour {
 
     //テキストを表示する親となるオブジェクト
+<<<<<<< HEAD
     public GameObject m_LeftTextBox;
     public GameObject m_RightTextBox;
+=======
+    public GameObject m_TextBox;
+>>>>>>> origin/development
 
     //フェードに使用するオブジェクト
     public Image m_FadeObject;
@@ -91,8 +98,11 @@ public class ConversationControll : MonoBehaviour {
         Finish      //テキスト読み込み終了    
     }
 
+<<<<<<< HEAD
     private GameObject m_TextBox;
 
+=======
+>>>>>>> origin/development
     //テキストの状態
     private ConversationState m_State;
 
@@ -165,8 +175,13 @@ public class ConversationControll : MonoBehaviour {
 
         m_FadeObjectComponent = m_FadeObject.GetComponent<Fade>();
 
+<<<<<<< HEAD
         ////Shift_JISのエンコーダーを取得
         //m_EncodingShiftJIS = Encoding.GetEncoding("Shift_JIS");
+=======
+        //Shift_JISのエンコーダーを取得
+        m_EncodingShiftJIS = Encoding.GetEncoding("Shift_JIS");
+>>>>>>> origin/development
 
         //会話シーンよう画像のパス
         m_ConversationPath = "Conversation/";
@@ -179,9 +194,13 @@ public class ConversationControll : MonoBehaviour {
         {
             m_WeightNum *= 2;
         }
+<<<<<<< HEAD
 
         m_TextBox = m_LeftTextBox;
 
+=======
+        
+>>>>>>> origin/development
         //表示用のテキストボックスを作成
         CreateTextBox();
     }
@@ -268,6 +287,7 @@ public class ConversationControll : MonoBehaviour {
     //=============================================================================
     void TextRead()
     {
+<<<<<<< HEAD
         ////ストリームリーダーを作成
         //m_Sr = new StreamReader(Application.dataPath + "/Resources/" + m_ConversationPath + "Text/" + m_TextPath + ".txt", m_EncodingShiftJIS);
 
@@ -278,6 +298,14 @@ public class ConversationControll : MonoBehaviour {
         TextAsset t = Resources.Load<TextAsset>(/*Application.dataPath + "/Resources/" + */m_ConversationPath + "Text/" + m_TextPath/* + ".txt"*/);
 
         m_Text = t.text;
+=======
+        //ストリームリーダーを作成
+        m_Sr = new StreamReader(Application.dataPath + "/Resources/" + m_ConversationPath + "Text/" + m_TextPath + ".txt", m_EncodingShiftJIS);
+
+        //最後まで読み込む
+        m_Text = m_Sr.ReadToEnd();
+        m_Sr.Close();
+>>>>>>> origin/development
     }
 
     //=============================================================================
@@ -305,7 +333,11 @@ public class ConversationControll : MonoBehaviour {
         TextComp.color = m_Color;
 
         //基準となる座標を左上にする
+<<<<<<< HEAD
         RTransform.localPosition = new Vector3(0, -(TextComp.preferredHeight) * m_TextLIst.Count, 0);
+=======
+        RTransform.position = new Vector3(0, -(TextComp.preferredHeight) * m_TextLIst.Count, 0);
+>>>>>>> origin/development
         RTransform.sizeDelta = new Vector2(m_TextBox.GetComponent<RectTransform>().rect.width,TextComp.preferredHeight);
         RTransform.anchorMin = new Vector2(0, 1);
         RTransform.anchorMax = new Vector2(0, 1);
@@ -327,8 +359,11 @@ public class ConversationControll : MonoBehaviour {
         }
     }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/development
     //=============================================================================
     //
     // Purpose : 現在表示してあるテキストをすべてクリアして行を1番上にする
@@ -360,6 +395,7 @@ public class ConversationControll : MonoBehaviour {
     {
         m_TextLIst[m_TextLIst.Count - 1].GetComponent<Text>().text += m_Text[m_CurrentTextNum];
 
+<<<<<<< HEAD
         if(new Regex("^[\u0020-\u007E\uFF66-\uFF9F]+$").IsMatch(m_Text[m_CurrentTextNum].ToString()))
         {
             m_WeightCurrentNum += 1;
@@ -370,6 +406,11 @@ public class ConversationControll : MonoBehaviour {
         }
 
         //m_WeightCurrentNum += m_EncodingShiftJIS.GetByteCount(m_Text[m_TextLIst.Count - 1].ToString());
+=======
+        char a = m_Text[m_CurrentTextNum];
+
+        m_WeightCurrentNum += m_EncodingShiftJIS.GetByteCount(m_Text[m_TextLIst.Count - 1].ToString());
+>>>>>>> origin/development
 
         m_CurrentTextNum++;
     }
@@ -425,7 +466,11 @@ public class ConversationControll : MonoBehaviour {
     void Wait()
     {
         //クリックまたはタッチされたら
+<<<<<<< HEAD
         if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+=======
+        if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+>>>>>>> origin/development
         {
             //入力待ち状態だったら
             if (m_State == ConversationState.Wait)
@@ -453,7 +498,11 @@ public class ConversationControll : MonoBehaviour {
             //現在ある行の数だけ繰り返す
             for (int i = 0; i < m_TextLIst.Count; i++)
             {
+<<<<<<< HEAD
                 m_TextLIst[i].GetComponent<RectTransform>().localPosition += new Vector3(0, m_ScrollSpeed * Time.deltaTime, 0);
+=======
+                m_TextLIst[i].GetComponent<RectTransform>().localPosition += new Vector3(0, m_ScrollSpeed, 0);
+>>>>>>> origin/development
 
                 if(m_Skip)
                 {
@@ -574,7 +623,11 @@ public class ConversationControll : MonoBehaviour {
     //
     // Purpose : キャラクターの変更関数
     //
+<<<<<<< HEAD
     // Return : なし3
+=======
+    // Return : なし
+>>>>>>> origin/development
     //
     //=============================================================================
     void CharaChange()
@@ -585,7 +638,11 @@ public class ConversationControll : MonoBehaviour {
 
                 if (m_ChangeGraphicNum == 1)
                 {
+<<<<<<< HEAD
                     m_GraphicLeft.rectTransform.localPosition -= new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
+=======
+                    m_GraphicLeft.rectTransform.localPosition -= new Vector3(m_ChangeSpeed, 0, 0);
+>>>>>>> origin/development
 
                     if (m_GraphicLeft.rectTransform.localPosition.x < -m_GraphicLeft.rectTransform.sizeDelta.x)
                     {
@@ -596,9 +653,15 @@ public class ConversationControll : MonoBehaviour {
                 }
                 else
                 {
+<<<<<<< HEAD
                     m_GraphicRight.rectTransform.localPosition += new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
 
                     if (m_GraphicRight.rectTransform.localPosition.x > m_Canvas.GetComponent<RectTransform>().sizeDelta.x)
+=======
+                    m_GraphicRight.rectTransform.localPosition += new Vector3(m_ChangeSpeed, 0, 0);
+
+                    if (m_GraphicRight.rectTransform.localPosition.x > Screen.width)
+>>>>>>> origin/development
                     {
                         m_GraphicRight.sprite = Resources.Load<Sprite>(m_ChangeGraphcPath);
 
@@ -612,7 +675,11 @@ public class ConversationControll : MonoBehaviour {
 
                 if (m_ChangeGraphicNum == 1)
                 {
+<<<<<<< HEAD
                     m_GraphicLeft.rectTransform.localPosition += new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
+=======
+                    m_GraphicLeft.rectTransform.localPosition += new Vector3(m_ChangeSpeed, 0, 0);
+>>>>>>> origin/development
 
                     if (m_GraphicLeft.rectTransform.localPosition.x > 0)
                     {
@@ -623,11 +690,19 @@ public class ConversationControll : MonoBehaviour {
                 }
                 else
                 {
+<<<<<<< HEAD
                     m_GraphicRight.rectTransform.localPosition -= new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
 
                     if (m_GraphicRight.rectTransform.localPosition.x < m_Canvas.GetComponent<RectTransform>().sizeDelta.x - m_GraphicRight.rectTransform.sizeDelta.x)
                     {
                         m_GraphicRight.rectTransform.localPosition = new Vector3(m_Canvas.GetComponent<RectTransform>().sizeDelta.x - m_GraphicRight.rectTransform.sizeDelta.x, m_GraphicRight.rectTransform.localPosition.y, m_GraphicRight.rectTransform.localPosition.z);
+=======
+                    m_GraphicRight.rectTransform.localPosition -= new Vector3(m_ChangeSpeed, 0, 0);
+
+                    if (m_GraphicRight.rectTransform.localPosition.x < Screen.width - m_GraphicRight.rectTransform.sizeDelta.x)
+                    {
+                        m_GraphicRight.rectTransform.localPosition = new Vector3(Screen.width - m_GraphicRight.rectTransform.sizeDelta.x, m_GraphicRight.rectTransform.localPosition.y, m_GraphicRight.rectTransform.localPosition.z);
+>>>>>>> origin/development
 
                         m_State = ConversationState.Read;
                     }
@@ -685,11 +760,19 @@ public class ConversationControll : MonoBehaviour {
 
         if (FadeIn)
         {
+<<<<<<< HEAD
             m_FadeObjectComponent.FadeIn(m_FadeSpeed);
         }
         else
         {
             m_FadeObjectComponent.FadeOut(m_FadeSpeed);
+=======
+            m_FadeObjectComponent.FadeIn();
+        }
+        else
+        {
+            m_FadeObjectComponent.FadeOut();
+>>>>>>> origin/development
         }
 
         //フェード後の状態のセット
@@ -917,6 +1000,7 @@ public class ConversationControll : MonoBehaviour {
 
                                     m_LeftNameText.text = SplitText[1];
 
+<<<<<<< HEAD
                                     foreach (Transform n in m_TextBox.transform)
                                     {
                                         GameObject.Destroy(n.gameObject);
@@ -928,6 +1012,8 @@ public class ConversationControll : MonoBehaviour {
 
                                     CreateTextBox();
 
+=======
+>>>>>>> origin/development
                                     break;
 
                                 case "2":
@@ -937,6 +1023,7 @@ public class ConversationControll : MonoBehaviour {
 
                                     m_RightNameText.text = SplitText[1];
 
+<<<<<<< HEAD
                                     foreach (Transform n in m_TextBox.transform)
                                     {
                                         GameObject.Destroy(n.gameObject);
@@ -948,6 +1035,8 @@ public class ConversationControll : MonoBehaviour {
 
                                     CreateTextBox();
 
+=======
+>>>>>>> origin/development
                                     break;
 
                                 default:

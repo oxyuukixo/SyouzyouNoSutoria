@@ -20,7 +20,10 @@ public class CPAI : MonoBehaviour {
     private List<GameObject> m_targetCandidates;    //狙う敵の候補
     private GameObject[][] m_stage;                 //ステージ情報
     private Status m_myStatus;                      //自分のステータス
+<<<<<<< HEAD
     private StageInfo m_onStage;                    //自分が乗っているステージ
+=======
+>>>>>>> origin/development
     private CPAIType m_aiType;                      //AIの状態
 
     //開始時に初期化
@@ -35,8 +38,11 @@ public class CPAI : MonoBehaviour {
         {
             m_stage[i] = map.m_MapList[i].ToArray();
         }
+<<<<<<< HEAD
         m_onStage = m_stage[Mathf.FloorToInt(transform.position.z)][Mathf.FloorToInt(transform.position.x)].GetComponent<StageInfo>();
         m_onStage.possible = true;
+=======
+>>>>>>> origin/development
     }
 
     //CPUのAI
@@ -98,10 +104,15 @@ public class CPAI : MonoBehaviour {
         if (m_targetCandidates.Count == 0) return;
         for (int i = m_targetCandidates.Count - 1; i >= 0; i--)
         {
+<<<<<<< HEAD
             m_targetCandidates[i].GetComponent<CharaControl>().ChangeOnStagePossible(false);
             moveRoute = SarchRange.SarchMoveRoute(m_stage,
                 gameObject, m_targetCandidates[i], m_myStatus.MOV + 1);
             m_targetCandidates[i].GetComponent<CharaControl>().ChangeOnStagePossible(true);
+=======
+            moveRoute = SarchRange.SarchMoveRoute(m_stage,
+                gameObject, m_targetCandidates[i], m_myStatus.MOV + 1);
+>>>>>>> origin/development
             if (moveRoute == null) m_targetCandidates.Remove(m_targetCandidates[i]);
         }
         if (m_targetCandidates.Count == 0) return;
@@ -196,6 +207,10 @@ public class CPAI : MonoBehaviour {
         if (moveRoute == null) return;
         moveNumber = target.GetComponent<Status>().MOV;
         moveRoute.RemoveRange(moveNumber, moveRoute.Count - moveNumber);
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/development
         gameObject.GetComponent<CharacterMove>().m_moveRoute = moveRoute.ToArray();
         gameObject.GetComponent<CharacterMove>().m_move = true;
         m_aiType = CPAIType.move;
@@ -221,9 +236,12 @@ public class CPAI : MonoBehaviour {
     //ターンエンド
     private void TurnEnd()
     {
+<<<<<<< HEAD
         m_onStage.possible = false;
         m_onStage = m_stage[Mathf.FloorToInt(transform.position.z)][Mathf.FloorToInt(transform.position.x)].GetComponent<StageInfo>();
         m_onStage.possible = true;
+=======
+>>>>>>> origin/development
         m_aiType = CPAIType.sarchMove;
         TurnController.NextMoveCharacter();
     }
