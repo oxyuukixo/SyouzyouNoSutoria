@@ -204,8 +204,7 @@ public class CharaControl : MonoBehaviour {
         }
         else if (hit.collider.gameObject.tag == "Stage")
         {
-            if (!hit.collider.gameObject.GetComponent<StageInfo>().m_displayArea[(int)MoveAreaType.player] ||
-                hit.collider.gameObject.GetComponent<StageInfo>().charaCategory == null)
+            if (!hit.collider.gameObject.GetComponent<StageInfo>().m_displayArea[(int)MoveAreaType.player])
             {
                 AttackDataList.HideAttackArea(gameObject);
                 iSelectCommand = 0;
@@ -264,8 +263,7 @@ public class CharaControl : MonoBehaviour {
         }
         else if (hit.collider.gameObject.tag == "Stage")
         {
-            if (!hit.collider.gameObject.GetComponent<StageInfo>().m_displayArea[(int)MoveAreaType.player] ||
-                hit.collider.gameObject.GetComponent<StageInfo>().charaCategory == null)
+            if (!hit.collider.gameObject.GetComponent<StageInfo>().m_displayArea[(int)MoveAreaType.player])
             {
                 AttackDataList.HideAttackArea(gameObject);
                 iSelectCommand = 0;
