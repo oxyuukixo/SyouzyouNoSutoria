@@ -6,6 +6,7 @@ public class SarchRange : MonoBehaviour {
 
     private static bool[][] m_sarchRange;   //探索範囲
     private static Vector2[] m_moveRoute;   //移動ルート
+    private static int m_notTurnCount;      //道を曲がらなかった回数
     private static float m_moveMin;         //最小値
     private static bool m_reachMovePoint;   //移動地点に到達したか
 
@@ -74,24 +75,32 @@ public class SarchRange : MonoBehaviour {
         if (character.tag == "Player") enemyTag = "Enemy";
         else enemyTag = "Player";
         m_moveMin = moveRange;
-        SarchRoute(stage, characterPosition, position, moveRouteDammy, moveRange, moveRange, enemyTag);
+        m_notTurnCount = 0;
+        SarchRoute(stage, characterPosition, position, moveRouteDammy, SarchDirection.top, m_notTurnCount, moveRange, moveRange, enemyTag);
         if(!m_reachMovePoint) m_moveRoute = null;
         return m_moveRoute;
     }
 
     //最短の移動経路を出す
     private static void SarchRoute(GameObject[][] stage, Vector2 characterPosition, Vector2 position,
-    List<Vector2> moveRouteDammy, int moveRange, int moveRageMax, string enemyTag)
+    List<Vector2> moveRouteDammy, SarchDirection oldDirection,int notTurnCount, int moveRange, int moveRageMax, string enemyTag)
     {
         Vector2 sarchPosition;      //探索座標
+        SarchDirection direction;   //向き
+        int count;                  //凡庸カウンター
+        int notTurn;                //曲がらなかった回数
+        direction = oldDirection;
+        count = 0;
         //キャラクター座標と移動先の座標が一致していたら
         if(characterPosition == position)
         {
             if (stage[(int)characterPosition.y][(int)characterPosition.x].GetComponent<StageInfo>().charaCategory != null) return;
             //移動量の最小値を移動回数が超えたら何もしない
             if (m_moveMin < moveRageMax - moveRange) return;
+            if (m_moveMin == moveRageMax - moveRange && m_notTurnCount > notTurnCount) return;
             m_reachMovePoint = true;
             m_moveMin = moveRageMax - moveRange;
+            m_notTurnCount = notTurnCount;
             m_moveRoute = moveRouteDammy.ToArray();
             return;
         }
@@ -101,13 +110,26 @@ public class SarchRange : MonoBehaviour {
         if (m_moveMin < moveRageMax - moveRange) return;
         //移動量がなくなったら何もしない
         if (moveRange <= 0) return;
-        for (SarchDirection i = SarchDirection.top; i < SarchDirection.number; i++)
+        //移動方向を決める
+        while (count < (int)SarchDirection.number)
         {
-            sarchPosition = SarchPosition(stage, characterPosition, i);
-            if (sarchPosition == characterPosition) continue;
+            notTurn = notTurnCount;
+            sarchPosition = SarchPosition(stage, characterPosition, direction);
+            if (sarchPosition == characterPosition)
+            {
+                if (++direction == SarchDirection.number) direction = SarchDirection.top;
+                count++;
+                continue;
+            }
+            if (direction == oldDirection || notTurnCount == 0)
+            {
+                ++notTurn;
+            }
             moveRouteDammy.Add(sarchPosition);
-            SarchRoute(stage, sarchPosition, position, moveRouteDammy, moveRange - 1, moveRageMax, enemyTag);
+            SarchRoute(stage, sarchPosition, position, moveRouteDammy, direction, notTurn, moveRange - 1, moveRageMax, enemyTag);
             moveRouteDammy.RemoveAt(moveRouteDammy.Count - 1);
+            if (++direction == SarchDirection.number) direction = SarchDirection.top;
+            count++;
         }
         return;
     }

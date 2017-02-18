@@ -6,6 +6,7 @@ using System.IO;
 //物理攻撃の名前
 public enum PhysicalName
 {
+    normal,     //通常攻撃
     number,     //要素数
 }
 
@@ -31,6 +32,8 @@ public class AttackDataList : MonoBehaviour {
     {
         switch (physical)
         {
+            case PhysicalName.normal:
+                return "Normal";
             default:
                 return "";
         }
@@ -80,7 +83,7 @@ public class AttackDataList : MonoBehaviour {
         string line;                        //読み込み文字列
         string[] values;                    //読み込み文字列の単語
         int count;                          //凡庸カウンター
-        csv = Resources.Load("CSV/" + PhysicalNameString(physical)) as TextAsset;
+        csv = Resources.Load("CSV/Physical/" + PhysicalNameString(physical)) as TextAsset;
         reader = new StringReader(csv.text);
         if (reader.Peek() == -1) return;
         //余分な文字列を排除する
@@ -119,7 +122,7 @@ public class AttackDataList : MonoBehaviour {
         string line;                        //読み込み文字列
         string[] values;                    //読み込み文字列の単語
         int count;                          //凡庸カウンター
-        csv = Resources.Load("CSV/" + MagicNameString(magic)) as TextAsset;
+        csv = Resources.Load("CSV/Magic/" + MagicNameString(magic)) as TextAsset;
         reader = new StringReader(csv.text);
         if (reader.Peek() == -1) return;
         //余分な文字列を排除する
@@ -144,6 +147,7 @@ public class AttackDataList : MonoBehaviour {
                 if (int.Parse(values[i]) == 0) attackArea[count].Add(false);
                 else attackArea[count].Add(true);
             }
+            count++;
         }
         //攻撃範囲を入力
         m_magicData[(int)magic].m_range = new bool[attackArea.Count][];
@@ -170,6 +174,7 @@ public class AttackDataList : MonoBehaviour {
         moveAreaType = MoveAreaType.player;
         if (character.tag == "Player") moveAreaType = MoveAreaType.player;
         else if (character.tag == "Enemy") moveAreaType = MoveAreaType.enemy;
+        ActiveAttackArea(character);
         for (int i = 0; i < m_physicalData[(int)physical].m_range.Length; i++)
         {
             stageY = characterY + i - m_physicalData[(int)physical].m_centerYRange;
@@ -202,6 +207,7 @@ public class AttackDataList : MonoBehaviour {
         moveAreaType = MoveAreaType.player;
         if (character.tag == "Player") moveAreaType = MoveAreaType.player;
         else if (character.tag == "Enemy") moveAreaType = MoveAreaType.enemy;
+        ActiveAttackArea(character);
         for (int i = 0; i < m_magicData[(int)magic].m_range.Length; i++)
         {
             stageY = characterY + i - m_magicData[(int)magic].m_centerYRange;
@@ -249,6 +255,45 @@ public class AttackDataList : MonoBehaviour {
             status.HP = 0;
             Destroy(otherCharacter);
         }
+    }
+
+    //攻撃エリアの表示準備
+    private static void ActiveAttackArea(GameObject character)
+    {
+        GameObject[][] stage;   //ステージ
+        stage = character.GetComponent<CharacterMove>().m_stage;
+        if (stage == null) return;
+        for (int i = 0; i < stage.Length; i++)
+        {
+            for (int j = 0; j < stage[i].Length; j++)
+            {
+                for (int k = 0; k < (int)MoveAreaType.number; k++)
+                {
+                    stage[i][j].GetComponent<StageInfo>().m_displayArea[k] = false;
+                    stage[i][j].GetComponent<StageInfo>().m_moveAriaActive[k] = true;
+                }
+            }
+        }
+    }
+
+    //攻撃エリアの非表示にする
+    public static void HideAttackArea(GameObject character)
+    {
+        GameObject[][] stage;   //ステージ
+        stage = character.GetComponent<CharacterMove>().m_stage;
+        if (stage == null) return;
+        for (int i = 0; i < stage.Length; i++)
+        {
+            for (int j = 0; j < stage[i].Length; j++)
+            {
+                for (int k = 0; k < (int)MoveAreaType.number; k++)
+                {
+                    stage[i][j].GetComponent<StageInfo>().m_displayArea[k] = false;
+                    stage[i][j].GetComponent<StageInfo>().m_moveAriaActive[k] = false;
+                }
+            }
+        }
+
     }
 
 }

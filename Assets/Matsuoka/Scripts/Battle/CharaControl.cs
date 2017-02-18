@@ -132,12 +132,10 @@ public class CharaControl : MonoBehaviour {
 
     public void Move()
     {
-        int number;     //オブジェクト番号
         if (iSelectCommand == 0) MoveArea.MoveAreaSarch(gameObject);
         iSelectCommand = 1;
         CommandUIFalse(0);
         m_UIClass.m_Cover[0].SetActive(false);
-
 
         if (CrossPlatformInputManager.GetButtonUp("Fire1"))
         {
@@ -152,29 +150,25 @@ public class CharaControl : MonoBehaviour {
                 // マウスの光線の先にオブジェクトが存在していたら hit に入る
                 if (Physics.Raycast(ray, out hit))
                 {
-                    // 当たったオブジェクトを取得
-                    number = StatusController.CharactorNumber(hit.collider.gameObject);
-                    if (oldMapChip != null)
-                    {
-                        StageInfo oldStage = oldMapChip.gameObject.GetComponent<StageInfo>();
-                        oldStage.possible = false;
-                    }
                     // ステージ上
-                    if (number == (int)PlayerNumber.Default)
+                    if (hit.collider.gameObject.tag == "Stage")
                     {
                         if(!m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject))
                         {
                             MoveArea.ResetMoveArea();
+                            StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
+                            stage.possible = true;
+                            stage.charaCategory = gameObject;
+                            StageInfo oldStage = oldMapChip.gameObject.GetComponent<StageInfo>();
+                            oldStage.possible = false;
+                            oldStage.charaCategory = null;
+                            oldMapChip = hit.collider.gameObject;
                         }
                         //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
                         m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
                         m_StatusClass.HEIGHT = m_StageInfoClass.height; // 高さを取得
                         iSelectCommand = 0;
-                    }
-                                  
-                    StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
-                    stage.possible = true;
-                    oldMapChip = hit.collider.gameObject;
+                    }                          
                 }
             }
         }
@@ -186,11 +180,10 @@ public class CharaControl : MonoBehaviour {
         Ray ray;         //光線クラス
         Status status;   //ステータス
         int damage;      //ダメージ
-
+        if (iSelectCommand == 0) AttackDataList.PhysicalAttackRange(gameObject,PhysicalName.normal);
         iSelectCommand = 2;
         CommandUIFalse(0);
         m_UIClass.m_Cover[0].SetActive(false);
-
         if (!CrossPlatformInputManager.GetButtonDown("Fire1")) return;
         // スクリーン座標に対してマウスの位置の光線を取得
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -200,26 +193,62 @@ public class CharaControl : MonoBehaviour {
             //マウスの光線に当たったのが敵以外なら何もしない
             if (hit.collider.gameObject.tag == "Enemy")
             {
-                status = hit.collider.gameObject.GetComponent<Status>();
-                damage = DamageCalculations.Damege(gameObject, hit.collider.gameObject,
-                    GameLevel.levelEasy, AttackType.Physical, AttackProperty.NoPropertyAttack);
-                status.HP -= damage;
-                if (status.HP < 0)
+                if (hit.collider.gameObject.GetComponent<EnemyControl>().m_StageInfoClass.m_displayArea[(int)MoveAreaType.player])
                 {
-                    status.HP = 0;
-                    Destroy(hit.collider.gameObject);
-                    m_UIClass.m_End.enabled = true;
+                    status = hit.collider.gameObject.GetComponent<Status>();
+                    damage = DamageCalculations.Damege(gameObject, hit.collider.gameObject,
+                        GameLevel.levelEasy, AttackType.Physical, AttackProperty.NoPropertyAttack);
+                    status.HP -= damage;
+                    if (status.HP < 0)
+                    {
+                        status.HP = 0;
+                        Destroy(hit.collider.gameObject);
+                        m_UIClass.m_End.enabled = true;
+                    }
                 }
-                iSelectCommand = 0;
             }
+            AttackDataList.HideAttackArea(gameObject);
+            iSelectCommand = 0;
         }
     }
 
     public void Magic()
     {
-        if (iSelectCommand == 0) AttackDataList.MagicAttackRange(gameObject,MagicName.fire);
+        RaycastHit hit;  //光線に当たったオブジェクトを受け取るクラス
+        Ray ray;         //光線クラス
+        Status status;   //ステータス
+        int damage;      //ダメージ
+        if (iSelectCommand == 0) AttackDataList.MagicAttackRange(gameObject, MagicName.fire);
+        iSelectCommand = 3;
         CommandUIFalse(0);
         m_UIClass.m_Cover[0].SetActive(false);
+        if (!CrossPlatformInputManager.GetButtonDown("Fire1")) return;
+        // スクリーン座標に対してマウスの位置の光線を取得
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // マウスの光線の先にオブジェクトが存在していたら hit に入る
+        if (Physics.Raycast(ray, out hit))
+        {
+            //マウスの光線に当たったのが敵以外なら何もしない
+            if (hit.collider.gameObject.tag == "Enemy")
+            {
+
+                if (hit.collider.gameObject.GetComponent<EnemyControl>().m_StageInfoClass.m_displayArea[(int)MoveAreaType.player])
+                {
+                    status = hit.collider.gameObject.GetComponent<Status>();
+                    damage = DamageCalculations.Damege(gameObject, hit.collider.gameObject,
+                        GameLevel.levelEasy, AttackType.Magic, AttackProperty.FireAttack);
+                    status.HP -= damage;
+                    if (status.HP < 0)
+                    {
+                        status.HP = 0;
+                        Destroy(hit.collider.gameObject);
+                        m_UIClass.m_End.enabled = true;
+                    }
+                }
+                AttackDataList.HideAttackArea(gameObject);
+                iSelectCommand = 0;
+            }
+        }
     }
 
     public void Skil()
@@ -315,5 +344,9 @@ public class CharaControl : MonoBehaviour {
     {
         oldMapChip.GetComponent<StageInfo>().possible = flag;
     }
+
+
+
+
 }
 

@@ -3,9 +3,10 @@ using System.Collections;
 
 public class EnemyControl : MonoBehaviour {
 
-    Status m_StatusClass;
-    StageInfo m_StageInfoClass;
-    UICtrl m_UIClass;
+    public StageInfo m_StageInfoClass;
+
+    private Status m_StatusClass;
+    private UICtrl m_UIClass;
 
     // Use this for initialization
     void Start () {

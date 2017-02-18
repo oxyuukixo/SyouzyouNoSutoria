@@ -37,6 +37,7 @@ public class CPAI : MonoBehaviour {
         }
         m_onStage = m_stage[Mathf.FloorToInt(transform.position.z)][Mathf.FloorToInt(transform.position.x)].GetComponent<StageInfo>();
         m_onStage.possible = true;
+        m_onStage.charaCategory = gameObject;
     }
 
     //CPUのAI
@@ -222,8 +223,10 @@ public class CPAI : MonoBehaviour {
     private void TurnEnd()
     {
         m_onStage.possible = false;
+        m_onStage.charaCategory = null;
         m_onStage = m_stage[Mathf.FloorToInt(transform.position.z)][Mathf.FloorToInt(transform.position.x)].GetComponent<StageInfo>();
         m_onStage.possible = true;
+        m_onStage.charaCategory = gameObject;
         m_aiType = CPAIType.sarchMove;
         TurnController.NextMoveCharacter();
     }
