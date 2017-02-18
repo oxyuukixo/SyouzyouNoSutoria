@@ -51,6 +51,7 @@ public class CharacterMove : MonoBehaviour {
         float routeLenge;           //移動ルートまでの直線距離
         float speed;                //直線移動の移動速度
         float radian;               //ラジアン角
+        if (m_moveRoute.Length == m_routeCount) return;
         stageX = (int)m_moveRoute[m_routeCount].x;
         stageY = (int)m_moveRoute[m_routeCount].y;
         stagePosition = new Vector3

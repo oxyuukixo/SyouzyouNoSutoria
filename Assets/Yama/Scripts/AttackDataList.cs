@@ -22,7 +22,16 @@ public enum MagicName
 
 public class AttackDataList : MonoBehaviour {
 
-    
+    //探索方向
+    private enum SarchDirection
+    {
+        top,        //上
+        left,       //左
+        bottom,     //下
+        right,      //右
+        number,     //要素数
+    }
+
     public static List<AttackData> m_physicalData;  //物理攻撃データ
     public static List<AttackData> m_magicData;     //魔法攻撃データ
 
@@ -88,6 +97,12 @@ public class AttackDataList : MonoBehaviour {
         if (reader.Peek() == -1) return;
         //余分な文字列を排除する
         line = reader.ReadLine();
+        //魔法の基礎データを入力
+        line = reader.ReadLine();
+        values = line.Split(',');
+        m_physicalData[(int)physical].m_attackHeight = int.Parse(values[0]);
+        //余分な文字列を排除する
+        line = reader.ReadLine();
         //物理の攻撃範囲の情報を取得
         count = 0;
         attackArea = new List<List<bool>>();
@@ -132,6 +147,7 @@ public class AttackDataList : MonoBehaviour {
         values = line.Split(',');
         m_magicData[(int)magic].m_attackType = AttackType.Magic;
         m_magicData[(int)magic].m_attackProperty = (AttackProperty)int.Parse(values[0]);
+        m_magicData[(int)magic].m_attackHeight = int.Parse(values[1]);
         //余分な文字列を排除する
         line = reader.ReadLine();
         //魔法の攻撃範囲の情報を取得
@@ -189,7 +205,9 @@ public class AttackDataList : MonoBehaviour {
                 stage[stageY][stageX].GetComponent<StageInfo>().m_displayArea[(int)moveAreaType] = m_physicalData[(int)physical].m_range[i][j];
             }
         }
-
+        AttackAreaLimit(stage, moveAreaType, SarchDirection.number, characterX, characterY,
+            stage[characterY][characterX].GetComponent<StageInfo>().height, m_physicalData[(int)physical].m_attackHeight,
+            m_physicalData[(int)physical].m_centerXRange);
     }
 
     //魔法攻撃範囲を表示する
@@ -222,7 +240,9 @@ public class AttackDataList : MonoBehaviour {
                 stage[stageY][stageX].GetComponent<StageInfo>().m_displayArea[(int)moveAreaType] = m_magicData[(int)magic].m_range[i][j];
             }
         }
-
+        AttackAreaLimit(stage, moveAreaType, SarchDirection.number, characterX, characterY,
+            stage[characterY][characterX].GetComponent<StageInfo>().height, m_magicData[(int)magic].m_attackHeight,
+            m_magicData[(int)magic].m_centerXRange);
     }
 
     //物理で攻撃する
@@ -296,4 +316,46 @@ public class AttackDataList : MonoBehaviour {
 
     }
 
+    //攻撃可能エリアの限定
+    private static void AttackAreaLimit(GameObject[][] stage, MoveAreaType moveAreaType, SarchDirection oldSarch,
+        int x, int y, int height, int attackHeight, int count)
+    {
+        StageInfo stageInfo;        //ステージ情報
+        StageInfo newStageInfo;     //新しいステージ情報
+        int stageX;
+        int stageY;
+        if (count == 0) return;
+        stageInfo = stage[y][x].GetComponentInChildren<StageInfo>();
+        for (SarchDirection i = 0; i < SarchDirection.number; i++)
+        {
+            if (i == oldSarch) continue;
+            stageX = x;
+            stageY = y;
+            switch(i)
+            {
+                case SarchDirection.top:
+                    stageY++;
+                    break;
+                case SarchDirection.left:
+                    stageX--;
+                    break;
+                case SarchDirection.bottom:
+                    stageY--;
+                    break;
+                case SarchDirection.right:
+                    stageX++;
+                    break;
+            }
+            if (stageX < 0 || stageX > stage[0].Length) continue;
+            if (stageY < 0 || stageY > stage.Length) continue;
+            newStageInfo = stage[stageY][stageX].GetComponent<StageInfo>();
+            if (!newStageInfo.m_displayArea[(int)moveAreaType]) continue;
+            if(Mathf.Abs(newStageInfo.height - height) > attackHeight)
+            {
+                newStageInfo.m_displayArea[(int)moveAreaType] = false;
+                continue;
+            }
+            AttackAreaLimit(stage, moveAreaType, i, stageX, stageY, height, attackHeight, count - 1);
+        }
+    }
 }
