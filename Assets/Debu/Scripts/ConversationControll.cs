@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityStandardAssets.CrossPlatformInput;
 using System.Text.RegularExpressions;
+using UnityEngine.SceneManagement;
 
 public class ConversationControll : MonoBehaviour {
 
@@ -66,11 +67,16 @@ public class ConversationControll : MonoBehaviour {
     //フェードする速さ
     public float m_FadeSpeed;
 
-    //キャラクターが変わるときの速さ
-    public float m_ChangeSpeed;
+    //キャラクターが変わるときの時間
+    public float m_OutChangeTime;
+    public float m_InChangeTime;
+
+    //移動時のカーブ
+    public AnimationCurve m_OutCurve;
+    public AnimationCurve m_InCurve;
 
     //読み込むテキストのパス(シーン移動する前に設定)
-    public static string m_TextPath = "Conversation_1220";
+    public static string m_TextPath = "Conversation_1220"/*"Prologue"*/;
 
     //テキストをスキップするか
     [HideInInspector]
@@ -149,6 +155,9 @@ public class ConversationControll : MonoBehaviour {
 
     //キャラチェンジ時のステート
     private int m_ChangeGrahicState;
+
+    //キャラの移動中か
+    private bool m_IsMove = false;
 
     //=============================================================================
     //
@@ -579,63 +588,99 @@ public class ConversationControll : MonoBehaviour {
     //=============================================================================
     void CharaChange()
     {
-       switch(m_ChangeGrahicState)
+        switch (m_ChangeGrahicState)
         {
             case 0:
 
                 if (m_ChangeGraphicNum == 1)
                 {
-                    m_GraphicLeft.rectTransform.localPosition -= new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
-
-                    if (m_GraphicLeft.rectTransform.localPosition.x < -m_GraphicLeft.rectTransform.sizeDelta.x)
-                    {
-                        m_GraphicLeft.sprite = Resources.Load<Sprite>(m_ChangeGraphcPath);
-
-                        m_ChangeGrahicState = 1;
-                    }
+                    StartCoroutine(CharaChangeCorutine(
+                        m_GraphicLeft,
+                        m_GraphicLeft.rectTransform.localPosition,
+                        new Vector2(-m_GraphicLeft.rectTransform.sizeDelta.x, m_GraphicLeft.rectTransform.localPosition.y),
+                        m_OutCurve,
+                        m_OutChangeTime));
                 }
                 else
                 {
-                    m_GraphicRight.rectTransform.localPosition += new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
-
-                    if (m_GraphicRight.rectTransform.localPosition.x > m_Canvas.GetComponent<RectTransform>().sizeDelta.x)
-                    {
-                        m_GraphicRight.sprite = Resources.Load<Sprite>(m_ChangeGraphcPath);
-
-                        m_ChangeGrahicState = 1;
-                    }
+                    StartCoroutine(CharaChangeCorutine(
+                        m_GraphicRight,
+                        m_GraphicRight.rectTransform.localPosition,
+                        new Vector2(m_Canvas.GetComponent<RectTransform>().sizeDelta.x, m_GraphicRight.rectTransform.localPosition.y),
+                        m_OutCurve,
+                        m_OutChangeTime));
                 }
+
+                m_IsMove = true;
+
+                m_ChangeGrahicState = 1;
 
                 break;
 
             case 1:
 
-                if (m_ChangeGraphicNum == 1)
+                if (!m_IsMove)
                 {
-                    m_GraphicLeft.rectTransform.localPosition += new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
-
-                    if (m_GraphicLeft.rectTransform.localPosition.x > 0)
+                    if (m_ChangeGraphicNum == 1)
                     {
-                        m_GraphicLeft.rectTransform.localPosition = new Vector3(0, m_GraphicLeft.rectTransform.localPosition.y, m_GraphicLeft.rectTransform.localPosition.z);
+                        m_GraphicLeft.sprite = Resources.Load<Sprite>(m_ChangeGraphcPath);
 
-                        m_State = ConversationState.Read;
+                        StartCoroutine(CharaChangeCorutine(
+                       m_GraphicLeft,
+                       m_GraphicLeft.rectTransform.localPosition,
+                       new Vector3(0, m_GraphicLeft.rectTransform.localPosition.y),
+                       m_InCurve,
+                       m_InChangeTime));
                     }
+                    else
+                    {
+                        m_GraphicRight.sprite = Resources.Load<Sprite>(m_ChangeGraphcPath);
+
+                        StartCoroutine(CharaChangeCorutine(
+                       m_GraphicRight,
+                       m_GraphicRight.rectTransform.localPosition,
+                       new Vector3(m_Canvas.GetComponent<RectTransform>().sizeDelta.x - m_GraphicRight.rectTransform.sizeDelta.x, m_GraphicRight.rectTransform.localPosition.y),
+                       m_InCurve,
+                       m_InChangeTime));
+                    }
+
+                    m_IsMove = true;
+
+                    m_ChangeGrahicState = 2;
                 }
-                else
+
+                break;
+
+            case 2:
+
+                if (!m_IsMove)
                 {
-                    m_GraphicRight.rectTransform.localPosition -= new Vector3(m_ChangeSpeed * Time.deltaTime, 0, 0);
-
-                    if (m_GraphicRight.rectTransform.localPosition.x < m_Canvas.GetComponent<RectTransform>().sizeDelta.x - m_GraphicRight.rectTransform.sizeDelta.x)
-                    {
-                        m_GraphicRight.rectTransform.localPosition = new Vector3(m_Canvas.GetComponent<RectTransform>().sizeDelta.x - m_GraphicRight.rectTransform.sizeDelta.x, m_GraphicRight.rectTransform.localPosition.y, m_GraphicRight.rectTransform.localPosition.z);
-
-                        m_State = ConversationState.Read;
-                    }
+                    m_State = ConversationState.Read;
                 }
 
                 break;
         }
 
+    }
+
+    IEnumerator CharaChangeCorutine(Image moveImage,Vector2 startPos,Vector2 targetPos,AnimationCurve curve ,float changeTime)
+    {
+        float currentTime = 0;
+
+        while(currentTime < changeTime)
+        {
+            float rate = curve.Evaluate(currentTime / changeTime);
+
+            moveImage.rectTransform.localPosition = Vector2.Lerp(startPos, targetPos, rate);
+
+            currentTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        moveImage.rectTransform.localPosition = targetPos;
+
+        m_IsMove = false;
     }
 
     //=============================================================================
@@ -1118,6 +1163,8 @@ public class ConversationControll : MonoBehaviour {
 
                                 m_ChoicesList[i].transform.FindChild("Text").GetComponent<Text>().text = ChoiceSplit[0];
 
+                                m_ChoicesList[i].GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+
                                 m_ChoicesList[i].GetComponent<ChoiceButton>().m_ReadText = ChoiceSplit[1];
 
                                 float ChoiceHeight = m_ChoicesList[i].GetComponent<RectTransform>().sizeDelta.y;
@@ -1128,6 +1175,32 @@ public class ConversationControll : MonoBehaviour {
                             m_CurrentTextNum = 0;
                             m_ChoiceParent.SetActive(true);
                             m_State = ConversationState.Choice;        
+                        }
+
+                        break;
+
+                    //テキストの変更
+                    case 't':
+
+                        OperationText = PickString();
+
+                        //文字列が返ってきたら
+                        if (OperationText != null)
+                        {
+                            m_TextPath = OperationText;
+                        }
+
+                        break;
+
+                    //シーン変更
+                    case 'm':
+
+                        OperationText = PickString();
+
+                        //文字列が返ってきたら
+                        if (OperationText != null)
+                        {
+                            SceneManager.LoadScene(OperationText);
                         }
 
                         break;

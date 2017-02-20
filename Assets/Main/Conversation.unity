@@ -144,7 +144,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: dd69f56bee4cae34993aa3d587a2361a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 625a086416e91ed428b7d701dc07c2b9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1062,7 +1062,45 @@ MonoBehaviour:
   m_IsRichText: 1
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FadeSpeed: 0.03
-  m_ChangeSpeed: 1500
+  m_OutChangeTime: 0.3
+  m_InChangeTime: 0.75
+  m_OutCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 10
+    - time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 10
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  m_InCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+    - time: 0.5138255
+      value: 0.8660112
+      inSlope: 0.42349133
+      outSlope: 0.42349133
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
   m_Skip: 0
 --- !u!1 &1501737212
 GameObject:
