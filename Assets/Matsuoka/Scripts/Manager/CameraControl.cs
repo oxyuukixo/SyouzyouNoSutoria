@@ -88,12 +88,16 @@ public class CameraControl : MonoBehaviour {
         //}
         if (Input.GetMouseButtonDown(0))
         {
-            startPos = Input.mousePosition;
+            startPos = m_Camera.transform.localPosition;
         }
-        if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0))
         {
             // マウス(タップ)の移動量
-//            m_Camera.transform.localPosition += 
+            m_Camera.transform.localPosition = Input.mousePosition;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            m_Camera.transform.localPosition = startPos;
         }
     }
 
