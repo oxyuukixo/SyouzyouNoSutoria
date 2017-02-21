@@ -41,14 +41,13 @@ public class StatusController : MonoBehaviour {
         if (Physics.Raycast(ray, out hit))
         {
             selectCharacter = hit.collider.gameObject;
-            turnPlayerState = turnPlayer.GetComponent<CharaControl>().iSelectCommand;
             // 当たったオブジェクトを取得
             number = CharactorNumber(selectCharacter);
             switch (number)
             {
                 case 0: // ステージ
-                    if (turnPlayerState != 0) return;
-                    if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+                    if (turnPlayer.tag != "Player") return;
+                        if (CrossPlatformInputManager.GetButtonDown("Fire1"))
                     {
                         m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
@@ -72,7 +71,7 @@ public class StatusController : MonoBehaviour {
                 case 5: // シエル
                 case 6: // イーグニズル
                     m_UIClass.m_Status[number - 1].SetActive(true);
-                    if (turnPlayerState != 0) return;
+                    if (turnPlayer.tag != "Player") return;
                     if (selectCharacter != turnPlayer) return;
                     UIStatus(selectCharacter);
                     break;

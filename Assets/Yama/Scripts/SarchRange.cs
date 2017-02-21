@@ -58,12 +58,11 @@ public class SarchRange : MonoBehaviour {
     }
 
     //移動経路を決める
-    public static Vector2[] SarchMoveRoute(GameObject[][] stage, GameObject character, GameObject movePosition, int moveRange)
+    public static Vector2[] SarchMoveRoute(GameObject[][] stage, GameObject character, GameObject movePosition, int moveRange, bool dammy)
     {
         List<Vector2> moveRouteDammy;   //移動経路のダミー
         Vector2 characterPosition;      //キャラクター座標
         Vector2 position;               //移動先の座標
-        string enemyTag;                //敵のタグ
         m_moveRoute = null;
         m_reachMovePoint = false;
         moveRouteDammy = new List<Vector2>();
@@ -72,18 +71,16 @@ public class SarchRange : MonoBehaviour {
             position = new Vector2(movePosition.transform.position.x + 0.5f, movePosition.transform.position.z + 0.5f);
         else
             position = new Vector2(movePosition.transform.position.x, movePosition.transform.position.z);
-        if (character.tag == "Player") enemyTag = "Enemy";
-        else enemyTag = "Player";
         m_moveMin = moveRange;
         m_notTurnCount = 0;
-        SarchRoute(stage, characterPosition, position, moveRouteDammy, SarchDirection.top, m_notTurnCount, moveRange, moveRange, enemyTag);
-        if(!m_reachMovePoint) m_moveRoute = null;
+        SarchRoute(stage, characterPosition, position, moveRouteDammy, SarchDirection.top, m_notTurnCount, moveRange, moveRange, dammy);
+        if (!m_reachMovePoint) m_moveRoute = moveRouteDammy.ToArray(); ;
         return m_moveRoute;
     }
 
     //最短の移動経路を出す
     private static void SarchRoute(GameObject[][] stage, Vector2 characterPosition, Vector2 position,
-    List<Vector2> moveRouteDammy, SarchDirection oldDirection,int notTurnCount, int moveRange, int moveRageMax, string enemyTag)
+    List<Vector2> moveRouteDammy, SarchDirection oldDirection,int notTurnCount, int moveRange, int moveRageMax, bool dammy)
     {
         Vector2 sarchPosition;      //探索座標
         SarchDirection direction;   //向き
@@ -94,7 +91,7 @@ public class SarchRange : MonoBehaviour {
         //キャラクター座標と移動先の座標が一致していたら
         if(characterPosition == position)
         {
-            if (stage[(int)characterPosition.y][(int)characterPosition.x].GetComponent<StageInfo>().charaCategory != null) return;
+            if (!dammy && stage[(int)characterPosition.y][(int)characterPosition.x].GetComponent<StageInfo>().charaCategory != null) return;
             //移動量の最小値を移動回数が超えたら何もしない
             if (m_moveMin < moveRageMax - moveRange) return;
             if (m_moveMin == moveRageMax - moveRange && m_notTurnCount > notTurnCount) return;
@@ -126,7 +123,7 @@ public class SarchRange : MonoBehaviour {
                 ++notTurn;
             }
             moveRouteDammy.Add(sarchPosition);
-            SarchRoute(stage, sarchPosition, position, moveRouteDammy, direction, notTurn, moveRange - 1, moveRageMax, enemyTag);
+            SarchRoute(stage, sarchPosition, position, moveRouteDammy, direction, notTurn, moveRange - 1, moveRageMax, dammy);
             moveRouteDammy.RemoveAt(moveRouteDammy.Count - 1);
             if (++direction == SarchDirection.number) direction = SarchDirection.top;
             count++;
@@ -166,5 +163,63 @@ public class SarchRange : MonoBehaviour {
         if (stage[(int)sarchPosition.y][(int)sarchPosition.x].tag != "Stage") return characterPosition;
         if (height != 0 && height != 1) return characterPosition;
         return sarchPosition;
+    }
+
+    //キャラクターに近づく
+    public static Vector2[] NearCharacterMove(GameObject[][] stage, GameObject myCharacter,GameObject character, int moveRange)
+    {
+        List<Vector2> moveRoute;   //移動経路のダミー
+        Vector2 position;           //探索地点
+        Vector2 charaposition;
+        Vector2 sarchPosition;
+        Vector2 oldSarchPosition;
+        SarchDirection sarchDirection;
+        int count;
+        moveRoute = new List<Vector2>();
+        position = new Vector2(myCharacter.transform.position.x, myCharacter.transform.position.z);
+        charaposition = new Vector2(character.transform.position.x, character.transform.position.z);
+        sarchPosition = position;
+        sarchDirection = SarchDirection.number;
+        for (int i = 0; i < moveRange; i++)
+        {
+            oldSarchPosition = sarchPosition;
+            count = 0;
+            while (true)
+            {
+                if (count == 2) break;
+                switch (count)
+                {
+                    case 0:
+                        if (charaposition.x - position.x < 0)
+                            sarchDirection = SarchDirection.left;
+                        else if (charaposition.x - position.x > 0)
+                            sarchDirection = SarchDirection.right;
+                        else
+                        {
+                            count++;
+                            continue;
+                        }
+                        break;
+                    case 1:
+                        if (charaposition.y - position.y < 0)
+                            sarchDirection = SarchDirection.bottom;
+                        else if (charaposition.y - position.y > 0)
+                            sarchDirection = SarchDirection.top;
+                        else
+                        {
+                            count++;
+                            continue;
+                        }
+                        break;
+                }
+                sarchPosition = SarchPosition(stage, sarchPosition, sarchDirection);
+                count++;
+                if (sarchPosition == oldSarchPosition) continue;
+                moveRoute.Add(sarchPosition);
+                break;
+            }
+            if (count == 2) break;
+        }
+        return moveRoute.ToArray();
     }
 }

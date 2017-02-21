@@ -19,6 +19,8 @@ public class EnemyControl : MonoBehaviour {
 	void Update () {
         // 今いるマップの情報を取得
         GetStageInfo();
+        GetComponent<CPAI>().m_anime.SetInteger("direction", (int)m_StatusClass.DIRECTION);
+
         if (gameObject != TurnController.m_turnCharacter) return;
         GetComponent<CPAI>().AI();
     }

@@ -24,6 +24,8 @@ enum EnemyNumber
 
 public class CharaControl : MonoBehaviour {
 
+    private const float m_attackWaitTime = 0.3f;    //攻撃の最低保証時間
+
     private GameObject m_MoveSprite;
     private GameObject m_AttackSprite;
     private Color default_color;     // 初期化カラー
@@ -35,6 +37,10 @@ public class CharaControl : MonoBehaviour {
     public int iSelectCommand;
     public bool bColorState;
     public GameObject oldMapChip;
+    public Animator m_anime;
+    public PhysicalName m_physicalName;
+    public MagicName m_magicName;
+    public AudioController m_audio;
 
     UICtrl m_UIClass;
     BattleMain m_BMClass;
@@ -54,6 +60,15 @@ public class CharaControl : MonoBehaviour {
     //設置した数
     private int InstNum;
 
+    private GameObject m_attackEnemy;
+    private GameObject m_effect;
+    private AttackType m_attackType;
+    private AttackProperty m_attackProperty;
+    private int m_spendMP;
+    private float m_attackTime;
+    private bool m_attack;
+    private bool m_selectMove;
+    private bool m_selectAttack;
 
     // Use this for initialization
     void Start()
@@ -72,7 +87,8 @@ public class CharaControl : MonoBehaviour {
         m_StatusClass = GetComponent<Status>();
         m_StageInfoClass = GetComponent<StageInfo>();
         m_CharaMoveClass = GetComponent<CharacterMove>();
-
+        m_anime = GetComponent<Animator>();
+        m_audio = GetComponent<AudioController>();
         // 彩術用
         InstWall = new GameObject[WallMaxNum];
     }
@@ -81,6 +97,7 @@ public class CharaControl : MonoBehaviour {
     void Update()
     {
         m_Material.color = default_color;
+        m_anime.SetInteger("direction", (int)m_StatusClass.DIRECTION);
         // StageBaseからbColorStateの値がtrueにされていれば色をかえる
         if (bColorState)
         {
@@ -134,6 +151,12 @@ public class CharaControl : MonoBehaviour {
 
     public void Move()
     {
+        if (m_selectMove)
+        {
+            iSelectCommand = 0;
+            return;
+        }
+
         if (iSelectCommand == 0) MoveArea.MoveAreaSarch(gameObject);
         iSelectCommand = 1;
         CommandUIFalse(0);
@@ -155,9 +178,10 @@ public class CharaControl : MonoBehaviour {
                     // ステージ上
                     if (hit.collider.gameObject.tag == "Stage")
                     {
-                        if (!m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject))
+                        if (m_CharaMoveClass.SelectMovePoiont(hit.collider.gameObject))
                         {
                             MoveArea.ResetMoveArea();
+                            m_anime.SetBool("walk", true);
                             StageInfo stage = hit.collider.gameObject.GetComponent<StageInfo>();
                             stage.possible = true;
                             stage.charaCategory = gameObject;
@@ -165,6 +189,7 @@ public class CharaControl : MonoBehaviour {
                             oldStage.possible = false;
                             oldStage.charaCategory = null;
                             oldMapChip = hit.collider.gameObject;
+                            m_selectMove = true;
                         }
                         //m_SelectPlayer.transform.position = hit.transform.position + new Vector3(0.5f, (-hit.transform.position.y) + (stage.height / 2) + 0.662f, 0.5f);
                         m_StageInfoClass = hit.collider.gameObject.GetComponent<StageInfo>();
@@ -180,10 +205,15 @@ public class CharaControl : MonoBehaviour {
     {
         RaycastHit hit;  //光線に当たったオブジェクトを受け取るクラス
         Ray ray;         //光線クラス
-        Status status;   //ステータス
         GameObject enemy;   //敵のオブジェクト
-        int damage;      //ダメージ
-        if (iSelectCommand == 0) AttackDataList.PhysicalAttackRange(gameObject, PhysicalName.normal);
+        m_physicalName = PhysicalName.normal;
+        if (m_selectAttack)
+        {
+            iSelectCommand = 0;
+            return;
+        }
+
+        if (iSelectCommand == 0) AttackDataList.PhysicalAttackRange(gameObject, m_physicalName);
         iSelectCommand = 2;
         CommandUIFalse(0);
         m_UIClass.m_Cover[0].SetActive(false);
@@ -220,17 +250,19 @@ public class CharaControl : MonoBehaviour {
             iSelectCommand = 0;
             return;
         }
-
-        status = enemy.GetComponent<Status>();
-        damage = DamageCalculations.Damege(gameObject, enemy,
-            GameLevel.levelEasy, AttackType.Physical, AttackProperty.NoPropertyAttack);
-        status.HP -= damage;
-        if (status.HP < 0)
-        {
-            status.HP = 0;
-            Destroy(hit.collider.gameObject);
-        }
-        AttackDataList.HideAttackArea(gameObject);
+        m_attack = true;
+        m_selectAttack = true;
+        m_anime.SetTrigger("attack");
+        m_attackTime = 0.0f;
+        m_attackEnemy = enemy;
+        m_attackType = AttackType.Physical;
+        m_audio.m_SEType = SoundController.SEType.attack;
+        m_audio.ChangeSound();
+        m_audio.m_audioSource.Play();
+        m_effect = CreateEffect.EffectCreate(m_attackEnemy, EffectType.attack);
+        m_attackProperty = AttackDataList.m_physicalData[(int)m_physicalName].m_attackProperty;
+        m_spendMP = AttackDataList.m_physicalData[(int)m_physicalName].m_spendMP;
+        m_StatusClass.DIRECTION = CharacterDirection.CharaDirection(gameObject, m_attackEnemy);
         iSelectCommand = 0;
     }
 
@@ -238,10 +270,14 @@ public class CharaControl : MonoBehaviour {
     {
         RaycastHit hit;  //光線に当たったオブジェクトを受け取るクラス
         Ray ray;         //光線クラス
-        Status status;   //ステータス
         GameObject enemy;   //敵のオブジェクト
-        int damage;      //ダメージ
-        if (iSelectCommand == 0) AttackDataList.MagicAttackRange(gameObject, MagicName.fire);
+        m_magicName = MagicName.fire;
+        if (m_selectAttack || AttackDataList.m_magicData[(int)m_magicName].m_spendMP > m_StatusClass.MP)
+        {
+            iSelectCommand = 0;
+            return;
+        }
+        if (iSelectCommand == 0) AttackDataList.MagicAttackRange(gameObject, m_magicName);
         iSelectCommand = 3;
         CommandUIFalse(0);
         m_UIClass.m_Cover[0].SetActive(false);
@@ -279,18 +315,38 @@ public class CharaControl : MonoBehaviour {
             return;
         }
 
-
-        status = hit.collider.gameObject.GetComponent<Status>();
-        damage = DamageCalculations.Damege(gameObject, hit.collider.gameObject,
-            GameLevel.levelEasy, AttackType.Magic, AttackProperty.FireAttack);
-        status.HP -= damage;
-        if (status.HP < 0)
+        m_attack = true;
+        m_selectAttack = true;
+        m_anime.SetTrigger("skill");
+        m_attackEnemy = enemy;
+        m_attackTime = 0.0f;
+        m_attackType = AttackType.Magic;
+        switch(m_magicName)
         {
-            status.HP = 0;
-            Destroy(hit.collider.gameObject);
-            m_UIClass.m_End.enabled = true;
+            case MagicName.fire:
+                m_audio.m_SEType = SoundController.SEType.fire;
+                m_effect = CreateEffect.EffectCreate(m_attackEnemy, EffectType.fire);
+                break;
+            case MagicName.water:
+                m_audio.m_SEType = SoundController.SEType.water;
+                m_effect = CreateEffect.EffectCreate(m_attackEnemy, EffectType.water);
+                break;
+            case MagicName.wind:
+                m_audio.m_SEType = SoundController.SEType.wind;
+                m_effect = CreateEffect.EffectCreate(m_attackEnemy, EffectType.wind);
+                break;
+            case MagicName.soil:
+                m_audio.m_SEType = SoundController.SEType.soil;
+                m_effect = CreateEffect.EffectCreate(m_attackEnemy, EffectType.soil);
+                break;
         }
-        AttackDataList.HideAttackArea(gameObject);
+        m_audio.ChangeSound();
+        m_audio.m_audioSource.Play();
+
+
+        m_attackProperty = AttackDataList.m_magicData[(int)m_magicName].m_attackProperty;
+        m_spendMP = AttackDataList.m_magicData[(int)m_magicName].m_spendMP;
+        m_StatusClass.DIRECTION = CharacterDirection.CharaDirection(gameObject, m_attackEnemy);
         iSelectCommand = 0;
     }
 
@@ -368,6 +424,7 @@ public class CharaControl : MonoBehaviour {
 
                         //壁の位置をマスの位置にする
                         NowWall.transform.position = hit.transform.position + new Vector3(0, 0.5f, 0);
+                        m_effect = CreateEffect.EffectCreate(hit.transform.gameObject, EffectType.saijutu);
 
                         //置いたマスの情報を保存(キャンセルしたときに戻すため)
                         InstWall[InstNum] = hit.collider.gameObject;
@@ -388,7 +445,41 @@ public class CharaControl : MonoBehaviour {
         oldMapChip.GetComponent<StageInfo>().possible = flag;
     }
 
+    private void AttackDamege()
+    {
+        Status status;   //ステータス
+        AnimatorStateInfo anime;    //アニメーターの状態
+        int damage;      //ダメージ
+        anime = m_anime.GetCurrentAnimatorStateInfo(0);
+        if (m_effect != null) return;
+        if ((m_attackTime += Time.deltaTime) < m_attackWaitTime) return;
+        m_anime.SetBool("skill", false);
+        if (anime.fullPathHash != Animator.StringToHash(CharacterDirection.AnimationLayerName(m_StatusClass.DIRECTION) + "wait")) return;
 
+        status = m_attackEnemy.GetComponent<Status>();
+        damage = DamageCalculations.Damege(gameObject, m_attackEnemy,
+            GameLevel.levelEasy, m_attackType, m_attackProperty);
+        status.HP -= damage;
+        status.DIRECTION = CharacterDirection.CharaDirection(m_attackEnemy, gameObject);
+        if (status.HP < 0)
+        {
+            status.HP = 0;
+            m_attackEnemy.GetComponent<CharaControl>().m_audio.m_SEType = SoundController.SEType.dead;
+            m_attackEnemy.GetComponent<CharaControl>().m_audio.ChangeSound();
+            m_attackEnemy.GetComponent<CharaControl>().m_audio.m_audioSource.Play();
+            m_effect = CreateEffect.EffectCreate(m_attackEnemy, EffectType.dead);
+            Destroy(m_attackEnemy);
+            m_UIClass.m_End.enabled = true;
+        }
+        else
+        {
+            m_attackEnemy.GetComponent<CPAI>().m_anime.SetTrigger("damage");
+        }
+        AttackDataList.HideAttackArea(gameObject);
+        m_StatusClass.MP -= m_spendMP;
+        m_attack = false;
+        m_attackEnemy = null;
+    }
 
 
 }

@@ -1,1 +1,2 @@
-Select	Decision
+Select	Decision	SE_Battle_Attack	SE_Battle_critical	SE_Battle_dead	SE_battle_guard	SE_Battle_recovery
+SE_Battle_saijutsu_bridge	SE_Battle_fire	SE_Battle_saijutsu_wall	SE_Battle_soil	SE_Battle_water	SE_Battle_wind

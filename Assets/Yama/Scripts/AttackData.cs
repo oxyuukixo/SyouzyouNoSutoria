@@ -5,6 +5,7 @@ public class AttackData : MonoBehaviour {
 
     public AttackType m_attackType;          //攻撃の種類
     public AttackProperty m_attackProperty;  //攻撃の属性
+    public int m_spendMP;                    //消費MP
     public int m_attackHeight;               //攻撃可能な高さ
     public int m_centerXRange;               //攻撃範囲の横方向の端から中心点までの距離
     public int m_centerYRange;               //攻撃範囲の縦方向の端から中心点までの距離

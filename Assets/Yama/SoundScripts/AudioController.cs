@@ -6,9 +6,10 @@ public class AudioController : MonoBehaviour {
     public SoundController.SoundType m_soundType;   //音の種類
     public SoundController.BGMType m_BGMType;       //BGMの種類
     public SoundController.SEType m_SEType;         //SEの種類
+    public bool m_play;
     public bool m_soundLoop;                        //サウンドがループするかの判定
 
-    private AudioSource m_audioSource;              //音源
+    public AudioSource m_audioSource;              //音源
 
 	//初期化
 	void Start ()
@@ -19,6 +20,7 @@ public class AudioController : MonoBehaviour {
             case SoundController.SoundType.BGM:
                 m_audioSource.volume = SoundController.m_BGMVolume;
                 m_audioSource.clip = SoundController.m_BGM[(int)m_BGMType];
+                if (m_play) m_audioSource.Play();
                 break;
             case SoundController.SoundType.SE:
                 m_audioSource.volume = SoundController.m_SEVolume;
@@ -50,6 +52,21 @@ public class AudioController : MonoBehaviour {
         }
 
     }
+
+    public void ChangeSound()
+    {
+        switch (m_soundType)
+        {
+            case SoundController.SoundType.BGM:
+                m_audioSource.Stop();
+                m_audioSource.clip = SoundController.m_BGM[(int)m_BGMType];
+                if (m_play) m_audioSource.Play();
+                break;
+            case SoundController.SoundType.SE:
+                m_audioSource.clip = SoundController.m_SE[(int)m_SEType];
+                break;
+        }
+}
 
 
 }

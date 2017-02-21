@@ -18,6 +18,7 @@ public class CharacterMove : MonoBehaviour {
     private void Start()
     {
         m_routeCount = 0;
+
         m_MMClass = GameObject.Find("Stage").GetComponent<MapManager>();
 
         m_stage = new GameObject[m_MMClass.m_MapList.Count][];
@@ -36,6 +37,15 @@ public class CharacterMove : MonoBehaviour {
         m_move = false;
         m_moveRoute = null;
         m_routeCount = 0;
+        switch(gameObject.tag)
+        {
+            case "Player":
+                gameObject.GetComponent<CharaControl>().m_anime.SetBool("walk", false);
+                break;
+            case "Enemy":
+                gameObject.GetComponent<CPAI>().m_anime.SetBool("walk", false);
+                break;
+        }
         MoveArea.ResetMoveArea();
 	}
 
@@ -98,7 +108,7 @@ public class CharacterMove : MonoBehaviour {
     //移動ルートを検索する
     public bool SelectMovePoiont(GameObject movePoint)
     {
-        m_moveRoute = SarchRange.SarchMoveRoute(m_stage, gameObject, movePoint, GetComponent<Status>().MOV);
+        m_moveRoute = SarchRange.SarchMoveRoute(m_stage, gameObject, movePoint, GetComponent<Status>().MOV, false);
         if (m_moveRoute == null) return false;
         m_move = true;
         return true;

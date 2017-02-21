@@ -101,6 +101,7 @@ public class AttackDataList : MonoBehaviour {
         line = reader.ReadLine();
         values = line.Split(',');
         m_physicalData[(int)physical].m_attackHeight = int.Parse(values[0]);
+        m_physicalData[(int)physical].m_spendMP = int.Parse(values[1]);
         //余分な文字列を排除する
         line = reader.ReadLine();
         //物理の攻撃範囲の情報を取得
@@ -148,6 +149,7 @@ public class AttackDataList : MonoBehaviour {
         m_magicData[(int)magic].m_attackType = AttackType.Magic;
         m_magicData[(int)magic].m_attackProperty = (AttackProperty)int.Parse(values[0]);
         m_magicData[(int)magic].m_attackHeight = int.Parse(values[1]);
+        m_magicData[(int)magic].m_spendMP = int.Parse(values[2]);
         //余分な文字列を排除する
         line = reader.ReadLine();
         //魔法の攻撃範囲の情報を取得

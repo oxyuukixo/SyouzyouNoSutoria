@@ -19,7 +19,11 @@ public class SoundController : MonoBehaviour {
     //BGMの
     public enum BGMType
     {
-
+        title,
+        battle,
+        endBousho,
+        conversationEnkishu,
+        ConversationKoukatodou,
     }
 
     //SEの
@@ -27,6 +31,17 @@ public class SoundController : MonoBehaviour {
     {
         select,     //選択音
         decision,   //決定音
+        attack,
+        critical,
+        dead,
+        guard,
+        recovery,
+        saihustuBridge,
+        fire,
+        wall,
+        soil,
+        water,
+        wind,
     }
 
 

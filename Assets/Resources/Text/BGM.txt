@@ -1,1 +1,1 @@
-
+BGM_Title	BGM_Battle	BGM_End_Bousho	BGM_Conversation_Enkishu	BGM_Conversation_Koukatodou
