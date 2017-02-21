@@ -7,6 +7,7 @@ public class StatusController : MonoBehaviour {
 
     CameraControl m_CamCtrlClass;
     UICtrl m_UIClass;
+    BattleMain m_BtlClass;
     GameObject turnPlayer;
     private int CharactorCount;
 
@@ -15,6 +16,7 @@ public class StatusController : MonoBehaviour {
     {
         m_CamCtrlClass = GameObject.Find("Camera").GetComponent<CameraControl>();
         m_UIClass = GameObject.Find("SceneManager/GameManager").GetComponent<UICtrl>();
+        m_BtlClass = GameObject.Find("SceneManager/GameManager").GetComponent<BattleMain>();
         CharactorCount = 6;
     }
 
@@ -59,7 +61,7 @@ public class StatusController : MonoBehaviour {
                     {
                         if (!m_UIClass.m_Command[i].activeInHierarchy)
                         {
-                            m_UIClass.m_Status[i].enabled = false;
+                            m_UIClass.m_Status[i].SetActive(false);
                         }
                     }
                     break;
@@ -69,7 +71,7 @@ public class StatusController : MonoBehaviour {
                 case 4: // 紅音
                 case 5: // シエル
                 case 6: // イーグニズル
-                    m_UIClass.m_Status[number - 1].enabled = true;
+                    m_UIClass.m_Status[number - 1].SetActive(true);
                     if (turnPlayerState != 0) return;
                     if (selectCharacter != turnPlayer) return;
                     UIStatus(selectCharacter);
@@ -90,7 +92,7 @@ public class StatusController : MonoBehaviour {
                 turnPlayer.GetComponent<CharaControl>().CommandUIFalse(i);
                 if (!m_UIClass.m_Command[i].activeInHierarchy)
                 {
-                    m_UIClass.m_Status[i].enabled = false;
+                    m_UIClass.m_Status[i].SetActive(false);
                 }
             }
             turnPlayer.GetComponent<CharaControl>().CommandUITrue(1);
@@ -121,14 +123,37 @@ public class StatusController : MonoBehaviour {
         {
             return (int)PlayerNumber.Akane;
         }
+        if (obj.name == "Ciel")
+        {
+            return (int)PlayerNumber.Ciel;
+        }
+        if (obj.name == "Ignizure")
+        {
+            return (int)PlayerNumber.Ignir;
+        }
         if (obj.name == "Enemy1")
         {
             return (int)EnemyNumber.Enemy1;
         }
+        if (obj.name == "Enemy2")
+        {
+            return (int)EnemyNumber.Enemy2;
+        }
+        if (obj.name == "Enemy3")
+        {
+            return (int)EnemyNumber.Enemy3;
+        }
         return -1;
     }
 
-
+    private void HP_MP()
+    {
+        for(int i= 0; i < 9; i++)
+        {
+            m_UIClass.m_HP[i].rectTransform.sizeDelta = new Vector2(100 / m_BtlClass.Player[i].GetComponent<Status>().HP, m_UIClass.m_HP[i].rectTransform.sizeDelta.y);
+            m_UIClass.m_MP[i].rectTransform.sizeDelta = new Vector2(100 / m_BtlClass.Player[i].GetComponent<Status>().MP, m_UIClass.m_MP[i].rectTransform.sizeDelta.y);
+        }
+    }
 
 
 }

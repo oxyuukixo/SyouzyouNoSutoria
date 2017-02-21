@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 using GodTouches;
 
@@ -9,9 +9,12 @@ public class UICtrl : MonoBehaviour {
     public Image[] m_Chara;
     public GameObject[] m_Command;
     public Image[] m_ComIcon;
-    public Image[] m_Status;
+    public GameObject[] m_Status;
+    public Image[] m_HP;
+    public Image[] m_MP;
     public Text m_Turn;
     public GameObject[] m_Cover;
+    public List<Image> m_NextTurn;
     public Text m_Start;
     public Text m_End;
 
@@ -31,7 +34,7 @@ public class UICtrl : MonoBehaviour {
         {
             m_Chara[i].enabled = false;
             m_Command[i].SetActive(false);
-            m_Status[i].enabled = false;
+            m_Status[i].SetActive(false);
         }
         m_Cover[0].SetActive(false);
         m_Start.enabled = false;
@@ -70,7 +73,7 @@ public class UICtrl : MonoBehaviour {
             // マウス(タップ)の移動量
             moveDistance = GodTouch.GetPosition() - startPos;
             // コマンドボタンのスライド
-            if (/*m_ComIcon[m_ComIcon.Length - 1].transform.localPosition.y <= -65 &&*/
+            if (m_ComIcon[m_ComIcon.Length - 1].transform.localPosition.y <= -65 &&
                moveDistance.y > 0)
             {
                 for (int i = 0; i < m_radian.Length; i++)
@@ -78,7 +81,7 @@ public class UICtrl : MonoBehaviour {
                     m_radian[i] += moveDistance.y / 10;
                 }
             }
-            else if (/*m_ComIcon[0].transform.localPosition.y >= -65 &&*/
+            else if (m_ComIcon[0].transform.localPosition.y >= -65 &&
                moveDistance.y < 0)
             {
                 for (int i = 0; i < m_radian.Length; i++)

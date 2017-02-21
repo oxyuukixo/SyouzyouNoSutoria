@@ -16,7 +16,9 @@ enum PlayerNumber
 
 enum EnemyNumber
 {
-    Enemy1 = 11
+    Enemy1 = 11,
+    Enemy2,
+    Enemy3
 }
 
 
@@ -227,7 +229,6 @@ public class CharaControl : MonoBehaviour {
         {
             status.HP = 0;
             Destroy(hit.collider.gameObject);
-            m_UIClass.m_End.enabled = true;
         }
         AttackDataList.HideAttackArea(gameObject);
         iSelectCommand = 0;

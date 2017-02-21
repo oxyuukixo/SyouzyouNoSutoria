@@ -43,8 +43,11 @@ public class CameraControl : MonoBehaviour {
             ui.m_Start.enabled = true;
             m_ScrolFlg = false;
         }
-        transform.position = m_CenterObj.transform.position;
-        m_Camera.transform.localPosition = m_Offset;
+        if (m_CenterObj != null)
+        {
+            transform.position = m_CenterObj.transform.position;
+            m_Camera.transform.localPosition = m_Offset;
+        }
 
         // ズーム・ルーズ
         if (wheel > 0)
@@ -68,37 +71,35 @@ public class CameraControl : MonoBehaviour {
 
     void MoveCamera()
     {
-        //if (Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
-        //{
-        //    // タッチを検出して動かす
-        //    var phase = GodTouch.GetPhase();
-        //    if (phase == GodPhase.Began)
-        //    {
-        //        startPos = m_Camera.transform.localPosition;
-        //    }
-        //    else if (phase == GodPhase.Moved)
-        //    {
-        //        m_Camera.transform.localPosition = GodTouch.GetPosition();
-        //        //				Move.position += GodTouch.GetDeltaPosition(); 
-        //    }
-        //    else if (phase == GodPhase.Ended)
-        //    {
-        //        m_Camera.transform.localPosition = startPos;
-        //    }
-        //}
-        if (Input.GetMouseButtonDown(0))
+        var phase = GodTouch.GetPhase();
+        if (phase == GodPhase.Began)
         {
-            startPos = m_Camera.transform.localPosition;
+            startPos = GodTouch.GetPosition();
         }
-        else if (Input.GetMouseButton(0))
+        if (phase == GodPhase.Moved)
         {
+            m_CenterObj = null;
             // マウス(タップ)の移動量
-            m_Camera.transform.localPosition = Input.mousePosition;
+            moveDistance = GodTouch.GetPosition() - startPos;
+            // カメラの移動
+            m_Camera.transform.localPosition -= moveDistance / 75;
+            // マウス(タップ)の移動量の初期化
+            startPos = GodTouch.GetPosition();
         }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            m_Camera.transform.localPosition = startPos;
-        }
+        
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    startPos = m_Camera.transform.localPosition;
+        //}
+        //else if (Input.GetMouseButton(0))
+        //{
+        //    // マウス(タップ)の移動量
+        //    m_Camera.transform.localPosition = Input.mousePosition;
+        //}
+        //else if (Input.GetMouseButtonUp(0))
+        //{
+        //    m_Camera.transform.localPosition = startPos;
+        //}
     }
 
     void InputWheel()

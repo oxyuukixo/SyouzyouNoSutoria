@@ -48,6 +48,14 @@ public class TurnController : MonoBehaviour {
         GameObject.FindWithTag("TargetCamera").GetComponent<CameraControl>().m_CenterObj = m_turnCharacter;
     }
 
+    public static GameObject NextCharacter()
+    {
+        int count;
+        count = m_counter;
+        if (++count >= m_character.Length) count = 0;
+        return m_character[count].gameObject;
+    }
+
     //移動できる順番
     public static string[] NextMoveCharacters(int number)
     {

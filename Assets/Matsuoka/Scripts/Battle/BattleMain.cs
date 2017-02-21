@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 using UnityStandardAssets.CrossPlatformInput;
 using GodTouches;
 
@@ -10,13 +11,18 @@ public class BattleMain : MonoBehaviour
     public GameObject prefabWall;
     public GameObject animationCamera;
     public GameObject[] Player;
+    public List<GameObject> Enemy;
     public GameObject[] Status_TAC; // 順番
     public int TurnElapsedNum;      // ターン数
+    public string m_NextScene;
 
     protected int m_SceneTask;
     
     private int m_iPlayerNum;   // 呼び出すキャラクターの番号
+    private float m_time = 0f;  // 終了までの時間
+    [SerializeField] private float m_WaitTime = 5f; // 終了までの時間
     private UICtrl m_UIClass;
+    private CameraControl m_CameraCtrl;
 
     // Use this for initialization
     void Start()
@@ -64,16 +70,24 @@ public class BattleMain : MonoBehaviour
         m_iPlayerNum = 0;
         TurnElapsedNum = 0;
         m_UIClass = GetComponent<UICtrl>();
+        m_CameraCtrl = GameObject.Find("Camera").GetComponent<CameraControl>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        for (int i = 0; i < Enemy.Count; i++)
+        {
+            if (Enemy[i] == null)
+            {
+                Enemy.RemoveAt(i);
+            }
+        }
         if (animationCamera.GetComponent<Animation>().isPlaying) return;
         // プレイアブルキャラクターの初期配置
         if (m_iPlayerNum < Player.Length)
         {
-            if (CrossPlatformInputManager.GetButtonDown("Fire1") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            if (CrossPlatformInputManager.GetButtonUp("Fire1") || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
             {
                 m_UIClass.m_Start.enabled = false;
 
@@ -85,6 +99,7 @@ public class BattleMain : MonoBehaviour
                 // マウスの光線の先にオブジェクトが存在していたら hit に入る
                 if (Physics.Raycast(ray, out hit))
                 {
+                    m_CameraCtrl.m_CenterObj = hit.collider.gameObject;
                     // 当たったオブジェクトを取得
                     // ステージ上
                     if (hit.collider.gameObject.tag == "Stage")
@@ -102,6 +117,17 @@ public class BattleMain : MonoBehaviour
                 }
             }
         }
+
+        if (Enemy.Count == 0)
+        {
+            m_time += Time.deltaTime;
+            m_UIClass.m_End.enabled = true;
+            if(m_time > m_WaitTime)
+            {
+                SceneManager.LoadScene(m_NextScene);
+            }
+        }
+
         m_UIClass.m_Turn.text = TurnElapsedNum.ToString();
     }
 }
