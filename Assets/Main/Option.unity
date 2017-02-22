@@ -956,7 +956,9 @@ MonoBehaviour:
   m_soundType: 1
   m_BGMType: 0
   m_SEType: 0
+  m_play: 0
   m_soundLoop: 0
+  m_audioSource: {fileID: 0}
 --- !u!114 &818873298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1388,7 +1390,9 @@ MonoBehaviour:
   m_soundType: 1
   m_BGMType: 0
   m_SEType: 0
+  m_play: 0
   m_soundLoop: 0
+  m_audioSource: {fileID: 0}
 --- !u!114 &1026912212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1498,6 +1502,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1107524977}
+        m_MethodName: ChangeTextSpeed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!82 &1048050128
@@ -1588,7 +1603,9 @@ MonoBehaviour:
   m_soundType: 1
   m_BGMType: 0
   m_SEType: 0
+  m_play: 0
   m_soundLoop: 0
+  m_audioSource: {fileID: 0}
 --- !u!114 &1048050130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1699,6 +1716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BGMSlider: {fileID: 818873295}
   m_SESlider: {fileID: 1026912209}
+  m_TestSlider: {fileID: 1048050127}
 --- !u!4 &1107524978
 Transform:
   m_ObjectHideFlags: 0
@@ -1892,6 +1910,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1107524977}
+        m_MethodName: ChangeCancel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1334636437
@@ -2027,7 +2056,9 @@ MonoBehaviour:
   m_soundType: 1
   m_BGMType: 0
   m_SEType: 1
+  m_play: 0
   m_soundLoop: 0
+  m_audioSource: {fileID: 0}
 --- !u!1 &1358232246
 GameObject:
   m_ObjectHideFlags: 0
@@ -2528,6 +2559,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1107524977}
+        m_MethodName: ChangeApply
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1528849699
@@ -2663,7 +2705,9 @@ MonoBehaviour:
   m_soundType: 1
   m_BGMType: 0
   m_SEType: 1
+  m_play: 0
   m_soundLoop: 0
+  m_audioSource: {fileID: 0}
 --- !u!1 &1693780255
 GameObject:
   m_ObjectHideFlags: 0

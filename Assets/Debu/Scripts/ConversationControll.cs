@@ -169,6 +169,7 @@ public class ConversationControll : MonoBehaviour {
     //=============================================================================
     void Start () {
 
+        float speedRate;
         //場所表示用のオブジェクトの非アクティブにする
         m_PlaceObject.SetActive(false);
 
@@ -190,6 +191,21 @@ public class ConversationControll : MonoBehaviour {
         }
 
         m_TextBox = m_LeftTextBox;
+
+        switch((int)TextSpeed.m_speed)
+        {
+            case 0:
+                speedRate = 0.5f;
+                break;
+            case 1:
+                speedRate = 1.0f;
+                break;
+            case 2:
+                speedRate = 2.0f;
+                break;
+        }
+
+        m_ReadSpeed = 0.05f;
 
         //表示用のテキストボックスを作成
         CreateTextBox();

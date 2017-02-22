@@ -328,7 +328,9 @@ MonoBehaviour:
   m_soundType: 0
   m_BGMType: 0
   m_SEType: 0
+  m_play: 0
   m_soundLoop: 1
+  m_audioSource: {fileID: 0}
 --- !u!82 &349385792
 AudioSource:
   m_ObjectHideFlags: 0
@@ -822,7 +824,9 @@ MonoBehaviour:
   m_soundType: 1
   m_BGMType: 0
   m_SEType: 1
+  m_play: 0
   m_soundLoop: 0
+  m_audioSource: {fileID: 0}
 --- !u!1 &893692431
 GameObject:
   m_ObjectHideFlags: 0
@@ -996,7 +1000,9 @@ MonoBehaviour:
   m_soundType: 1
   m_BGMType: 0
   m_SEType: 1
+  m_play: 0
   m_soundLoop: 0
+  m_audioSource: {fileID: 0}
 --- !u!82 &893692438
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1080,6 +1086,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1079822445}
   - 114: {fileID: 1079822444}
+  - 114: {fileID: 1079822446}
   m_Layer: 0
   m_Name: SoundSystem
   m_TagString: Untagged
@@ -1111,6 +1118,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!114 &1079822446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1079822443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7677fad9ccbc2fd4f9f073a175a6338b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1180114892
 GameObject:
   m_ObjectHideFlags: 0
