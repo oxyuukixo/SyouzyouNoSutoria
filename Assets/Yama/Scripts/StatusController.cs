@@ -47,7 +47,7 @@ public class StatusController : MonoBehaviour {
             {
                 case 0: // ステージ
                     if (turnPlayer.tag != "Player") return;
-                        if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+                        if (CrossPlatformInputManager.GetButtonUp("Fire1"))
                     {
                         m_CamCtrlClass.m_CenterObj = hit.collider.gameObject;
                         for (int i = 0; i < CharactorCount; i++)
@@ -83,7 +83,7 @@ public class StatusController : MonoBehaviour {
 
     private void UIStatus(GameObject selectCharacter)
     {
-        if (CrossPlatformInputManager.GetButtonDown("Fire1"))
+        if (CrossPlatformInputManager.GetButtonUp("Fire1"))
         {
             m_CamCtrlClass.m_CenterObj = selectCharacter;
             for (int i = 0; i < CharactorCount; i++)

@@ -371,6 +371,8 @@ public class CharaControl : MonoBehaviour {
     {
         CommandUIFalse(0);
         m_UIClass.m_Cover[0].SetActive(false);
+        m_attack=false;
+        m_selectMove = false;
         m_BMClass.TurnElapsedNum++; // ターン経過
         for (int i = 0; i < m_UIClass.m_Cover.Length; i++)
         {

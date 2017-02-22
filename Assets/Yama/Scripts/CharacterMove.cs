@@ -109,7 +109,7 @@ public class CharacterMove : MonoBehaviour {
     public bool SelectMovePoiont(GameObject movePoint)
     {
         m_moveRoute = SarchRange.SarchMoveRoute(m_stage, gameObject, movePoint, GetComponent<Status>().MOV, false);
-        if (m_moveRoute == null) return false;
+        if (m_moveRoute.Length == 0) return false;
         m_move = true;
         return true;
     }

@@ -64,7 +64,7 @@ public class CPAI : MonoBehaviour {
                 gameObject.GetComponent<CharacterMove>().Move();
                 if (!gameObject.GetComponent<CharacterMove>().m_move)
                 {
-                    m_anime.SetBool("walk", false);
+                    //m_anime.SetBool("walk", false);
                     if (m_target == null)
                     {
                         m_aiType = CPAIType.turnEnd;
@@ -72,7 +72,7 @@ public class CPAI : MonoBehaviour {
                     else
                     {
                         m_aiType = CPAIType.attack;
-                        m_anime.SetTrigger("attack");
+                    //    m_anime.SetTrigger("attack");
                         if (m_attackType == AttackType.Physical)
                         {
                             m_audio.m_SEType = SoundController.SEType.attack;
