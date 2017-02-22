@@ -128,7 +128,7 @@ public class CPAI : MonoBehaviour {
             SarchMovePoint();
         }
         else NearMovePlayer();
-        m_anime.SetBool("walk", true);
+    //    m_anime.SetBool("walk", true);
     }
 
     //狙う敵の候補を決める

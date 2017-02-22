@@ -43,7 +43,7 @@ public class CharacterMove : MonoBehaviour {
                 gameObject.GetComponent<CharaControl>().m_anime.SetBool("walk", false);
                 break;
             case "Enemy":
-                gameObject.GetComponent<CPAI>().m_anime.SetBool("walk", false);
+                //gameObject.GetComponent<CPAI>().m_anime.SetBool("walk", false);
                 break;
         }
         MoveArea.ResetMoveArea();
