@@ -203,9 +203,12 @@ public class ConversationControll : MonoBehaviour {
             case 2:
                 speedRate = 2.0f;
                 break;
+            default:
+                speedRate = 1.0f;
+                break;
         }
 
-        m_ReadSpeed = 0.05f;
+        m_ReadSpeed = 0.05f * speedRate;
 
         //表示用のテキストボックスを作成
         CreateTextBox();
