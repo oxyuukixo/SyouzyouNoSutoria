@@ -78,13 +78,18 @@ public class CameraControl : MonoBehaviour {
         }
         if (phase == GodPhase.Moved)
         {
-            m_CenterObj = null;
-            // マウス(タップ)の移動量
-            moveDistance = GodTouch.GetPosition() - startPos;
-            // カメラの移動
-            m_Camera.transform.localPosition -= moveDistance / 75;
-            // マウス(タップ)の移動量の初期化
-            startPos = GodTouch.GetPosition();
+            for (int i = 0; i < ui.m_Command.Length; i++) {
+                if (!ui.m_Command[i].activeSelf)
+                {
+                    m_CenterObj = null;
+                    // マウス(タップ)の移動量
+                    moveDistance = GodTouch.GetPosition() - startPos;
+                    // カメラの移動
+                    m_Camera.transform.localPosition -= moveDistance / 75;
+                    // マウス(タップ)の移動量の初期化
+                    startPos = GodTouch.GetPosition();
+                }
+            }
         }
         
         //if (Input.GetMouseButtonDown(0))

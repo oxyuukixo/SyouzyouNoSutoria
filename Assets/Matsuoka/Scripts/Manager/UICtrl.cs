@@ -70,6 +70,12 @@ public class UICtrl : MonoBehaviour {
         }
         if (phase == GodPhase.Moved)
         {
+            for (int i = 0; i < m_Command.Length; i++)
+            {
+                if (m_Command[i].activeSelf) goto Next;
+            }
+            return;
+            Next:
             // マウス(タップ)の移動量
             moveDistance = GodTouch.GetPosition() - startPos;
             // コマンドボタンのスライド
