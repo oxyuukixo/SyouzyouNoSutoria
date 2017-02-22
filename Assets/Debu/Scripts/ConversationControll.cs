@@ -76,7 +76,7 @@ public class ConversationControll : MonoBehaviour {
     public AnimationCurve m_InCurve;
 
     //読み込むテキストのパス(シーン移動する前に設定)
-    public static string m_TextPath = "Conversation_1220"/*"Prologue"*/;
+    public static string m_TextPath =  "Prologue";
 
     //テキストをスキップするか
     [HideInInspector]
@@ -1220,6 +1220,53 @@ public class ConversationControll : MonoBehaviour {
                         if (OperationText != null)
                         {
                             SceneManager.LoadScene(OperationText);
+                        }
+
+                        break;
+
+                    case 'a':
+
+                        OperationText = PickString();
+
+                        //文字列が返ってきたら
+                        if (OperationText != null)
+                        {
+                            AudioController ctrl = GetComponent<AudioController>();
+
+                            ctrl.m_soundLoop = true;
+                            ctrl.m_play = true;
+
+                            GetComponent<AudioSource>().loop = true;
+
+                            switch (OperationText)
+                            {
+                                case "0":
+
+                                    GetComponent<AudioSource>().Stop();
+
+                                    break;
+
+                                case "1":
+
+                                    ctrl.m_BGMType = SoundController.BGMType.conversationEnkishu;
+                                    ctrl.ChangeSound();
+
+                                    break;
+
+                                case "2":
+
+                                    ctrl.m_BGMType = SoundController.BGMType.ConversationKoukatodou;
+                                    ctrl.ChangeSound();
+
+                                    break;
+
+                                case "3":
+
+                                    ctrl.m_BGMType = SoundController.BGMType.endBousho;
+                                    ctrl.ChangeSound();
+
+                                    break;
+                            }                          
                         }
 
                         break;
